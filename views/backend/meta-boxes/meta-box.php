@@ -1,12 +1,4 @@
-<table class="form-table">
-	<tbody>
-		<tr valign="top">
-			<th scope="row"><label for="plugin-skeleton-some-meta"><?php _e('Some Meta'); ?></label></th>
-			<td>
-				<input type="text" class="regular-text" name="plugin-skeleton[some-meta]" id="plugin-skeleton-some-meta" value="<?php esc_attr_e($meta['some-meta']); ?>" />
-			</td>
-		</tr>
-	</tbody>
-</table>
+<p>Build out the Urtak management interface here.</p>
 
-<?php wp_nonce_field('save-plugin-skeleton-meta', 'save-plugin-skeleton-meta-nonce');
+
+<?php wp_nonce_field('save-urtak-meta', 'save-urtak-meta-nonce');
