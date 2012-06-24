@@ -1,0 +1,65 @@
+/** Settings Notice **/
+
+div.urtak-error {
+	background: #edf8fd;
+	border-color: #ebebeb;
+}
+
+/** Settings Page **/
+
+#icon-urtak {
+	background-image: url(img/urtak-logo-32.png);
+}
+
+.urtak-wrap-title {
+	display: inline-block;
+	margin-right: 10px;
+}
+
+.urtak-logged-in {
+	color: #aaaaaa;
+	font-size: 13px;
+	vertical-align: middle;
+}
+
+/** Buttons **/
+
+/*.urtak-button {
+	background-color: #33BEF3;
+	background-image: 0;
+	-webkit-border-radius: 3px;
+	-moz-border-radius: 3px;
+	border-radius: 3px;
+	box-sizing: content-box;
+	box-shadow: rgba(255, 255, 255, 0.398438) 0 1px 0 0 inset, rgba(0, 0, 0, 0.296875) 0 1px 2px 0;
+	color: #0076A3;
+	cursor: pointer;
+	display: inline-block;
+	font-family: 'Droid Sans', Helvetica, Arial, sans-serif;
+	font-size: 12px;
+	letter-spacing: normal;
+	line-height: normal;
+	margin: 0 10px;
+	outline-color: #0076A3;
+	outline-style: none;
+	outline-width: 0;
+	padding: 4px 25px;
+	position: relative;
+	text-align: center;
+	text-decoration: none;
+	text-indent: 0;
+	text-shadow: rgba(255, 255, 255, 0.496094) 0 1px 1px;
+	text-transform: none;
+	vertical-align: baseline;
+	white-space: pre;
+	word-spacing: 0;
+	border-color: #0076A3;
+	border-style: solid;
+	border-width: 1px;
+}
+
+.urtak-button:hover, .urtak-button:active {
+	border-color: #004159;
+	color: #004159;
+	outline-color: #004159;
+}*/

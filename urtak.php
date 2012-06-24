@@ -42,6 +42,7 @@ if(!class_exists('Urtak')) {
 			if(is_admin()) {
 				add_action('admin_enqueue_scripts', array(__CLASS__, 'enqueue_administrative_resources'));
 				add_action('admin_menu', array(__CLASS__, 'add_administrative_interface_items'));
+				add_action('admin_notices', array(__CLASS__, 'show_credentials_notice'));
 				add_action('add_meta_boxes_post', array(__CLASS__, 'add_meta_boxes'));
 			}
 
@@ -59,7 +60,7 @@ if(!class_exists('Urtak')) {
 		/// CALLBACKS
 
 		public static function add_administrative_interface_items() {
-			self::$admin_page_hooks[] = $top_level = add_menu_page(__('Urtak Insights'), __('Urtak'), 'manage_options', self::TOP_LEVEL_PAGE_SLUG, array(__CLASS__, 'display_insights_page'), plugins_url('resources/backend/img/menu-logo.png', __FILE__), 56);
+			self::$admin_page_hooks[] = $top_level = add_menu_page(__('Urtak Insights'), __('Urtak'), 'manage_options', self::TOP_LEVEL_PAGE_SLUG, array(__CLASS__, 'display_insights_page'), plugins_url('resources/backend/img/urtak-logo-15.png', __FILE__), 56);
 			self::$admin_page_hooks[] = $sub_level_insights = add_submenu_page(self::TOP_LEVEL_PAGE_SLUG, __('Urtak Insights'), __('Insights'), 'manage_options', self::SUB_LEVEL_INSIGHTS_SLUG, array(__CLASS__, 'display_insights_page'));
 			self::$admin_page_hooks[] = $sub_level_settings = add_submenu_page(self::TOP_LEVEL_PAGE_SLUG, __('Urtak Settings'), __('Settings'), 'manage_options', self::SUB_LEVEL_SETTINGS_SLUG, array(__CLASS__, 'display_settings_page'));
 
@@ -78,10 +79,10 @@ if(!class_exists('Urtak')) {
 		}
 
 		public static function enqueue_administrative_resources($hook) {
-			if(!in_array($hook, self::$admin_page_hooks)) { return; }
-
-			wp_enqueue_script('urtak-backend', plugins_url('resources/backend/urtak.js', __FILE__), array('jquery'), self::VERSION);
 			wp_enqueue_style('urtak-backend', plugins_url('resources/backend/urtak.css', __FILE__), array(), self::VERSION);
+
+			if(!in_array($hook, self::$admin_page_hooks)) { return; }
+			wp_enqueue_script('urtak-backend', plugins_url('resources/backend/urtak.js', __FILE__), array('jquery'), self::VERSION);
 		}
 
 		public static function process_settings_save() {
@@ -107,12 +108,23 @@ if(!class_exists('Urtak')) {
 			self::set_meta($post_id, apply_filters('urtak_pre_meta_save', $data['urtak']));
 		}
 
+		public static function show_credentials_notice() {
+			$data = stripslashes_deep($_REQUEST);
+
+			if(!self::has_credentials() && (!isset($data['page']) || !in_array($data['page'], array(self::SUB_LEVEL_INSIGHTS_SLUG, self::SUB_LEVEL_SETTINGS_SLUG)))) {
+				include('views/backend/misc/admin-notice.php');
+			}
+		}
+
 		/// DISPLAY CALLBACKS
 
 		public static function display_insights_page() {
+			$is_insights = true;
 			$settings = self::get_settings();
 
+			include('views/backend/settings/header.php');
 			include('views/backend/settings/insights.php');
+			include('views/backend/settings/footer.php');
 		}
 
 		public static function display_meta_box($post) {
@@ -122,9 +134,12 @@ if(!class_exists('Urtak')) {
 		}
 
 		public static function display_settings_page() {
+			$is_settings = true;
 			$settings = self::get_settings();
 
+			include('views/backend/settings/header.php');
 			include('views/backend/settings/settings.php');
+			include('views/backend/settings/footer.php');
 		}
 
 		/// SHORTCODE CALLBACKS
@@ -180,6 +195,10 @@ if(!class_exists('Urtak')) {
 		}
 
 		/// UTILITY
+
+		private static function has_credentials() {
+			return false;
+		}
 
 		/// TEMPLATE TAGS
 
