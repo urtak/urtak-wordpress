@@ -4,4 +4,8 @@ jQuery(document).ready(function($) {
 
 		$(this).parents('form').hide().siblings('.urtak-login-signup-settings').show();
 	});
+
+	$('#urtak-placement-manual-tag').focus(function(event) {
+		$(this).select();
+	});
 });

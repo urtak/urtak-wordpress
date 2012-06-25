@@ -14,16 +14,16 @@
 
 	<h2><?php _e('Account'); ?></h2>
 
-	<input type="hidden" name="urtak[credentials][email]" 
-			id="urtak-credentials-email" 
-			value="<?php esc_attr_e($settings['credentials']['email']); ?>" />
-	<input type="hidden" name="urtak[credentials][api-key]" 
-			id="urtak-credentials-email" 
-			value="<?php esc_attr_e($settings['credentials']['email']); ?>" />
+	<?php foreach($settings['credentials'] as $credential_key => $credential_value) { ?>
+	<input type="hidden" name="urtak[credentials][<?php esc_attr_e($credential_key); ?>]" 
+			id="urtak-credentials-<?php esc_attr_e($credential_key); ?>" 
+			value="<?php esc_attr_e($credential_value); ?>" />
+	
+	<?php } ?>
 
 	<div class="urtak-field">
 		<p>
-			<?php printf('Logged in as %1$s', self::get_credentials('email')); ?><br />
+			<?php printf('Logged in as %1$s', self::get_credentials('email')); ?> <a href="<?php esc_attr_e(self::_get_logout_url()); ?>">(<?php _e('logout'); ?>)</a><br />
 			<span class="urtak-api-key"><?php printf('API Key: %1$s', self::get_credentials('api-key')); ?></span>
 		</p>
 	</div>

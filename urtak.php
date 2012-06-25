@@ -53,6 +53,10 @@ if(!class_exists('UrtakPlugin')) {
 
 			add_action('admin_bar_menu', array(__CLASS__, 'add_admin_bar_items'), 35);
 			add_action('init', array(__CLASS__, 'initialize_api_object'));
+
+			/// DISABLE COMMENTS CALLBACKS
+			add_action('widgets_init', array(__CLASS__, 'disable_comments__remove_widget'));
+			add_action('wp_loaded', array(__CLASS__, 'disable_comments'));	
 		}
 
 		private static function add_filters() {
@@ -63,6 +67,9 @@ if(!class_exists('UrtakPlugin')) {
 		private static function initialize_defaults() {
 			// Empty credentials to stat
 			self::$default_settings['credentials'] = array();
+
+			// No pubilcation to start
+			self::$default_settings['publication-key'] = '';
 
 			// We want the Urtaks to appear by default, so let's append them
 			self::$default_settings['placement'] = 'append';
@@ -88,7 +95,7 @@ if(!class_exists('UrtakPlugin')) {
 				$wp_admin_bar->add_menu( array(
 					'id' => 'urtak',
 					'title' => sprintf(__('+%s'), number_format_i18n(self::get_pending_questions_count())),
-					'href' => add_query_arg(array('page' => self::SUB_LEVEL_INSIGHTS_SLUG), admin_url('admin.php'))
+					'href' => self::_get_insights_url()
 				));
 			}
 		}
@@ -145,12 +152,75 @@ if(!class_exists('UrtakPlugin')) {
 			$new_links = array();
 
 			if(self::has_credentials()) {
-				$new_links[] = $insights_link = sprintf('<a href="%s">%s</a>', add_query_arg(array('page' => self::SUB_LEVEL_INSIGHTS_SLUG), admin_url('admin.php')), __('Insights'));
+				$new_links[] = $insights_link = sprintf('<a href="%s">%s</a>', self::_get_insights_url(), __('Insights'));
 			}
 
-			$new_links[] = $settings_link = sprintf('<a href="%s">%s</a>', add_query_arg(array('page' => self::SUB_LEVEL_SETTINGS_SLUG), admin_url('admin.php')), __('Settings'));
+			$new_links[] = $settings_link = sprintf('<a href="%s">%s</a>', self::_get_settings_url(), __('Settings'));
 
 			return array_merge($new_links, $links);
+		}
+
+		public static function disable_comments__remove_from_dashboard() {
+			if(self::comments_are_disabled()) {
+				// remove_meta_box('dashboard_recent_comments', null, 'high');
+				// remove_meta_box('dashboard_recent_comments', null, 'core');
+			}
+		}
+
+		/**
+		 * Big thank you to the Disable Comments plugin for these.
+		 */
+		public static function disable_comments() {
+			if(self::comments_are_disabled()) {
+				foreach(get_post_types( array( 'public' => true ), 'objects' ) as $post_type_key => $post_type_object) {
+					if( post_type_supports($post_type_key, 'comments') ) {
+						remove_post_type_support($post_type_key, 'comments');
+						remove_post_type_support($post_type_key, 'trackbacks');
+					}
+				}
+
+				add_filter('comments_open', array(__CLASS__, 'disable_comments__filter_comment_status'), 20, 2 );
+				add_filter('pings_open', array(__CLASS__, 'disable_comments__filter_comment_status'), 20, 2 );
+			
+				add_action('admin_head', array(__CLASS__, 'disable_comments__hide_discussion_rightnow'));
+				add_action('admin_menu', array(__CLASS__, 'disable_comments__filter_admin_menu'), 9999);
+				add_action('edit_form_advanced', array(__CLASS__, 'disable_comments__edit_form_inputs'));
+				add_action('edit_page_form', array(__CLASS__, 'disable_comments__edit_form_inputs'));				
+				add_action('wp_dashboard_setup', array(__CLASS__, 'disable_comments__filter_dashboard'));
+
+				remove_action('admin_bar_menu', 'wp_admin_bar_comments_menu', 60);
+			}
+		}
+
+		public static function disable_comments__discussion_js() {
+			echo '<script> jQuery(document).ready(function($){ $("#dashboard_right_now .table_discussion").has(\'a[href="edit-comments.php"]\').first().hide(); }); </script>';
+		}
+
+		public static function disable_comments__hide_discussion_rightnow(){
+			if('dashboard' == get_current_screen()->id) {
+				add_action('admin_print_footer_scripts', array(__CLASS__, 'disable_comments__discussion_js'));
+			}
+		}
+
+		public static function disable_comments__filter_admin_menu(){
+			global $menu;
+			if(isset($menu[25]) && $menu[25][2] == 'edit-comments.php') {
+				unset($menu[25]);
+			}
+		}
+
+		public static function disable_comments__filter_comment_status($open, $post_id) {
+			return false;
+		}
+
+		public static function disable_comments__filter_dashboard() {
+			remove_meta_box('dashboard_recent_comments', 'dashboard', 'normal');
+		}
+
+		public static function disable_comments__remove_widget() {
+			if(self::comments_are_disabled()) {
+				unregister_widget('WP_Widget_Recent_Comments');
+			}
 		}
 
 		public static function enqueue_administrative_resources($hook) {
@@ -171,10 +241,12 @@ if(!class_exists('UrtakPlugin')) {
 		}
 
 		public static function process_settings_actions() {
-			$data = stripslashes_deep($_POST);
+			$data = stripslashes_deep($_REQUEST);
 
 			if(!empty($data['urtak-login-nonce']) && wp_verify_nonce($data['urtak-login-nonce'], 'urtak-login')) {
 				self::_process_login($data['urtak-login-email'], $data['urtak-login-password']);
+			} else if(!empty($data['urtak-logout-nonce']) && wp_verify_nonce($data['urtak-logout-nonce'], 'urtak-logout')) {
+				self::_process_logout();
 			} else if(!empty($data['save-urtak-settings-nonce']) && wp_verify_nonce($data['save-urtak-settings-nonce'], 'save-urtak-settings')) {
 				self::_process_settings_save($data['urtak']);
 			} else if(!empty($data['urtak-signup-nonce']) && wp_verify_nonce($data['urtak-signup-nonce'], 'urtak-signup')) {
@@ -196,8 +268,6 @@ if(!class_exists('UrtakPlugin')) {
 			$data = stripslashes_deep($_REQUEST);
 
 			if(!self::has_credentials() && (!isset($data['page']) || !in_array($data['page'], array(self::SUB_LEVEL_INSIGHTS_SLUG, self::SUB_LEVEL_SETTINGS_SLUG)))) {
-				$base = add_query_arg(array('page' => self::SUB_LEVEL_SETTINGS_SLUG), admin_url('admin.php'));
-
 				include('views/backend/misc/admin-notice.php');
 			}
 		}
@@ -280,6 +350,21 @@ if(!class_exists('UrtakPlugin')) {
 			include('views/backend/meta-boxes/meta-box.php');
 		}
 
+		public static function display_settings_page() {
+			$data = stripslashes_deep($_REQUEST);
+			$is_settings = true;
+			$settings = self::get_settings();
+
+			include('views/backend/misc/header.php');
+
+			include('views/backend/settings/settings.php');
+
+			include('views/backend/misc/footer.php');
+		}
+
+
+		//// META BOX DISPLAY CALLBACKS
+
 		public static function display_meta_box__at_a_glance() {
 			$maximum_responses = 0;
 
@@ -318,18 +403,6 @@ if(!class_exists('UrtakPlugin')) {
 
 		public static function display_meta_box__user_stats() {
 			include('views/backend/insights/meta-boxes/user-stats.php');
-		}
-
-		public static function display_settings_page() {
-			$data = stripslashes_deep($_REQUEST);
-			$is_settings = true;
-			$settings = self::get_settings();
-
-			include('views/backend/misc/header.php');
-
-			include('views/backend/settings/settings.php');
-
-			include('views/backend/misc/footer.php');
 		}
 
 		/// SHORTCODE CALLBACKS
@@ -391,10 +464,16 @@ if(!class_exists('UrtakPlugin')) {
 
 		/// CREDENTIALS
 
+		/**
+		 * Returns a hash of stored credentials or a single credential by name (depending
+		 * on if the parameter is passed or not). Returns false if the credential doesn't 
+		 * exist.
+		 *
+		 * @param string $credential_key The name of the credential from the has to return 
+		 * @return false|mixed
+		 */
 		private static function get_credentials($credential_key = null) {
 			$credentials = self::get_settings('credentials');
-
-			error_log(print_r($credentials, true));
 
 			return empty($credentials) ? false : 
 						(is_null($credential_key) ? $credentials : 
@@ -418,6 +497,12 @@ if(!class_exists('UrtakPlugin')) {
 					&& !empty($credentials['id']);
 		}
 
+		/// COMMENTS
+
+		private static function comments_are_disabled() {
+			return 'yes' === self::get_settings('disable-comments');
+		}
+
 		/// API DELEGATES
 
 		private static function has_pending_questions() {
@@ -430,12 +515,24 @@ if(!class_exists('UrtakPlugin')) {
 
 		/// UTILITY
 
+		private static function _get_insights_url() {
+			return add_query_arg(array('page' => self::SUB_LEVEL_INSIGHTS_SLUG), admin_url('admin.php'));
+		}
+
 		private static function _get_login_url() {
-			return add_query_arg(array('page' => self::SUB_LEVEL_SETTINGS_SLUG, 'action' => 'login'), admin_url('admin.php'));
+			return add_query_arg(array('action' => 'login'), self::_get_settings_url());
+		}
+
+		private static function _get_logout_url() {
+			return add_query_arg(array('action' => 'logout', 'urtak-logout-nonce' => wp_create_nonce('urtak-logout')), self::_get_settings_url());
+		}
+
+		private static function _get_settings_url() {
+			return add_query_arg(array('page' => self::SUB_LEVEL_SETTINGS_SLUG), admin_url('admin.php'));
 		}
 
 		private static function _get_signup_url() {
-			return add_query_arg(array('page' => self::SUB_LEVEL_SETTINGS_SLUG, 'action' => 'signup'), admin_url('admin.php'));
+			return add_query_arg(array('action' => 'signup'), self::_get_settings_url());
 		}
 
 		private static function _print_login_form($show, $data) {
@@ -464,14 +561,26 @@ if(!class_exists('UrtakPlugin')) {
 				$account_response = self::$urtak_api->login_account($email, $password);
 
 				if($account_response->success()) {
-					add_settings_error('general', 'settings_updated', __('Your account was successfully retrieved and your credentials linked.'), 'updated');
+					add_settings_error('general', 'settings_updated', __('Your account was successfully retrieved and your credentials saved.'), 'updated');
 
 					set_transient('settings_errors', get_settings_errors(), 30);
-					wp_redirect(add_query_arg(array('page' => self::SUB_LEVEL_SETTINGS_SLUG, 'settings-updated' => 'true'), admin_url('admin.php')));
+					wp_redirect(add_query_arg(array('settings-updated' => 'true'), self::_get_settings_url()));
 				} else {
 					add_settings_error('general', 'settings_updated', __('Your account could not be created. Please try again.'), 'error');
 				}
 			}
+		}
+
+		private static function _process_logout() {
+			$settings = self::get_settings();
+			$settings['credentials'] = array();
+			$settings = self::set_settings($settings);
+
+			add_settings_error('general', 'settings_updated', __('Your credentials were successfully cleared.'), 'updated');
+			set_transient('settings_errors', get_settings_errors(), 30);
+
+			wp_redirect(add_query_arg(array('settings-updated' => 'true'), self::_get_settings_url()));
+			exit;
 		}
 
 		private static function _process_settings_save($settings) {
@@ -481,7 +590,7 @@ if(!class_exists('UrtakPlugin')) {
 			add_settings_error('general', 'settings_updated', __('Settings saved.'), 'updated');
 			set_transient('settings_errors', get_settings_errors(), 30);
 
-			wp_redirect(add_query_arg(array('page' => self::SUB_LEVEL_SETTINGS_SLUG, 'settings-updated' => 'true'), admin_url('admin.php')));
+			wp_redirect(add_query_arg(array('settings-updated' => 'true'), self::_get_settings_url()));
 			exit;
 		}
 
@@ -493,7 +602,7 @@ if(!class_exists('UrtakPlugin')) {
 			} else {
 				$account_response = self::$urtak_api->create_account(array('email' => $email));
 
-				$redirect_url = add_query_arg(array('page' => self::SUB_LEVEL_SETTINGS_SLUG, 'settings-updated' => 'true'), admin_url('admin.php'));
+				$redirect_url = add_query_arg(array('settings-updated' => 'true'), self::_get_settings_url());
 				if($account_response->success()) {
 					$settings = self::get_settings();
 					$settings['credentials'] = array(
@@ -503,7 +612,7 @@ if(!class_exists('UrtakPlugin')) {
 					);
 					$settings = self::set_settings($settings);
 
-					add_settings_error('general', 'settings_updated', __('Your account was successfully created and your credentials linked.'), 'updated');
+					add_settings_error('general', 'settings_updated', __('Your account was successfully created and your credentials saved.'), 'updated');
 				} else {
 					$redirect_url = add_query_arg(array('action' => 'login'), $redirect_url);
 
