@@ -7,6 +7,7 @@ if(!class_exists('WordPressUrtak') && class_exists('Urtak')) {
 			$request_args['headers'] = array();
 			$request_args['headers']['Accept'] = $this->media_types();
 			$request_args['method'] = $method;
+			$request_args['redirection'] = 0;
 			$request_args['user-agent'] = $this->client_name;
 
 			$signed_data = array_filter(array_merge($data, $this->create_signature()));
@@ -19,8 +20,7 @@ if(!class_exists('WordPressUrtak') && class_exists('Urtak')) {
 				$json = json_encode($signed_data);
 
 				$request_args['body'] = $json;
-				$request_args['header']['Content-length'] = strlen($json);
-				$request_args['header']['Content-type'] = 'application/json';
+				$request_args['headers']['Content-Type'] = 'application/json';
 			}
 
 			$response = wp_remote_request($url, $request_args);

@@ -161,27 +161,25 @@ if(!class_exists('UrtakPlugin')) {
 		}
 
 		public static function initialize_api_object() {
-			if(self::has_credentials()) {
-				self::$urtak_api = new WordPressUrtak(
-					array(
-						'api_key' => self::get_credentials('api-key'), 
-						'email' => self::get_credentials('email'), 
-						'publication_key' => self::get_credentials('publication-key')
-					)
-				);
-			}
+			self::$urtak_api = new WordPressUrtak(
+				array(
+					'api_key' => self::get_credentials('api-key'), 
+					'email' => self::get_credentials('email'), 
+					'publication_key' => self::get_credentials('publication-key')
+				)
+			);
 		}
 
 		public static function process_settings_actions() {
 			$data = stripslashes_deep($_POST);
 
-			if(!empty($data['urtak-login-noce']) && wp_verify_nonce($data['urtak-login-nonce'], 'urtak-login')) {
+			if(!empty($data['urtak-login-nonce']) && wp_verify_nonce($data['urtak-login-nonce'], 'urtak-login')) {
 				self::_process_login($data['urtak-login-email'], $data['urtak-login-password']);
-			} else if(!empty($data['urtak-signup-nonce']) && wp_verify_nonce($data['urtak-signup-nonce'], 'urtak-signup')) {
-				self::_process_signup($data['urtak-signup-email']);
 			} else if(!empty($data['save-urtak-settings-nonce']) && wp_verify_nonce($data['save-urtak-settings-nonce'], 'save-urtak-settings')) {
 				self::_process_settings_save($data['urtak']);
-			}
+			} else if(!empty($data['urtak-signup-nonce']) && wp_verify_nonce($data['urtak-signup-nonce'], 'urtak-signup')) {
+				self::_process_signup($data['urtak-signup-email']);
+			} 
 		}
 
 		public static function save_post_meta($post_id, $post) {
@@ -369,7 +367,7 @@ if(!class_exists('UrtakPlugin')) {
 
 		/// SETTINGS
 
-		private static function get_settings() {
+		private static function get_settings($settings_key = null) {
 			$settings = wp_cache_get(self::SETTINGS_KEY);
 
 			if(!is_array($settings)) {
@@ -377,7 +375,8 @@ if(!class_exists('UrtakPlugin')) {
 				wp_cache_set(self::SETTINGS_KEY, $settings, null, time() + self::CACHE_PERIOD);
 			}
 
-			return $settings;
+			return is_null($settings_key) ? $settings : 
+					(isset($settings[$settings_key]) ? $settings[$settings_key] : false);
 		}
 
 		private static function set_settings($settings) {
@@ -395,7 +394,11 @@ if(!class_exists('UrtakPlugin')) {
 		private static function get_credentials($credential_key = null) {
 			$credentials = self::get_settings('credentials');
 
-			return empty($credentials) ? false : (is_null($credential_key) ? $credentials : (isset($credentials[$credential_key]) ? $credentials[$credential_key] : false));
+			error_log(print_r($credentials, true));
+
+			return empty($credentials) ? false : 
+						(is_null($credential_key) ? $credentials : 
+							(isset($credentials[$credential_key]) ? $credentials[$credential_key] : false));
 		}
 
 		/**
@@ -406,7 +409,13 @@ if(!class_exists('UrtakPlugin')) {
 		private static function has_credentials() {
 			$credentials = self::get_credentials();
 
-			return is_array($credentials) && isset($credentials['api-key']) && isset($credentials['email']) && !empty($credentials['api-key']) && !empty($credentials['email']);
+			return is_array($credentials) 
+					&& isset($credentials['api-key']) 
+					&& isset($credentials['email']) 
+					&& isset($credentials['id']) 
+					&& !empty($credentials['api-key']) 
+					&& !empty($credentials['email'])
+					&& !empty($credentials['id']);
 		}
 
 		/// API DELEGATES
@@ -438,10 +447,31 @@ if(!class_exists('UrtakPlugin')) {
 		}
 
 		private static function _process_login($email, $password) {
-			add_settings_error('general', 'settings_updated', __('Account credentials saved.'), 'updated');
-			set_transient('settings_errors', get_settings_errors(), 30);
+			if(empty($email)) {
+				$error = true;
+				add_settings_error('general', 'settings_updated', __('Please provide an email address.'), 'error');
+			} else if(!is_email($email)) {
+				$error = true;
+				add_settings_error('general', 'settings_updated', __('Please provide a valid email address.'), 'error');
+			} 
 
-			wp_redirect(add_query_arg(array('page' => self::SUB_LEVEL_SETTINGS_SLUG, 'settings-updated' => 'true'), admin_url('admin.php')));
+			if(empty($password)) {
+				$error = true;
+				add_settings_error('general', 'settings_updated', __('Please provide a password.'), 'error');
+			}
+
+			if(!$error) {
+				$account_response = self::$urtak_api->login_account($email, $password);
+
+				if($account_response->success()) {
+					add_settings_error('general', 'settings_updated', __('Your account was successfully retrieved and your credentials linked.'), 'updated');
+
+					set_transient('settings_errors', get_settings_errors(), 30);
+					wp_redirect(add_query_arg(array('page' => self::SUB_LEVEL_SETTINGS_SLUG, 'settings-updated' => 'true'), admin_url('admin.php')));
+				} else {
+					add_settings_error('general', 'settings_updated', __('Your account could not be created. Please try again.'), 'error');
+				}
+			}
 		}
 
 		private static function _process_settings_save($settings) {
@@ -456,11 +486,35 @@ if(!class_exists('UrtakPlugin')) {
 		}
 
 		private static function _process_signup($email) {
-			add_settings_error('general', 'settings_updated', __('ERROR.'), 'error');
-			set_transient('settings_errors', get_settings_errors(), 30);
+			if(empty($email)) {
+				add_settings_error('general', 'settings_updated', __('Please provide an email address.'), 'error');
+			} else if(!is_email($email)) {
+				add_settings_error('general', 'settings_updated', __('Please provide a valid email address.'), 'error');
+			} else {
+				$account_response = self::$urtak_api->create_account(array('email' => $email));
 
-			wp_redirect(add_query_arg(array('page' => self::SUB_LEVEL_SETTINGS_SLUG, 'settings-updated' => 'true'), admin_url('admin.php')));
-			exit;
+				$redirect_url = add_query_arg(array('page' => self::SUB_LEVEL_SETTINGS_SLUG, 'settings-updated' => 'true'), admin_url('admin.php'));
+				if($account_response->success()) {
+					$settings = self::get_settings();
+					$settings['credentials'] = array(
+						'api-key' => $account_response->body['account']['api_key'],
+						'email' => $account_response->body['account']['email'],
+						'id' => $account_response->body['account']['id'],
+					);
+					$settings = self::set_settings($settings);
+
+					add_settings_error('general', 'settings_updated', __('Your account was successfully created and your credentials linked.'), 'updated');
+				} else {
+					$redirect_url = add_query_arg(array('action' => 'login'), $redirect_url);
+
+					add_settings_error('general', 'settings_updated', __('An account with that email address already exists. Please login below.'), 'error');
+				}
+
+				set_transient('settings_errors', get_settings_errors(), 30);
+
+				wp_redirect($redirect_url);
+				exit;
+			}
 		}
 
 		/// TEMPLATE TAGS

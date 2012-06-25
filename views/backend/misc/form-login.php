@@ -1,5 +1,5 @@
 <form class="urtak-settings urtak-login-signup-settings" method="post" 
-		action="<?php esc_attr_e(self::_get_signup_url()); ?>" 
+		action="<?php esc_attr_e(self::_get_login_url()); ?>" 
 		<?php if(!$show) { ?>style="display: none;"<?php } ?> >
 
 	<h2><?php _e('Account Login'); ?> 
@@ -14,8 +14,8 @@
 	</div>
 
 	<p class="submit">
-		<?php wp_nonce_field('urtak-signup', 'urtak-signup-nonce'); ?>
-		<input class="button button-primary" type="submit" name="urtak-signup-submit" id="urtak-signup-submit" value="<?php _e('Login'); ?>" />
+		<?php wp_nonce_field('urtak-login', 'urtak-login-nonce'); ?>
+		<input class="button button-primary" type="submit" name="urtak-login-submit" id="urtak-login-submit" value="<?php _e('Login'); ?>" />
 	</p>
 
 </form>
