@@ -1,8 +1,21 @@
+/** Admin Bar **/
+
+#wpadminbar li#wp-admin-bar-urtak a {
+	background-image: url(img/urtak-logo-16-desat.png);
+	background-repeat: no-repeat;
+	background-position: 12px center;
+	padding-left: 32px;
+}
+
 /** Settings Notice **/
 
 div.urtak-error {
 	background: #edf8fd;
 	border-color: #ebebeb;
+}
+
+div.urtak-error p {
+	background: transparent url(img/urtak-logo-20.png) no-repeat right center
 }
 
 /** Settings Page **/
@@ -11,15 +24,153 @@ div.urtak-error {
 	background-image: url(img/urtak-logo-32.png);
 }
 
+.urtak-wrap div.updated {
+	margin-bottom: 0;
+}
+
 .urtak-wrap-title {
 	display: inline-block;
 	margin-right: 10px;
 }
 
-.urtak-logged-in {
+.urtak-logged-in, .urtak-api-key {
 	color: #aaaaaa;
 	font-size: 13px;
 	vertical-align: middle;
+}
+
+.urtak-api-key {
+	color: #aaaaaa;
+}
+
+.urtak-inner-wrap {
+	margin-left: 115px;
+}
+
+.urtak-settings {
+	width: 418px;
+}
+
+.urtak-settings h2 {
+	padding-right: 0;
+}
+
+.urtak-settings h2 small {
+	float: right;
+	font-size: 13px;
+}
+
+.urtak-field {
+	background: #f8f8f8;
+	margin-bottom: 1px;
+	padding: 11px;
+}
+
+.urtak-field > *:first-child {
+	margin-top: 0;
+}
+
+.urtak-field > *:last-child {
+	margin-bottom: 0;
+}
+
+.urtak-checkbox {
+	display: block;
+	font-weight: 600;
+}
+
+.urtak-help {
+	margin-left: 18px;
+	margin-top: 0;
+}
+
+.urtak-help label {
+	/*display: block;*/
+}
+
+#urtak-video-container {
+	background: #f8f8f8;
+	padding: 11px;
+	width: 640px;
+}
+
+#urtak-video-container iframe {
+	display: block;
+}
+
+/** Insights **/
+
+#urtak-main-widget .meta-box-sortables, #urtak-other-widgets .meta-box-sortables {
+	margin: 0 8px;
+}
+#urtak-main-widget .postbox-container {
+	width: 100%;
+}
+
+#urtak-other-widgets .postbox-container {
+	width: 50%;
+}
+
+/** Bar Graphs **/
+.urtak-bar-graph {
+	float: left;
+	margin-bottom: 3em;
+	width: 100%;
+}
+
+.urtak-bar-graph-item {
+	border-bottom: 3px solid #ebebeb;
+	color: #00aef0;
+	float: left;
+	margin: 1em 0 0;
+	padding: 0 1%;
+	position: relative;
+	text-align: center;
+	width: 10.5%;
+}
+
+.urtak-bar-graph-many .urtak-bar-graph-item {
+	padding: 0 .5%;
+	width: 5.25%;
+}
+
+.urtak-bar-graph-item.urtak-yes {
+	color: #fe7101;
+}
+
+.urtak-bar-graph-item-value {
+	margin-top: -1.25em;
+}
+
+.urtak-bar-graph-item-container {
+	height: 200px;
+	position: relative;
+}
+
+.urtak-bar-graph-item-inner {
+	background: #00aef0;
+	min-height: 0px;
+	position: absolute;
+	bottom: 0;
+	left: 0;
+	right: 0;
+}
+
+.urtak-bar-graph-item-inner.urtak-yes {
+	background: #fe7101;
+}
+
+.urtak-bar-graph-item-identifier {
+	padding-top: .5em;
+	position: absolute;
+	left: 0;
+	right: 0;
+	top: 100%;
+}
+
+/** Stat Tables **/
+.urtak-responses-column, .urtak-questions-column, .urtak-users-column {
+	width: 125px;
 }
 
 /** Buttons **/

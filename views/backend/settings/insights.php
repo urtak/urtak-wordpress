@@ -1,1 +1,0 @@
-<p>Put the insight meta boxes here</p>

@@ -36,3 +36,7 @@ function urtak_the_embeddable_widget($args = array()) {
 function make_urtak_widget($args = array()) {
 	urtak_the_embeddable_widget($args);
 }
+
+// We do this so people can insert the action into their template
+// instead of a function_exists(...) { ... } construct
+add_action('make_urtak_widget', 'make_urtak_widget');
