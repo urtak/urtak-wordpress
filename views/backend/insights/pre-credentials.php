@@ -7,8 +7,8 @@
 						tempor incididunt ut labore et dolore magna aliqua.'); ?>
 		</p>
 		<p>
-			<a class="urtak-button" href="<?php esc_attr_e($signup_url); ?>"><?php _e('Sign Up'); ?></a>
-			<a class="urtak-button" href="<?php esc_attr_e($login_url); ?>"><?php _e('Login'); ?></a>
+			<a class="button button-primary" href="<?php esc_attr_e($signup_url); ?>"><?php _e('Sign Up'); ?></a>&nbsp;
+			<a class="button button-secondary" href="<?php esc_attr_e($login_url); ?>"><?php _e('Login'); ?></a>
 		</p>
 	</div>
 </form>

@@ -1,5 +1,16 @@
-<?php if(self::has_credentials()) { ?>
+<?php if(!self::has_credentials()) { ?>
+
+<?php $action = (isset($data['action']) && 'login' === $data['action']) ? 'login' : 'signup'; ?>
+
+<?php self::_print_login_form('login' === $action, $data); ?>
+
+<?php self::_print_signup_form('signup' === $action, $data); ?>
+
+<?php } ?>
+
 <form class="urtak-settings" method="post" action="<?php esc_url(add_query_arg(array())); ?>">
+
+<?php if(self::has_credentials()) { ?>
 
 	<h2><?php _e('Account'); ?></h2>
 
@@ -19,43 +30,8 @@
 
 	<h3><?php _e('This Site'); ?></h3>
 
-	<?php } else { $action = (isset($_GET['action']) && 'login' === $_GET['action']) ? 'login' : 'signup'; ?>
+<?php } ?>
 
-<form class="urtak-settings" method="post" 
-		action="<?php esc_url(add_query_arg(array())); ?>"
-		<?php if('login' === $action) { echo 'style="display: none;"'; } ?> 
-		id="urtak-signup-section">
-
-	<h2><?php _e('Account Sign Up'); ?> <small><a href="<?php esc_attr_e(self::_get_login_url()); ?>"><?php _e('or Login'); ?></a></small></h2>
-
-	<div class="urtak-field">
-		<input type="text" class="large-text" name="urtak-signup-email" value="<?php esc_attr_e(get_the_author_meta('email')); ?>" placeholder="<?php _e('Email'); ?>" />
-	
-		<p class="submit">
-			<?php wp_nonce_field('urtak-signup', 'urtak-signup-nonce'); ?>
-			<input class="button button-primary" type="submit" name="urtak-signup-submit" id="urtak-signup-submit" value="<?php _e('Sign Up'); ?>" />
-		</p>
-	</div>
-
-</form>
-
-<form class="urtak-settings" method="post" 
-		action="<?php esc_url(add_query_arg(array())); ?>" 
-		<?php if('signup' === $action) { echo 'style="display: none;"'; } ?>
-		id="urtak-login-section">
-
-	<h2><?php _e('Account Login'); ?> <small><a href="<?php esc_attr_e(self::_get_signup_url()); ?>"><?php _e('or Sign Up'); ?></a></small></h2>
-
-	<p class="submit">
-		<?php wp_nonce_field('urtak-signup', 'urtak-signup-nonce'); ?>
-		<input class="button button-primary" type="submit" name="urtak-signup-submit" id="urtak-signup-submit" value="<?php _e('Sign Up'); ?>" />
-	</p>
-
-</form>
-
-<form class="urtak-settings" method="post" action="<?php esc_url(add_query_arg(array())); ?>">
-
-	<?php } ?>
 
 	<h2><?php _e('Settings'); ?></h2>
 
