@@ -15,7 +15,8 @@ div.urtak-error {
 }
 
 div.urtak-error p {
-	background: transparent url(img/urtak-logo-20.png) no-repeat right center
+	background: transparent url(img/urtak-logo-20.png) no-repeat left center;
+	padding-left: 27px;
 }
 
 /** Settings Page **/

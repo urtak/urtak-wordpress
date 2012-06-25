@@ -29,7 +29,7 @@
 	<h2><?php _e('Account Sign Up'); ?> <small><a href="<?php esc_attr_e(self::_get_login_url()); ?>"><?php _e('or Login'); ?></a></small></h2>
 
 	<div class="urtak-field">
-		<input type="text" class="large-text" name="urtak-signup-email" value="<?php esc_attr_e(get_option(get_the_author_meta('email'))); ?>" placeholder="<?php _e('Email'); ?>" />
+		<input type="text" class="large-text" name="urtak-signup-email" value="<?php esc_attr_e(get_the_author_meta('email')); ?>" placeholder="<?php _e('Email'); ?>" />
 	
 		<p class="submit">
 			<?php wp_nonce_field('urtak-signup', 'urtak-signup-nonce'); ?>
