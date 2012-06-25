@@ -1,5 +1,7 @@
-<ul>
-	<li><a href="#">10th Grade Congress</a> - <a href="#"><?php _e('Edit'); ?></a></li>
-	<li><a href="#">Cab Fare Increase</a> - <a href="#"><?php _e('Edit'); ?></a></li>
-	<li><a href="#">Dogs and Cats</a> - <a href="#"><?php _e('Edit'); ?></a></li>
+<?php if($posts->have_posts()) { ?>
+<ul id="urtak-posts-without-urtaks-list">
+	<?php while($posts->have_posts()) { $posts->the_post(); ?>
+	<li><a href="<?php the_permalink(); ?>"><?php the_title(); ?></a> - <?php edit_post_link(__('Edit')); ?></li>
+	<?php } ?>
 </ul>
+<?php }

@@ -16,8 +16,8 @@ if(!class_exists('UrtakPlugin')) {
 		const VERSION = '2.0.0-RC1';
 
 		//// KEYS
-		const POST_META_KEY = '_urtak_post_meta';
 		const SETTINGS_KEY = '_urtak_settings';
+		const URTAK_ID_KEY = '_urtak_id';
 
 		//// SLUGS
 		const TOP_LEVEL_PAGE_SLUG = 'urtak';
@@ -110,7 +110,13 @@ if(!class_exists('UrtakPlugin')) {
 			add_meta_box('urtak-at-a-glance', __('At a Glance'), array(__CLASS__, 'display_meta_box__at_a_glance'), 'urtak', 'top');
 			add_meta_box('urtak-top-urtaks', __('Top Urtaks'), array(__CLASS__, 'display_meta_box__top_urtaks'), 'urtak', 'left');
 			add_meta_box('urtak-user-stats', __('User Stats'), array(__CLASS__, 'display_meta_box__user_stats'), 'urtak', 'left');
-			add_meta_box('urtak-posts-without-urtaks', __('Posts without Urtaks'), array(__CLASS__, 'display_meta_box__posts_without_urtaks'), 'urtak', 'left');
+
+			$posts_without_urtaks = self::get_nonassociated_post_ids();
+			if(!empty($posts_without_urtaks)) {
+				add_meta_box('urtak-posts-without-urtaks', __('Posts without Urtaks'), array(__CLASS__, 'display_meta_box__posts_without_urtaks'), 'urtak', 'left');
+			}
+			
+
 			add_meta_box('urtak-top-questions', __('Top Questions'), array(__CLASS__, 'display_meta_box__top_questions'), 'urtak', 'right');
 		}
 
@@ -160,19 +166,12 @@ if(!class_exists('UrtakPlugin')) {
 			return array_merge($new_links, $links);
 		}
 
-		public static function disable_comments__remove_from_dashboard() {
-			if(self::comments_are_disabled()) {
-				// remove_meta_box('dashboard_recent_comments', null, 'high');
-				// remove_meta_box('dashboard_recent_comments', null, 'core');
-			}
-		}
-
 		/**
 		 * Big thank you to the Disable Comments plugin for these.
 		 */
 		public static function disable_comments() {
 			if(self::comments_are_disabled()) {
-				foreach(get_post_types( array( 'public' => true ), 'objects' ) as $post_type_key => $post_type_object) {
+				foreach(array('page', 'post') as $post_type_key) {
 					if( post_type_supports($post_type_key, 'comments') ) {
 						remove_post_type_support($post_type_key, 'comments');
 						remove_post_type_support($post_type_key, 'trackbacks');
@@ -194,6 +193,13 @@ if(!class_exists('UrtakPlugin')) {
 
 		public static function disable_comments__discussion_js() {
 			echo '<script> jQuery(document).ready(function($){ $("#dashboard_right_now .table_discussion").has(\'a[href="edit-comments.php"]\').first().hide(); }); </script>';
+		}
+
+		public static function disable_comments__edit_form_inputs() {
+			global $post;
+			if(in_array($post->post_type, array('page', 'post'))) {
+				echo '<input type="hidden" name="comment_status" value="' . $post->comment_status . '" /><input type="hidden" name="ping_status" value="' . $post->ping_status . '" />';
+			}
 		}
 
 		public static function disable_comments__hide_discussion_rightnow(){
@@ -228,6 +234,9 @@ if(!class_exists('UrtakPlugin')) {
 
 			if(!in_array($hook, self::$admin_page_hooks)) { return; }
 			wp_enqueue_script('urtak-backend', plugins_url('resources/backend/urtak.js', __FILE__), array('jquery'), self::VERSION);
+			wp_localize_script('urtak-backend', 'Urtak_Vars', array(
+				'see_all' => __('See all...')
+			));
 		}
 
 		public static function initialize_api_object() {
@@ -260,8 +269,7 @@ if(!class_exists('UrtakPlugin')) {
 				return;
 			}
 
-			$meta = apply_filters('urtak_pre_meta_save', $data['urtak']);
-			$meta = self::set_meta($post_id, $meta);
+			// Save associated Urtak
 		}
 
 		public static function show_credentials_notice() {
@@ -345,8 +353,6 @@ if(!class_exists('UrtakPlugin')) {
 		}
 
 		public static function display_meta_box($post) {
-			$meta = self::get_meta($post->ID);
-
 			include('views/backend/meta-boxes/meta-box.php');
 		}
 
@@ -390,6 +396,9 @@ if(!class_exists('UrtakPlugin')) {
 		}
 
 		public static function display_meta_box__posts_without_urtaks() {
+			$post_ids = self::get_nonassociated_post_ids();
+			$posts = new WP_Query(array('nopaging' => true, 'post__in' => $post_ids, 'post_type' => 'any', 'order' => 'ASC', 'orderby' => 'title'));
+
 			include('views/backend/insights/meta-boxes/posts-without-urtaks.php');
 		}
 
@@ -409,33 +418,36 @@ if(!class_exists('UrtakPlugin')) {
 
 		/// POST META
 
-		private static function get_meta($post_id) {
-			if(empty($post_id)) {
-				global $post;
-				$post_id = $post->ID;
-			}
+		private static function get_nonassociated_post_ids() {
+			global $wpdb;
 
-			$meta = wp_cache_get(self::POST_META_KEY, $post_id);
-
-			if(false === $meta) {
-				$meta = wp_parse_args((array)get_post_meta($post_id, self::POST_META_KEY, true), self::$default_meta);
-				wp_cache_set(self::POST_META_KEY, $meta, $post_id, time() + self::CACHE_PERIOD);
-			}
-
-			return $meta;
+			return $wpdb->get_col($wpdb->prepare("SELECT ID FROM {$wpdb->posts} WHERE ID NOT IN(SELECT DISTINCT post_id FROM {$wpdb->postmeta} WHERE meta_key = %s AND meta_value <> %s)", self::URTAK_ID_KEY, ''));
 		}
 
-		private static function set_meta($post_id, $meta) {
+		private static function get_urtak_id($post_id) {
 			if(empty($post_id)) {
-				global $post;
-				$post_id = $post->ID;
+				$post_id = get_the_ID();
 			}
 
-			$meta = wp_parse_args($meta, self::$default_meta);
-			update_post_meta($post_id, self::POST_META_KEY, $meta);
-			wp_cache_set(self::POST_META_KEY, $meta, $post_id, time() + self::CACHE_PERIOD);
+			$urtak_id = wp_cache_get(self::URTAK_ID_KEY, $post_id);
 
-			return $meta;
+			if(false === $meta) {
+				$urtak_id = get_post_meta($post_id, self::URTAK_ID_KEY, true);
+				wp_cache_set(self::URTAK_ID_KEY, $urtak_id, $post_id, time() + self::CACHE_PERIOD);
+			}
+
+			return $urtak_id;
+		}
+
+		private static function set_urtak_id($post_id, $urtak_id) {
+			if(empty($post_id)) {
+				$post_id = get_the_ID();
+			}
+
+			update_post_meta($post_id, self::URTAK_ID_KEY, $urtak_id);
+			wp_cache_set(self::POST_META_KEY, $urtak_id, $post_id, time() + self::CACHE_PERIOD);
+
+			return $urtak_id;
 		}
 
 		/// SETTINGS
