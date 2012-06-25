@@ -62,6 +62,7 @@ if(!class_exists('UrtakPlugin')) {
 		private static function add_filters() {
 			add_filter('manage_edit-post_columns', array(__CLASS__, 'add_posts_columns'));
 			add_filter('plugin_action_links_' . plugin_basename(__FILE__), array(__CLASS__, 'add_plugin_links'));
+			add_filter('urtak_pre_settings_save', array(__CLASS__, 'sanitize_and_validate_settings'));
 		}
 
 		private static function initialize_defaults() {
@@ -263,6 +264,27 @@ if(!class_exists('UrtakPlugin')) {
 			} 
 		}
 
+		public static function sanitize_and_validate_settings($settings) {
+			if(!empty($settings['credentials']['api-key']) && !empty($settings['credentials']['email']) && empty($settings['publication-key'])) {
+				// We need to either create a publication or fetch an existing one for this domain
+				$urtak_api = new WordPressUrtak(array('api_key' => $settings['credentials']['api-key'], 'email' => $settings['credentials']['email']));
+				$publications_response = $urtak_api->get_publications(array());
+			}
+
+			$settings['placement'] = 'manual' === $settings['placement'] ? 'manual' : 'append';
+
+			$settings['homepage'] = pd_yes_no($settings['homepage']);
+			$settings['user-start'] = pd_yes_no($settings['user-start']);
+
+			$settings['moderation'] = 'publisher' === $settings['moderation'] ? 'publisher' : 'community';
+			
+			$settings['language'] = 'es' === $settings['language'] ? 'es' : 'en';
+
+			$settings['disable-comments'] = pd_yes_no($settings['disable-comments']);
+
+			return $settings;
+		}
+
 		public static function save_post_meta($post_id, $post) {
 			$data = stripslashes_deep($_POST);
 			if(wp_is_post_autosave($post_id) || wp_is_post_revision($post_id) || !wp_verify_nonce($data['save-urtak-meta-nonce'], 'save-urtak-meta')) {
@@ -397,7 +419,7 @@ if(!class_exists('UrtakPlugin')) {
 
 		public static function display_meta_box__posts_without_urtaks() {
 			$post_ids = self::get_nonassociated_post_ids();
-			$posts = new WP_Query(array('nopaging' => true, 'post__in' => $post_ids, 'post_type' => 'any', 'order' => 'ASC', 'orderby' => 'title'));
+			$posts = new WP_Query(array('nopaging' => true, 'post__in' => $post_ids, 'post_type' => array('page', 'post'), 'order' => 'ASC', 'orderby' => 'title'));
 
 			include('views/backend/insights/meta-boxes/posts-without-urtaks.php');
 		}
@@ -421,7 +443,7 @@ if(!class_exists('UrtakPlugin')) {
 		private static function get_nonassociated_post_ids() {
 			global $wpdb;
 
-			return $wpdb->get_col($wpdb->prepare("SELECT ID FROM {$wpdb->posts} WHERE ID NOT IN(SELECT DISTINCT post_id FROM {$wpdb->postmeta} WHERE meta_key = %s AND meta_value <> %s)", self::URTAK_ID_KEY, ''));
+			return $wpdb->get_col($wpdb->prepare("SELECT ID FROM {$wpdb->posts} WHERE post_type IN ('page', 'post') AND ID NOT IN(SELECT DISTINCT post_id FROM {$wpdb->postmeta} WHERE meta_key = %s AND meta_value <> %s)", self::URTAK_ID_KEY, ''));
 		}
 
 		private static function get_urtak_id($post_id) {
@@ -466,7 +488,7 @@ if(!class_exists('UrtakPlugin')) {
 
 		private static function set_settings($settings) {
 			if(is_array($settings)) {
-				$settings = wp_parse_args($settings, self::$default_settings);
+				$settings = apply_filters('urtak_pre_settings_save', wp_parse_args($settings, self::$default_settings));
 				update_option(self::SETTINGS_KEY, $settings);
 				wp_cache_set(self::SETTINGS_KEY, $settings, null, time() + self::CACHE_PERIOD);
 			}
@@ -527,6 +549,8 @@ if(!class_exists('UrtakPlugin')) {
 
 		/// UTILITY
 
+		//// LINKS
+
 		private static function _get_insights_url() {
 			return add_query_arg(array('page' => self::SUB_LEVEL_INSIGHTS_SLUG), admin_url('admin.php'));
 		}
@@ -554,6 +578,8 @@ if(!class_exists('UrtakPlugin')) {
 		private static function _print_signup_form($show, $data) {
 			include('views/backend/misc/form-signup.php');
 		}
+
+		//// PROCESSING DELEGATES
 
 		private static function _process_login($email, $password) {
 			if(empty($email)) {
@@ -586,6 +612,7 @@ if(!class_exists('UrtakPlugin')) {
 		private static function _process_logout() {
 			$settings = self::get_settings();
 			$settings['credentials'] = array();
+			$settings['publication-key'] = '';
 			$settings = self::set_settings($settings);
 
 			add_settings_error('general', 'settings_updated', __('Your credentials were successfully cleared.'), 'updated');
@@ -596,7 +623,6 @@ if(!class_exists('UrtakPlugin')) {
 		}
 
 		private static function _process_settings_save($settings) {
-			$settings = apply_filters('urtak_pre_settings_save', $settings);
 			$settings = self::set_settings($settings);
 
 			add_settings_error('general', 'settings_updated', __('Settings saved.'), 'updated');

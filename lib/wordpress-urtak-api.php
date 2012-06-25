@@ -16,6 +16,8 @@ if(!class_exists('WordPressUrtak') && class_exists('Urtak')) {
 
 			if('GET' === $method) {
 				$url = add_query_arg($signed_data, $url);
+
+				error_log($url);
 			} else if('POST' === $method || 'PUT' === $method) {
 				$json = json_encode($signed_data);
 

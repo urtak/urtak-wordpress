@@ -32,7 +32,6 @@
 
 <?php } ?>
 
-
 	<h2><?php _e('Settings'); ?></h2>
 
 	<h3><?php _e('Placement'); ?></h3>
