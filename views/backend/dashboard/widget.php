@@ -7,7 +7,7 @@
 			<div class="urtak-bar-graph-item-inner <?php echo $urtak_yes; ?>" style="<?php printf('height: %dpx;', $scaled); ?>">
 				<div class="urtak-bar-graph-item-value"><strong><?php esc_html_e(number_format_i18n($date['responses'], 0)); ?></strong></div>
 			</div>
-			<div class="urtak-bar-graph-item-identifier"><?php esc_html_e($date['date']); ?></div>
+			<div class="urtak-bar-graph-item-identifier"><?php echo ($date['date']); ?></div>
 		</div>
 	</div>
 	<?php } ?>

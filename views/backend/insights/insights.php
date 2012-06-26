@@ -6,11 +6,17 @@
 <div class="clear"></div>
 
 <div id="urtak-other-widgets" class="metabox-holder columns-2">
-	<div id="postbox-container-1" class="postbox-container">
-		<?php do_meta_boxes('urtak', 'left', ''); ?>
-	</div>
 	<div class="postbox-container">
 		<?php do_meta_boxes('urtak', 'right', ''); ?>
+	</div>
+	<div class="postbox-container">
+		<div class="meta-box-sortables">
+			<?php self::display_meta_box__top_urtaks() ?>
+
+			<?php self::display_meta_box__stats(); ?>
+		</div>
+
+		<?php do_meta_boxes('urtak', 'left', ''); ?>
 	</div>
 </div>
 <div class"clear"></div>

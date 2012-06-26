@@ -16,7 +16,7 @@
 
 	<?php foreach($settings['credentials'] as $credential_key => $credential_value) { ?>
 	<input type="hidden" name="urtak[credentials][<?php esc_attr_e($credential_key); ?>]" 
-			id="urtak-credentials-<?php esc_attr_e($credential_key); ?>" 
+			id="urtak-credentials-<?php esc_attr_e($credential_key); ?>-hidden" 
 			value="<?php esc_attr_e($credential_value); ?>" />
 	
 	<?php } ?>
@@ -29,6 +29,27 @@
 	</div>
 
 	<h3><?php _e('This Site'); ?></h3>
+
+	<div class="urtak-field">
+		<p><?php _e('Lorem ipsum dolor sit amet, consectutor.'); ?></p>
+		<select name="urtak[credentials][publication-key]" id="urtak-credentials-publication-key">
+			<?php foreach($publications as $publication) { ?>
+			<option data-domains="<?php esc_attr_e(implode(', ', (isset($publication['domains']['url']) ? (array)$publication['domains']['url'] : array()))); ?>" <?php selected($settings['credentials']['publication-key'], $publication['key']); ?> value="<?php esc_attr_e($publication['key']); ?>"><?php esc_html_e($publication['name']); ?></option>
+			<?php } ?>
+			<option data-domains="<?php esc_attr_e(parse_url(home_url('/'), PHP_URL_HOST)); ?>" value="-1"><?php _e('Create a new site...'); ?></option>
+		</select>
+
+		<div id="urtak-new-site-dependencies">
+			<p><?php _e('What do you want to name this site?'); ?></p>
+			<input type="text" class="large-text" name="urtak[publication][name]" value="<?php _e(''); ?>" placeholder="<?php _e('Site Name'); ?>" />
+		</div>
+
+		<p><?php _e('Domains this Urtak Site will run on.'); ?></p>
+		<input type="text" class="large-text code" name="urtak[publication][domains]" id="urtak-publication-domains" value="<?php ?>" />
+
+		<p id="urtak-publication-key-display-container"><?php _e('Site Key: <span id="urtak-publication-key-display"></span>'); ?></p>
+	</div>
+	<input type="hidden" name="urtak[publication][publication-data]" value="<?php esc_attr_e(json_encode($publications)); ?>" />
 
 <?php } ?>
 

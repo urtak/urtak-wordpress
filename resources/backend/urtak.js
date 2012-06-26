@@ -25,4 +25,35 @@ jQuery(document).ready(function($) {
 			$more.hide();
 		});
 	}
+
+	$('#urtak-credentials-publication-key').change(function(event) {
+		var $this = $(this)
+		, $dependencies = $('#urtak-new-site-dependencies')
+		, $domains = $('#urtak-publication-domains')
+		, $site_key_container = $('#urtak-publication-key-display-container')
+		, $site_key = $('#urtak-publication-key-display');
+
+		$domains.val($this.find('option:selected').attr('data-domains'));
+		if(-1 == $this.val()) {
+			$dependencies.show();
+			$site_key_container.hide();
+		} else {
+			$dependencies.hide();
+			$site_key_container.show();
+			$site_key.text($this.val());
+		}
+	}).change();
+
+	$('.urtak-tabbed-control a').click(function(event) {
+		event.preventDefault();
+		
+		var $this = $(this)
+		, $control = $this.parents('ul')
+		, $item = $this.parents('li');
+
+		$control.find('li.active').removeClass('active');
+		$item.addClass('active');
+
+		$('[data-tabbed-depend-on="' + $control.attr('id') + '"]').hide().filter($this.attr('href')).show();
+	}).parent().filter(':first-child').find('a').click();
 });

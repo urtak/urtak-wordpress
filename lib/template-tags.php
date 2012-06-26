@@ -9,7 +9,7 @@
  * @see Urtak::get_embeddable_widget
  */
 function urtak_get_embeddable_widget($args = array()) {
-	return apply_filters('urtak_get_embeddable_widget', Urtak::get_embeddable_widget($args), $args);
+	return apply_filters('urtak_get_embeddable_widget', UrtakPlugin::get_embeddable_widget($args), $args);
 }
 
 /**

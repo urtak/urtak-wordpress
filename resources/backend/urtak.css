@@ -40,16 +40,37 @@ div.urtak-error p {
 	vertical-align: middle;
 }
 
+.urtak-logged-in a {
+	text-decoration: none;
+}
+
 .urtak-api-key {
 	color: #aaaaaa;
 }
 
 .urtak-inner-wrap {
-	margin-left: 115px;
+	margin: 0 38px;
+}
+
+.urtak-inner-wrap-settings {
+	margin: 0 46px;
+}
+
+.urtak-inner-wrap .handlediv {
+	display: none !important;
+}
+
+.urtak-inner-wrap .meta-box-sortables > .widefat {
+	margin: 0 0 20px;
+}
+
+.urtak-inner-wrap .meta-box-sortables > .widefat td {
+	padding-top: 10px;
+	padding-bottom: 6px;
 }
 
 .urtak-settings {
-	width: 418px;
+	width: 488px;
 }
 
 .urtak-settings h2 {
@@ -63,6 +84,7 @@ div.urtak-error p {
 
 .urtak-field {
 	background: #f8f8f8;
+	border-radius: 3px;
 	margin-bottom: 1px;
 	padding: 11px;
 }
@@ -112,6 +134,62 @@ div.urtak-error p {
 	width: 50%;
 }
 
+#urtak-posts-without-urtaks-list {
+	-moz-column-count: 2;
+	-moz-column-gap: 20px;
+	-webkit-column-count: 2;
+	-webkit-column-gap: 20px;
+	column-count: 2;
+	column-gap: 20px;
+}
+
+#urtak-at-a-glance .hndle, #urtak-top-questions .hndle {
+	border-bottom: 0;
+	-moz-box-shadow: none;
+	-webkit-box-shadow: none;
+	box-shadow: none;
+}
+
+.urtak-tabbed-control {
+	background: #ececec;
+	border-bottom: 1px solid #dfdfdf;
+	height: 29px;
+	margin-left: -20px;
+	padding: 5px 0 0;
+	position: relative;
+	right: -10px;
+	top: -12px;
+}
+
+.urtak-tabbed-control li {
+	display: inline-block;
+	margin: 0 0 0 10px;
+}
+
+.urtak-tabbed-control li a {
+	background: #efefef;
+	border: 1px solid #dfdfdf;
+	-webkit-border-top-left-radius: 3px;
+	-webkit-border-top-right-radius: 3px;
+	-moz-border-radius-topleft: 3px;
+	-moz-border-radius-topright: 3px;
+	border-top-left-radius: 3px;
+	border-top-right-radius: 3px;	
+	color: #000000;
+	display: block;
+	font-weight: bold;
+	height: 12px;
+	line-height: 1;
+	padding: 8px;
+	text-decoration: none;
+	z-index: 1000;
+}
+
+.urtak-tabbed-control li.active a {
+	background: #f8f8f8;
+	border-bottom-color: #f8f8f8;
+}
+
 /** Bar Graphs **/
 .urtak-bar-graph {
 	float: left;
@@ -120,7 +198,7 @@ div.urtak-error p {
 }
 
 .urtak-bar-graph-item {
-	border-bottom: 3px solid #ebebeb;
+	border-bottom: 1px solid #666666;
 	color: #00aef0;
 	float: left;
 	margin: 1em 0 0;
@@ -162,6 +240,7 @@ div.urtak-error p {
 }
 
 .urtak-bar-graph-item-identifier {
+	color: #555555;
 	padding-top: .5em;
 	position: absolute;
 	left: 0;
@@ -170,48 +249,7 @@ div.urtak-error p {
 }
 
 /** Stat Tables **/
-.urtak-responses-column, .urtak-questions-column, .urtak-users-column {
-	width: 125px;
+.urtak-responses-column, .urtak-questions-column, .urtak-users-column, .urtak-stats-column {
+	max-width: 90px !important;
+	width: 90px !important;
 }
-
-/** Buttons **/
-
-/*.urtak-button {
-	background-color: #33BEF3;
-	background-image: 0;
-	-webkit-border-radius: 3px;
-	-moz-border-radius: 3px;
-	border-radius: 3px;
-	box-sizing: content-box;
-	box-shadow: rgba(255, 255, 255, 0.398438) 0 1px 0 0 inset, rgba(0, 0, 0, 0.296875) 0 1px 2px 0;
-	color: #0076A3;
-	cursor: pointer;
-	display: inline-block;
-	font-family: 'Droid Sans', Helvetica, Arial, sans-serif;
-	font-size: 12px;
-	letter-spacing: normal;
-	line-height: normal;
-	margin: 0 10px;
-	outline-color: #0076A3;
-	outline-style: none;
-	outline-width: 0;
-	padding: 4px 25px;
-	position: relative;
-	text-align: center;
-	text-decoration: none;
-	text-indent: 0;
-	text-shadow: rgba(255, 255, 255, 0.496094) 0 1px 1px;
-	text-transform: none;
-	vertical-align: baseline;
-	white-space: pre;
-	word-spacing: 0;
-	border-color: #0076A3;
-	border-style: solid;
-	border-width: 1px;
-}
-
-.urtak-button:hover, .urtak-button:active {
-	border-color: #004159;
-	color: #004159;
-	outline-color: #004159;
-}*/

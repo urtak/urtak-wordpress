@@ -1,7 +1,7 @@
 <table class="widefat">
 	<thead>
 		<tr valign="top">
-			<th scope="col"><?php _e('Urtak'); ?></th>
+			<th scope="col"><?php _e('Top Urtak'); ?></th>
 			<th scope="col"><?php _e('Responses'); ?></th>
 			<th scope="col"><?php _e('Questions'); ?></th>
 			<th scope="col"><?php _e('Users'); ?></th>
