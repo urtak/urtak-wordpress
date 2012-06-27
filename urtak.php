@@ -262,11 +262,14 @@ if(!class_exists('UrtakPlugin')) {
 
 			if(!in_array($hook, self::$admin_page_hooks)) { return; }
 			wp_enqueue_style('urtak-font', 'http://fonts.googleapis.com/css?family=Droid+Sans:400,700');
+
 			wp_enqueue_script('jquery-flot', plugins_url('resources/backend/flot/jquery.flot.min.js', __FILE__), 'jquery', '0.7');
 			wp_enqueue_script('urtak-backend', plugins_url('resources/backend/urtak.js', __FILE__), array('jquery', 'postbox'), self::VERSION);
 			wp_localize_script('urtak-backend', 'Urtak_Vars', array(
 				'see_all' => __('See all...')
 			));
+
+			add_action('admin_print_footer_scripts', array(__CLASS__, 'print_excanvas_script'));
 		}
 
 		public static function initialize_api_object() {
@@ -277,6 +280,11 @@ if(!class_exists('UrtakPlugin')) {
 					'publication_key' => self::get_credentials('publication-key')
 				)
 			);
+		}
+
+		public static function print_excanvas_script() {
+			$excanvas = plugins_url('resources/backend/flot/excanvas.min.js', __FILE__);
+			include('views/backend/misc/excanvas.php');
 		}
 
 		public static function process_settings_actions() {
@@ -519,24 +527,19 @@ if(!class_exists('UrtakPlugin')) {
 
 		public static function display_meta_box__insights($ajax = false) {
 			if($ajax) {
-				$maximum_responses = 0;
 
-				$dates = array();
+				$days = array();
 				for($i = -15; $i <= 0; $i++) {
 					$responses = rand(100, 2000);
 					$yes = rand(0, $responses);
 					$no = $responses - $yes;
 
-					$dates[] = $item = array(
+					$days[] = array(
 						'responses' => $responses,
 						'yes' => $yes,
 						'no' => $no,
 						'date' => date('D,<b\r />M j', strtotime("Today {$i} Days"))
 					);
-
-					if($item['responses'] > $maximum_responses) {
-						$maximum_responses = $item['responses'];
-					}
 				}
 				
 				include('views/backend/insights/meta-boxes/at-a-glance.php');

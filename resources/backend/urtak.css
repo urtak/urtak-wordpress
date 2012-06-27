@@ -216,6 +216,11 @@ div.urtak-error p {
 	box-shadow: none;
 }
 
+.urtak-at-a-glance-chart-placeholder {
+	height: 300px;
+	margin: 0 25px;
+}
+
 .urtak-tabbed-control {
 	background: #ececec;
 	border-bottom: 1px solid #dfdfdf;
