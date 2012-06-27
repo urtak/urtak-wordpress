@@ -27,6 +27,8 @@ div.urtak-error p {
 
 .urtak-wrap div.updated {
 	margin-bottom: 0;
+	margin-left: 46px;
+	width: 472px;
 }
 
 .urtak-wrap-title {
@@ -112,7 +114,7 @@ div.urtak-error p {
 	font-size: 13px;
 	font-weight: 400;
 	margin-bottom: 1px;
-	padding: 11px;
+	padding: 21px;
 }
 
 .urtak-field > *:first-child {
@@ -120,7 +122,13 @@ div.urtak-error p {
 }
 
 .urtak-field > *:last-child {
-	margin-bottom: 0;
+	margin-bottom: 0 !important;
+}
+
+.urtak-field input.text, .urtak-field select {
+	display: block;
+	margin-bottom: 16px;
+	width: 99%;
 }
 
 #urtak-field-logout {
@@ -133,14 +141,22 @@ div.urtak-error p {
 	text-decoration: underline;
 }
 
+.urtak-checkbox-container {
+	margin-bottom: 10px;
+}
+
 .urtak-checkbox {
+	color: #666666;
 	display: block;
-	font-weight: 600;
 }
 
 .urtak-help {
-	margin-left: 18px;
-	margin-top: 0;
+	color: #999999;
+	margin: 0 0 5px 18px;
+}
+
+.urtak-help-nomargin {
+	margin-left: 0;
 }
 
 .urtak-help label {
