@@ -324,3 +324,36 @@ div.urtak-error p {
 	max-width: 90px !important;
 	width: 90px !important;
 }
+
+/** Cards **/
+
+.urtak-card {
+	background: #ffffff;
+	border-radius: 3px;
+	box-shadow: 0 1px 20px 0 rgba(0, 0, 0, .2);
+	color: #333333;
+	font-family: 'Droid Sans', sans-serif;
+	min-height: 80px;
+	margin: 0 auto 30px;
+	max-width: 420px;
+	padding: 10px;
+	position: relative;
+}
+
+.urtak-card-info {
+	margin-right: 70px;
+}
+
+.urtak-card-plot {
+	float: right;
+	height: 60px;
+	width: 60px;
+}
+
+.urtak-card-info-asker {
+	color: #999999;
+	font-size: 9px;
+	position: absolute;
+	bottom: 10px;
+	left: 10px;
+}

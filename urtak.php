@@ -890,6 +890,20 @@ if(!class_exists('UrtakPlugin')) {
 			return add_query_arg(array('action' => 'signup'), self::_get_settings_url());
 		}
 
+		private static function _get_card($question, $controls = false) {
+			ob_start();
+			include('views/backend/misc/card.php');
+			return ob_get_clean();
+		}
+
+		private static function _get_pie_image($percent) {
+			return sprintf('<img src="%s" alt="%1$d%% %s" />', self::_get_pie_url($percent), $percent, __('No'));
+		}
+
+		private static function _get_pie_url($percent) {
+			return plugins_url(sprintf('resources/backend/img/assets/pie/pie60-%02d.png', $percent), __FILE__);
+		}
+
 		private static function _print_login_form($show, $data) {
 			include('views/backend/misc/form-login.php');
 		}
