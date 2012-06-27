@@ -26,8 +26,10 @@ div.urtak-error p {
 }
 
 .urtak-wrap div.updated {
+	bottom: -25px;
 	margin-bottom: 0;
 	margin-left: 46px;
+	position: relative;
 	width: 472px;
 }
 
@@ -131,10 +133,13 @@ div.urtak-error p {
 	width: 99%;
 }
 
-#urtak-field-logout {
+.urtak-credentals-field a {
 	color: #2f759b;
-	float: right;
 	text-decoration: none;
+}
+
+#urtak-field-logout {
+	float: right;
 }
 
 #urtak-field-logout:hover {
@@ -325,8 +330,12 @@ div.urtak-error p {
 	width: 90px !important;
 }
 
-/** Cards **/
+/** Edit List **/
+.urtak-pending-count {
+	color: #dc4d10;
+}
 
+/** Cards **/
 .urtak-card {
 	background: #ffffff;
 	border-radius: 3px;
@@ -338,6 +347,10 @@ div.urtak-error p {
 	max-width: 420px;
 	padding: 10px;
 	position: relative;
+}
+
+.urtak-card-with-controls {
+	min-height: 90px;
 }
 
 .urtak-card-info {
@@ -353,7 +366,66 @@ div.urtak-error p {
 .urtak-card-info-asker {
 	color: #999999;
 	font-size: 9px;
+	padding: 10px;
+}
+
+.urtak-card-controls-container {
 	position: absolute;
-	bottom: 10px;
-	left: 10px;
+	bottom: 0;
+	left: 0;
+	right: 0;
+}
+
+.urtak-card-controls {
+	background: #f8f8f8;
+	padding: 5px 10px 3px;
+}
+
+.urtak-card-controls-icon {
+	background: transparent url(img/assets/status-approved-off.png) no-repeat center center;
+	display: block;
+	height: 22px;
+	float: right;
+	margin-left: 10px;
+	width: 22px;
+}
+
+.urtak-card-controls-icon-approved {
+	background-image: url(img/assets/status-approved-off.png);
+}
+.urtak-card-controls-icon-approved.active {
+	background-image: url(img/assets/status-approved-on.png);
+}
+.urtak-card-controls-icon-approved:hover {
+	background-image: url(img/assets/status-approved-hover.png);
+}
+
+.urtak-card-controls-icon-reject {
+	background-image: url(img/assets/status-rejected-off.png);
+}
+.urtak-card-controls-icon-reject.active {
+	background-image: url(img/assets/status-rejected-on.png);
+}
+.urtak-card-controls-icon-reject:hover {
+	background-image: url(img/assets/status-rejected-hover.png);
+}
+
+.urtak-card-controls-icon-archive {
+	background-image: url(img/assets/status-archived-off.png);
+}
+.urtak-card-controls-icon-archive.active {
+	background-image: url(img/assets/status-archived-on.png);
+}
+.urtak-card-controls-icon-archive:hover {
+	background-image: url(img/assets/status-archived-hover.png);
+}
+
+.urtak-card-controls-icon-pending {
+	background-image: url(img/assets/status-pending-off.png);
+}
+.urtak-card-controls-icon-pending.active {
+	background-image: url(img/assets/status-pending-on.png);
+}
+.urtak-card-controls-icon-pending:hover {
+	background-image: url(img/assets/status-pending-hover.png);
 }

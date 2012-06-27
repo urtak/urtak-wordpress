@@ -12,15 +12,21 @@
 </div>
 
 <div id="urtak-divided-questions" data-tabbed-depend-on="urtak-questions-tabbed-control">
-	Most Divided Data
+	<?php for($i = 0; $i < 5; $i++) { ?>
+		<?php echo self::_get_card(array('question' => '')); ?>
+	<?php } ?>
 </div>
 
 <div id="urtak-cared-questions" data-tabbed-depend-on="urtak-questions-tabbed-control">
-	Most Cared Data
+	<?php for($i = 0; $i < 5; $i++) { ?>
+		<?php echo self::_get_card(array('question' => '')); ?>
+	<?php } ?>
 </div>
 
 <div id="urtak-agreed-questions" data-tabbed-depend-on="urtak-questions-tabbed-control">
-	Most Agreed Data
+	<?php for($i = 0; $i < 5; $i++) { ?>
+		<?php echo self::_get_card(array('question' => '')); ?>
+	<?php } ?>
 </div>	
 
 

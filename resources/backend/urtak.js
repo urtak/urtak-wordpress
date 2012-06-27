@@ -69,5 +69,11 @@ jQuery(document).ready(function($) {
 			'html'
 		);
 	});
+
+	$('.urtak-card-controls-icon').live('click', function(event) {
+		event.preventDefault();
+
+		$(this).addClass('active').siblings('a').removeClass('active');
+	});
 });
 

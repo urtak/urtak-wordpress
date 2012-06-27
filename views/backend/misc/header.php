@@ -12,7 +12,7 @@
 		
 		<small class="urtak-logged-in">
 			<?php if($has_credentials) { ?>
-			<?php printf(__('Logged in as %1$s'), self::get_credentials('email')); ?>
+			<?php printf(__('Logged in as <a href="https://urtak.com/account/edit" target="_blank">%1$s</a>'), self::get_credentials('email')); ?>
 			&nbsp;| &nbsp;
 			<?php } ?>
 			<a target="_blank" href="http://blog.urtak.com/"><?php _e('Blog'); ?></a>

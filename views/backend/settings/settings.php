@@ -22,8 +22,10 @@
 	<?php } ?>
 
 	<div class="urtak-field">
+		<p class="urtak-credentals-field">
+			<?php printf(__('Logged in as <a href="https://urtak.com/account/edit" target="_blank">%1$s</a>'), self::get_credentials('email')); ?> <a id="urtak-field-logout" href="<?php esc_attr_e(self::_get_logout_url()); ?>"><?php _e('Log out'); ?></a>
+		</p>
 		<p>
-			<?php printf('Logged in as %1$s', self::get_credentials('email')); ?> <a id="urtak-field-logout" href="<?php esc_attr_e(self::_get_logout_url()); ?>"><?php _e('Log out'); ?></a><br />
 			<span class="urtak-api-key"><?php printf('API Key: %1$s', self::get_credentials('api-key')); ?></span>
 		</p>
 	</div>
