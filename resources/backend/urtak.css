@@ -142,7 +142,7 @@ div.urtak-error p {
 }
 
 .urtak-checkbox-container {
-	margin-bottom: 10px;
+	margin-bottom: 20px;
 }
 
 .urtak-checkbox {
@@ -150,9 +150,13 @@ div.urtak-error p {
 	display: block;
 }
 
+.urtak-checkbox input {
+	margin-right: 5px;
+}
+
 .urtak-help {
 	color: #999999;
-	margin: 0 0 5px 18px;
+	margin: 0 0 5px 23px;
 }
 
 .urtak-help-nomargin {
@@ -174,6 +178,16 @@ div.urtak-error p {
 }
 
 /** Insights **/
+
+.urtak-ajax-loader {
+	padding: 10px;
+	text-align: center;
+}
+
+.urtak-ajax-loader img {
+	padding-right: 5px;
+	vertical-align: middle;
+}
 
 #urtak-main-widget .meta-box-sortables, #urtak-other-widgets .meta-box-sortables {
 	margin: 0 8px;

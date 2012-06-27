@@ -1,9 +1,9 @@
 <?php
 /*
  Plugin Name: Urtak
- Plugin URI: http://urtak.com
+ Plugin URI: http://urtak.com/wordpress/
  Description: Urtak is collaborative polling - everyone can ask questions. It's easy to engage a great number of people in a structured conversation that produces thousands of responses.
- Version: 2.0.0-RC1
+ Version: 1.0.0-RC1
  Author: Urtak, Inc.
  Author URI: http://urtak.com
  */
@@ -13,7 +13,7 @@ if(!class_exists('UrtakPlugin')) {
 		/// CONSTANTS
 
 		//// VERSION
-		const VERSION = '2.0.0-RC1';
+		const VERSION = '1.0.0-RC1';
 
 		//// KEYS
 		const SETTINGS_KEY = '_urtak_settings';
@@ -28,7 +28,7 @@ if(!class_exists('UrtakPlugin')) {
 		const CACHE_PERIOD = 86400; // 24 HOURS
 
 		/// DATA STORAGE
-		private static $admin_page_hooks = array();
+		private static $admin_page_hooks = array('index.php');
 		private static $default_meta = array();
 		private static $default_settings = array();
 		private static $urtak_api = null;
@@ -57,6 +57,13 @@ if(!class_exists('UrtakPlugin')) {
 			/// DISABLE COMMENTS CALLBACKS
 			add_action('widgets_init', array(__CLASS__, 'disable_comments__remove_widget'));
 			add_action('wp_loaded', array(__CLASS__, 'disable_comments'));	
+
+			add_action('wp_ajax_urtak_display_meta_box__dashboard', array(__CLASS__, 'ajax_display_meta_box'));
+			add_action('wp_ajax_urtak_display_meta_box__insights', array(__CLASS__, 'ajax_display_meta_box'));
+			add_action('wp_ajax_urtak_display_meta_box__questions', array(__CLASS__, 'ajax_display_meta_box'));
+			add_action('wp_ajax_urtak_display_meta_box__top_urtaks', array(__CLASS__, 'ajax_display_meta_box'));
+			add_action('wp_ajax_urtak_display_meta_box__stats', array(__CLASS__, 'ajax_display_meta_box'));
+			add_action('wp_ajax_urtak_display_meta_box__posts_without_urtaks', array(__CLASS__, 'ajax_display_meta_box'));
 		}
 
 		private static function add_filters() {
@@ -87,6 +94,22 @@ if(!class_exists('UrtakPlugin')) {
 
 		}
 
+		/// AJAX CALLBACKS
+
+		public static function ajax_display_meta_box() {
+			$data = stripslashes_deep($_REQUEST);
+			$action = $data['action'];
+			$method = substr($action, 6);
+
+			sleep(3);
+
+			if(method_exists(__CLASS__, $method)) {
+				call_user_func(array(__CLASS__, $method), true);
+			}
+
+			exit;
+		}
+
 		/// CALLBACKS
 
 		public static function add_admin_bar_items($wp_admin_bar) {
@@ -106,7 +129,7 @@ if(!class_exists('UrtakPlugin')) {
 
 			add_action("load-{$sub_level_settings}", array(__CLASS__, 'process_settings_actions'));
 
-			add_meta_box('urtak-at-a-glance', __('At a Glance'), array(__CLASS__, 'display_meta_box__at_a_glance'), 'urtak', 'top');
+			add_meta_box('urtak-at-a-glance', __('At a Glance'), array(__CLASS__, 'display_meta_box__insights'), 'urtak', 'top');
 
 			$posts_without_urtaks = self::get_nonassociated_post_ids();
 			if(!empty($posts_without_urtaks)) {
@@ -114,12 +137,12 @@ if(!class_exists('UrtakPlugin')) {
 			}
 			
 
-			add_meta_box('urtak-top-questions', __('Questions'), array(__CLASS__, 'display_meta_box__top_questions'), 'urtak', 'right');
+			add_meta_box('urtak-top-questions', __('Questions'), array(__CLASS__, 'display_meta_box__questions'), 'urtak', 'right');
 		}
 
 		public static function add_dashboard_widget() {
 			if(self::has_credentials()) {
-				wp_add_dashboard_widget('urtak', __('Urtak'), array(__CLASS__, 'display_dashboard_widget'));
+				wp_add_dashboard_widget('urtak', __('Urtak'), array(__CLASS__, 'display_meta_box__dashboard'));
 			}
 		}
 
@@ -239,6 +262,7 @@ if(!class_exists('UrtakPlugin')) {
 
 			if(!in_array($hook, self::$admin_page_hooks)) { return; }
 			wp_enqueue_style('urtak-font', 'http://fonts.googleapis.com/css?family=Droid+Sans:400,700');
+			wp_enqueue_script('jquery-flot', plugins_url('resources/backend/flot/jquery.flot.min.js', __FILE__), 'jquery', '0.7');
 			wp_enqueue_script('urtak-backend', plugins_url('resources/backend/urtak.js', __FILE__), array('jquery', 'postbox'), self::VERSION);
 			wp_localize_script('urtak-backend', 'Urtak_Vars', array(
 				'see_all' => __('See all...')
@@ -387,54 +411,58 @@ if(!class_exists('UrtakPlugin')) {
 
 		/// DISPLAY CALLBACKS
 
-		public static function display_dashboard_widget() {
-			$maximum_responses = 0;
+		public static function display_meta_box__dashboard($ajax = false) {
+			if($ajax) {
+				$maximum_responses = 0;
 
-			$dates = array();
-			for($i = -7; $i <= 0; $i++) {
-				$responses = rand(100, 2000);
-				$yes = rand(0, $responses);
-				$no = $responses - $yes;
+				$dates = array();
+				for($i = -7; $i <= 0; $i++) {
+					$responses = rand(100, 2000);
+					$yes = rand(0, $responses);
+					$no = $responses - $yes;
 
-				$dates[] = $item = array(
-					'responses' => $responses,
-					'yes' => $yes,
-					'no' => $no,
-					'date' => date('D,<b\r />M j', strtotime("Today {$i} Days"))
-				);
+					$dates[] = $item = array(
+						'responses' => $responses,
+						'yes' => $yes,
+						'no' => $no,
+						'date' => date('D,<b\r />M j', strtotime("Today {$i} Days"))
+					);
 
-				if($item['responses'] > $maximum_responses) {
-					$maximum_responses = $item['responses'];
+					if($item['responses'] > $maximum_responses) {
+						$maximum_responses = $item['responses'];
+					}
 				}
+
+				$urtaks = array();
+
+				$item = new stdClass;
+				$item->title = 'Why do you play mobile games?';
+				$item->questions = rand(1, 20);
+				$item->responses = rand(100, 2000);
+				$item->users = rand($item->questions,$item->responses);
+
+				$urtaks[] = $item;
+
+				$item = new stdClass;
+				$item->title = 'Who is Francois Hollande?';
+				$item->questions = rand(1, 20);
+				$item->responses = rand(100, 2000);
+				$item->users = rand($item->questions,$item->responses);
+
+				$urtaks[] = $item;
+
+				$item = new stdClass;
+				$item->title = 'The Science of Concussions';
+				$item->questions = rand(1, 20);
+				$item->responses = rand(100, 2000);
+				$item->users = rand($item->questions,$item->responses);
+
+				$urtaks[] = $item;
+
+				include('views/backend/dashboard/widget.php');
+			} else {
+				self::echo_ajax_loading_action(__FUNCTION__);
 			}
-
-			$urtaks = array();
-
-			$item = new stdClass;
-			$item->title = 'Why do you play mobile games?';
-			$item->questions = rand(1, 20);
-			$item->responses = rand(100, 2000);
-			$item->users = rand($item->questions,$item->responses);
-
-			$urtaks[] = $item;
-
-			$item = new stdClass;
-			$item->title = 'Who is Francois Hollande?';
-			$item->questions = rand(1, 20);
-			$item->responses = rand(100, 2000);
-			$item->users = rand($item->questions,$item->responses);
-
-			$urtaks[] = $item;
-
-			$item = new stdClass;
-			$item->title = 'The Science of Concussions';
-			$item->questions = rand(1, 20);
-			$item->responses = rand(100, 2000);
-			$item->users = rand($item->questions,$item->responses);
-
-			$urtaks[] = $item;
-
-			include('views/backend/dashboard/widget.php');
 		}
 
 		public static function display_insights_page() {
@@ -489,55 +517,79 @@ if(!class_exists('UrtakPlugin')) {
 
 		//// META BOX DISPLAY CALLBACKS
 
-		public static function display_meta_box__at_a_glance() {
-			$maximum_responses = 0;
+		public static function display_meta_box__insights($ajax = false) {
+			if($ajax) {
+				$maximum_responses = 0;
 
-			$dates = array();
-			for($i = -15; $i <= 0; $i++) {
-				$responses = rand(100, 2000);
-				$yes = rand(0, $responses);
-				$no = $responses - $yes;
+				$dates = array();
+				for($i = -15; $i <= 0; $i++) {
+					$responses = rand(100, 2000);
+					$yes = rand(0, $responses);
+					$no = $responses - $yes;
 
-				$dates[] = $item = array(
-					'responses' => $responses,
-					'yes' => $yes,
-					'no' => $no,
-					'date' => date('D,<b\r />M j', strtotime("Today {$i} Days"))
-				);
+					$dates[] = $item = array(
+						'responses' => $responses,
+						'yes' => $yes,
+						'no' => $no,
+						'date' => date('D,<b\r />M j', strtotime("Today {$i} Days"))
+					);
 
-				if($item['responses'] > $maximum_responses) {
-					$maximum_responses = $item['responses'];
+					if($item['responses'] > $maximum_responses) {
+						$maximum_responses = $item['responses'];
+					}
 				}
+				
+				include('views/backend/insights/meta-boxes/at-a-glance.php');
+			} else {
+				self::echo_ajax_loading_action(__FUNCTION__);
 			}
-
-			include('views/backend/insights/meta-boxes/at-a-glance.php');
 		}
 
-		public static function display_meta_box__posts_without_urtaks() {
-			$post_ids = self::get_nonassociated_post_ids();
-			$posts = new WP_Query(array('nopaging' => true, 'post__in' => $post_ids, 'post_type' => array('page', 'post'), 'order' => 'ASC', 'orderby' => 'title'));
+		public static function display_meta_box__posts_without_urtaks($ajax = false) {
+			if($ajax) {
+				$post_ids = self::get_nonassociated_post_ids();
+				$posts = new WP_Query(array('nopaging' => true, 'post__in' => $post_ids, 'post_type' => array('page', 'post'), 'order' => 'ASC', 'orderby' => 'title'));
 
-			include('views/backend/insights/meta-boxes/posts-without-urtaks.php');
+				include('views/backend/insights/meta-boxes/posts-without-urtaks.php');
+			} else {
+				self::echo_ajax_loading_action(__FUNCTION__);
+			}
 		}
 
-		public static function display_meta_box__top_questions() {
-			include('views/backend/insights/meta-boxes/top-questions.php');
+		public static function display_meta_box__questions($ajax = false) {
+			if($ajax) {
+				include('views/backend/insights/meta-boxes/top-questions.php');
+			} else {
+				self::echo_ajax_loading_action(__FUNCTION__);
+			}
 		}
 
-		public static function display_meta_box__top_urtaks() {
-			$urtaks = self::get_urtaks(array('sort' => 'responses'));
-			foreach($urtaks as $key => $urtak) {
-				$full = self::get_urtak($urtak['id']);
-				if($full) {
-					$urtaks[$key] = $full;
+		public static function display_meta_box__stats($ajax = false) {
+			if($ajax) {
+				include('views/backend/insights/meta-boxes/stats.php');
+			} else {
+				self::echo_ajax_loading_action(__FUNCTION__);
+			}
+		}
+
+		public static function display_meta_box__top_urtaks($ajax = false) {
+			if($ajax) {
+				$urtaks = self::get_urtaks(array('sort' => 'responses'));
+				foreach($urtaks as $key => $urtak) {
+					$full = self::get_urtak($urtak['id']);
+					if($full) {
+						$urtaks[$key] = $full;
+					}
 				}
-			}
 
-			include('views/backend/insights/meta-boxes/top-urtaks.php');
+				include('views/backend/insights/meta-boxes/top-urtaks.php');
+			} else {
+				self::echo_ajax_loading_action(__FUNCTION__);
+			}
 		}
 
-		public static function display_meta_box__stats() {
-			include('views/backend/insights/meta-boxes/stats.php');
+		private static function echo_ajax_loading_action($action) {
+			printf('<div class="urtak-ajax-loader" data-action="urtak_%s"><img src="%s" alt="" /> %s</div>', $action, admin_url('images/wpspin_light.gif'), __('Loading...'));
 		}
 
 		/// SHORTCODE CALLBACKS

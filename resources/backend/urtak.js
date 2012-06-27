@@ -44,7 +44,7 @@ jQuery(document).ready(function($) {
 		}
 	}).change();
 
-	$('.urtak-tabbed-control a').click(function(event) {
+	$('.urtak-tabbed-control a').live('click', function(event) {
 		event.preventDefault();
 		
 		var $this = $(this)
@@ -56,4 +56,17 @@ jQuery(document).ready(function($) {
 
 		$('[data-tabbed-depend-on="' + $control.attr('id') + '"]').hide().filter($this.attr('href')).show();
 	}).parent().filter(':first-child').find('a').click();
+
+	$('.urtak-ajax-loader[data-action]').each(function(index, element) {
+		var $element = $(element), action = $element.attr('data-action');
+
+		$.post(
+			ajaxurl,
+			{ action: action },
+			function(data, status) {
+				$element.replaceWith(data);
+			},
+			'html'
+		);
+	});
 });
