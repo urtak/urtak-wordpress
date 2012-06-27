@@ -238,6 +238,7 @@ if(!class_exists('UrtakPlugin')) {
 			wp_enqueue_style('urtak-backend', plugins_url('resources/backend/urtak.css', __FILE__), array(), self::VERSION);
 
 			if(!in_array($hook, self::$admin_page_hooks)) { return; }
+			wp_enqueue_style('urtak-font', 'http://fonts.googleapis.com/css?family=Droid+Sans:400,700');
 			wp_enqueue_script('urtak-backend', plugins_url('resources/backend/urtak.js', __FILE__), array('jquery', 'postbox'), self::VERSION);
 			wp_localize_script('urtak-backend', 'Urtak_Vars', array(
 				'see_all' => __('See all...')

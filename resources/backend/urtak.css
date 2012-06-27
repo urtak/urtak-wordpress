@@ -74,7 +74,21 @@ div.urtak-error p {
 }
 
 .urtak-settings h2 {
-	padding-right: 0;
+	color: #666666;
+	font-family: 'Droid Sans', sans-serif;
+	font-size: 38px;
+	font-weight: 700;
+	line-height: 1;
+	margin: 25px 0 14px;
+	padding: 0;
+}
+
+#urtak-settings-header {
+	margin: 38px 0 0;
+}
+
+#urtak-settings-subheader {
+	margin-top: 9px;
 }
 
 .urtak-settings h2 small {
@@ -82,9 +96,21 @@ div.urtak-error p {
 	font-size: 13px;
 }
 
+.urtak-settings h3 {
+	color: #666666;
+	font-family: 'Droid Sans', sans-serif;
+	font-size: 19px;
+	font-weight: 700;
+	line-height: 1;
+	margin: 28px 0 13px;
+}
+
 .urtak-field {
 	background: #f8f8f8;
 	border-radius: 3px;
+	font-family: 'Droid Sans', sans-serif;
+	font-size: 13px;
+	font-weight: 400;
 	margin-bottom: 1px;
 	padding: 11px;
 }
@@ -95,6 +121,16 @@ div.urtak-error p {
 
 .urtak-field > *:last-child {
 	margin-bottom: 0;
+}
+
+#urtak-field-logout {
+	color: #2f759b;
+	float: right;
+	text-decoration: none;
+}
+
+#urtak-field-logout:hover {
+	text-decoration: underline;
 }
 
 .urtak-checkbox {

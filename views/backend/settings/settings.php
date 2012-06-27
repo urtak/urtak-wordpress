@@ -23,7 +23,7 @@
 
 	<div class="urtak-field">
 		<p>
-			<?php printf('Logged in as %1$s', self::get_credentials('email')); ?> <a href="<?php esc_attr_e(self::_get_logout_url()); ?>">(<?php _e('logout'); ?>)</a><br />
+			<?php printf('Logged in as %1$s', self::get_credentials('email')); ?> <a id="urtak-field-logout" href="<?php esc_attr_e(self::_get_logout_url()); ?>"><?php _e('Log out'); ?></a><br />
 			<span class="urtak-api-key"><?php printf('API Key: %1$s', self::get_credentials('api-key')); ?></span>
 		</p>
 	</div>
@@ -53,9 +53,9 @@
 
 <?php } ?>
 
-	<h2><?php _e('Settings'); ?></h2>
+	<h2 id="urtak-settings-header"><?php _e('Settings'); ?></h2>
 
-	<h3><?php _e('Placement'); ?></h3>
+	<h3 id="urtak-settings-subheader"><?php _e('Placement'); ?></h3>
 
 	<div class="urtak-field">
 		<label class="urtak-checkbox">
