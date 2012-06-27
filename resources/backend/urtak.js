@@ -70,3 +70,4 @@ jQuery(document).ready(function($) {
 		);
 	});
 });
+

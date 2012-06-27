@@ -39,8 +39,6 @@
 		jQuery('#urtak-at-a-glance-weeks-chart-placeholder').empty();
 		jQuery('#urtak-at-a-glance-months-chart-placeholder').empty();
 
-		console.log(urtak_data_days);
-		console.log(urtak_ticks_days);
 		jQuery.plot(
 			jQuery('#urtak-at-a-glance-days-chart-placeholder'), 
 			[
@@ -50,7 +48,8 @@
             			align: 'center', 
             			fill: '#00aef0',
             			fillColor: '#00aef0',
-            			show: true 
+            			show: true,
+            			showNumbers: true
             		},
             		color: '#00aef0'
             	}
