@@ -429,3 +429,26 @@ div.urtak-error p {
 .urtak-card-controls-icon-pending:hover {
 	background-image: url(img/assets/status-pending-hover.png);
 }
+
+/** Post Meta Box */
+
+#urtak-meta-box .inside {
+	background: #ffffff;
+	margin: 0;
+	padding: 0;
+}
+
+.urtak-meta-box-actions {
+	padding: 10px 20px;
+}
+
+#urtak-meta-box-cards {
+	background: #f8f8f8;
+	max-height: 425px;
+	overflow: auto;
+	padding: 30px 5px;
+}
+
+#urtak-meta-box-cards .urtak-card:last-child {
+	margin-bottom: 0;
+}
