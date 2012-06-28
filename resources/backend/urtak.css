@@ -459,6 +459,10 @@ div.urtak-error p {
 	position: relative;
 }
 
+.urtak-card-remove {
+	display: none;
+}
+
 .urtak-meta-box-actions {
 	position: relative;
 }

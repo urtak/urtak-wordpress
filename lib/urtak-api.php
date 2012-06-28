@@ -93,6 +93,16 @@ class Urtak {
   public function create_account($options) {
     return $this->make_request('/accounts', 'POST', array("account" => $options));
   }
+  
+  /** Login an Account
+   *
+   * @access public
+   * @params 
+   * @return UrtakResponse
+   */
+  public function login_account($options) {
+    return $this->make_request('/account', 'GET', $options);
+  }
 
   // --------------------------------------------------------------------
   //                                PUBLICATIONS

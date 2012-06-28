@@ -16,6 +16,8 @@ if(!class_exists('WordPressUrtak') && class_exists('Urtak')) {
 
 			if('GET' === $method) {
 				$url = add_query_arg(urlencode_deep($signed_data), $url);
+
+				error_log($url);
 			} else if('POST' === $method || 'PUT' === $method) {
 				$json = json_encode($signed_data);
 
@@ -23,9 +25,7 @@ if(!class_exists('WordPressUrtak') && class_exists('Urtak')) {
 				$request_args['headers']['Content-Type'] = 'application/json';
 			}
 
-			error_log($url);
-			$response = wp_remote_request($url, $request_args);
-			error_log(print_r($response, true));
+			$response = wp_remote_request($url, $request_args); 
 			if(is_wp_error($response)) {
 				return new UrtakResponse('', 500, 'JSON');
 			} else if(in_array($this->api_format, array('JSON', 'XML'))) {

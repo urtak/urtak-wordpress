@@ -78,7 +78,7 @@ jQuery(document).ready(function($) {
 		event.preventDefault();
 
 		var $this = $(this)
-		, $cards = $('.urtak-card')
+		, $cards = $('.urtak-card[data-question-id]')
 		, action = $this.attr('data-action')
 		, vars = {
 			action: 'urtak_modify_question_status',
@@ -120,6 +120,33 @@ jQuery(document).ready(function($) {
 		$(this).addClass('active').siblings('a').removeClass('active');
 		$('#urtak-meta-box-per-page').val($(this).text()).change();
 	});
+
+	$('.urtak-card-add').live('click', function(event) {
+		event.preventDefault();
+
+		var $this = $(this)
+		, $card = $this.parents('.urtak-card')
+		, $clone = $card.clone()
+		, $question = $clone.find('.large-text')
+		, $remove = $this.siblings('.urtak-card-remove')
+		, question = $question.val();
+
+		$card.find('.large-text').val('');
+
+		$clone.hide();
+		$clone.find('.urtak-card-remove').show();
+		$clone.find('.urtak-card-add').hide();
+		$question.after(question).hide();
+		$clone.insertAfter($card);
+		$clone.slideDown('fast');
+	});
+
+	$('.urtak-card-remove').live('click', function(event) {
+		event.preventDefault();
+		var $card = $(this).parents('.urtak-card');
+
+		$card.slideUp('fast', function() { $card.remove(); });
+	});
 });
 
 var UrtakDelegates = (function(jQuery) {
@@ -131,7 +158,7 @@ var UrtakDelegates = (function(jQuery) {
 
 	_get_questions = function(vars) {
 		var $cards = $('#urtak-meta-box-cards').addClass('loading');
-		$cards.find('.urtak-card').remove();
+		$cards.find('.urtak-card[data-question-id]').remove();
 
 		$.post(
 			ajaxurl,
