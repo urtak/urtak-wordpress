@@ -28,7 +28,7 @@ if(!class_exists('UrtakPlugin')) {
 		const CACHE_PERIOD = 86400; // 24 HOURS
 
 		/// DATA STORAGE
-		private static $admin_page_hooks = array('index.php');
+		private static $admin_page_hooks = array('index.php', 'post.php', 'post-new.php');
 		private static $default_meta = array();
 		private static $default_settings = array();
 		private static $urtak_api = null;
@@ -65,6 +65,8 @@ if(!class_exists('UrtakPlugin')) {
 			add_action('wp_ajax_urtak_display_meta_box__top_urtaks', array(__CLASS__, 'ajax_display_meta_box'));
 			add_action('wp_ajax_urtak_display_meta_box__stats', array(__CLASS__, 'ajax_display_meta_box'));
 			add_action('wp_ajax_urtak_display_meta_box__posts_without_urtaks', array(__CLASS__, 'ajax_display_meta_box'));
+			add_action('wp_ajax_urtak_get_questions', array(__CLASS__, 'ajax_get_questions'));
+			add_action('wp_ajax_urtak_modify_question_status', array(__CLASS__, 'ajax_modify_question_status'));
 		}
 
 		private static function add_filters() {
@@ -106,6 +108,40 @@ if(!class_exists('UrtakPlugin')) {
 				call_user_func(array(__CLASS__, $method), true);
 			}
 
+			exit;
+		}
+
+		public static function ajax_get_questions() {
+			$data = stripslashes_deep($_REQUEST);
+			$atts = shortcode_atts(array('page' => 1, 'per_page' => 10, 'order' => 'all', 'sort' => 'recent', 'post_id' => 0), $data);
+
+			extract($atts);
+			if(empty($post_id)) {
+				$cards = '';
+				$pager = '';
+			} else {
+				$cards = '';
+				for($i = 0; $i < $per_page; $i++) {
+					$cards .= self::_get_card(array(), true);
+				}
+
+				$pager = self::_get_pager($page, 5);
+
+			}
+			echo json_encode(compact('pager', 'cards'));
+			exit;
+		}
+
+		public static function ajax_modify_question_status() {
+			$data = stripslashes_deep($_REQUEST);
+
+			$questions = (array)$data['questions'];
+
+			foreach($questions as $question) {
+				$results[] = $question;
+			}
+
+			echo json_encode($results);
 			exit;
 		}
 
@@ -444,22 +480,18 @@ if(!class_exists('UrtakPlugin')) {
 			if($ajax) {
 				$maximum_responses = 0;
 
-				$dates = array();
+				$days = array();
 				for($i = -7; $i <= 0; $i++) {
 					$responses = rand(100, 2000);
 					$yes = rand(0, $responses);
 					$no = $responses - $yes;
 
-					$dates[] = $item = array(
+					$days[] = $item = array(
 						'responses' => $responses,
 						'yes' => $yes,
 						'no' => $no,
 						'date' => date('D,<b\r />M j', strtotime("Today {$i} Days"))
 					);
-
-					if($item['responses'] > $maximum_responses) {
-						$maximum_responses = $item['responses'];
-					}
 				}
 
 				$urtaks = array();
@@ -562,6 +594,9 @@ if(!class_exists('UrtakPlugin')) {
 						'date' => date('D,<b\r />M j', strtotime("Today {$i} Days"))
 					);
 				}
+
+				$weeks = array();
+				$months = array();
 				
 				include('views/backend/insights/meta-boxes/at-a-glance.php');
 			} else {
@@ -885,6 +920,12 @@ if(!class_exists('UrtakPlugin')) {
 		private static function _get_card($question, $controls = false) {
 			ob_start();
 			include('views/backend/misc/card.php');
+			return ob_get_clean();
+		}
+
+		private static function _get_pager($current_page, $number_pages) {
+			ob_start();
+			include('views/backend/misc/pager.php');
 			return ob_get_clean();
 		}
 

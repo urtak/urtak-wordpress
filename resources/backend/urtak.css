@@ -25,7 +25,7 @@ div.urtak-error p {
 	background-image: url(img/urtak-logo-32.png);
 }
 
-.urtak-wrap div.updated {
+.urtak-wrap div.updated, .urtak-wrap div.error {
 	bottom: -25px;
 	margin-bottom: 0;
 	margin-left: 46px;
@@ -219,6 +219,11 @@ div.urtak-error p {
 	-moz-box-shadow: none;
 	-webkit-box-shadow: none;
 	box-shadow: none;
+	cursor: default;
+}
+
+#urtak-dashboard-chart {
+	margin-bottom: 10px;
 }
 
 .urtak-at-a-glance-chart-placeholder {
@@ -256,6 +261,7 @@ div.urtak-error p {
 	font-weight: bold;
 	height: 12px;
 	line-height: 1;
+	margin-top: 1px;
 	padding: 8px;
 	text-decoration: none;
 	z-index: 1000;
@@ -434,6 +440,7 @@ div.urtak-error p {
 
 #urtak-meta-box .inside {
 	background: #ffffff;
+	font-family: 'Droid Sans', sans-serif;
 	margin: 0;
 	padding: 0;
 }
@@ -444,11 +451,93 @@ div.urtak-error p {
 
 #urtak-meta-box-cards {
 	background: #f8f8f8;
-	max-height: 425px;
+	border-bottom: 1px solid #dcdcdc;
+	border-top: 1px solid #dcdcdc;
+	height: 425px;
 	overflow: auto;
 	padding: 30px 5px;
+	position: relative;
+}
+
+.urtak-meta-box-actions {
+	position: relative;
+}
+
+.urtak-meta-box-cards-shadow {
+	background: transparent url(img/background-shadow-top.png) no-repeat top center;
+	position: absolute;
+
+	left: 0;
+	right: 0;
+	height: 6px;
+	z-index: 1000000;
+}
+
+.urtak-disabled {
+	cursor: default;
+}
+
+#urtak-meta-box-cards-bottom-shadow {
+	background: transparent url(img/background-shadow-bottom.png) no-repeat bottom center;
+	top: -6px;
+}
+
+#urtak-meta-box-cards-top-shadow {
+	bottom: -6px;
 }
 
 #urtak-meta-box-cards .urtak-card:last-child {
 	margin-bottom: 0;
+}
+
+#urtak-meta-box-controls {
+	color: #666666;
+	line-height: 20px;
+}
+
+#urtak-meta-box-controls a {
+	text-decoration: none;
+}
+
+#urtak-meta-box-controls-alls {
+	text-align: center;
+}
+
+
+#urtak-meta-box-controls-pager > * {
+	font-size: 11px;
+	vertical-align: middle;
+}
+
+#urtak-meta-box-controls-page-number {
+	border: 1px solid #dcdcdc;
+	display: inline-block;
+	height: 20px;
+	padding: 0 3px;
+	text-align: center;
+	vertical-align: middle;
+	width: 20px;
+}
+
+#urtak-meta-box-controls-total-pages {
+	display: inline-block;
+	height: 20px;
+	vertical-align: middle;
+}
+
+#urtak-meta-box-controls-page-previous, #urtak-meta-box-controls-page-next {
+	background: transparent url(img/previous-page.png) no-repeat center center;
+	display: inline-block;
+	height: 20px;
+	margin-right: 1px;
+	outline: 0;
+	overflow: hidden;
+	text-indent: -999999px;
+	width: 20px;
+}
+
+#urtak-meta-box-controls-page-next {
+	background-image: url(img/next-page.png);
+	margin-left: 2px;
+	margin-right: 0;
 }

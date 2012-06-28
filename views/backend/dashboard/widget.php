@@ -1,18 +1,6 @@
-<div class="urtak-bar-graph">
-	<?php foreach($dates as $date) { 
-		$scaled = intval($date['responses'] / $maximum_responses * 200);
-		$urtak_yes = $date['yes'] >= $date['no'] ? 'urtak-yes' : '';  ?>
-	<div class="urtak-bar-graph-item <?php echo $urtak_yes; ?>">
-		<div class="urtak-bar-graph-item-container">
-			<div class="urtak-bar-graph-item-inner <?php echo $urtak_yes; ?>" style="<?php printf('height: %dpx;', $scaled); ?>">
-				<div class="urtak-bar-graph-item-value"><strong><?php esc_html_e(number_format_i18n($date['responses'], 0)); ?></strong></div>
-			</div>
-			<div class="urtak-bar-graph-item-identifier"><?php echo ($date['date']); ?></div>
-		</div>
-	</div>
-	<?php } ?>
-</div>
-<div class="clear"></div>
+<div id="urtak-dashboard-chart">
+	<div class="urtak-at-a-glance-chart-placeholder" id="urtak-dashboard-chart-placeholder"></div>
+</div>	
 
 <table class="widefat">
 	<thead>
@@ -34,3 +22,33 @@
 		<?php } ?>
 	</tbody>
 </table>
+
+<script type="text/javascript">
+	var urtak_aag_days = jQuery.parseJSON('<?php echo json_encode($days); ?>')
+	, urtak_data_days = []
+	, urtak_ticks_days = [];
+
+	for(var i = 0; i < urtak_aag_days.length; i++) {
+		urtak_data_days.push([i*2, urtak_aag_days[i].responses]);
+		urtak_ticks_days.push([i*2, urtak_aag_days[i].date]);
+	}
+
+	function urtak_plot_dashboard_plots() {
+		jQuery('#urtak-dashboard-chart-placeholder').empty();
+
+		if(!jQuery('#urtak.postbox').hasClass('closed')) {
+			UrtakDelegates.plot_bar_graph('#urtak-dashboard-chart-placeholder', urtak_data_days, urtak_ticks_days);
+		}
+	}
+
+	jQuery(window).resize(function() {
+		setTimeout(urtak_plot_dashboard_plots, 25);
+	});
+
+	urtak_plot_dashboard_plots();
+
+	jQuery('#urtak.postbox .hndle, #urta.postbox .handlediv').live('click', function(event) {
+		urtak_plot_dashboard_plots();
+	});
+
+</script>

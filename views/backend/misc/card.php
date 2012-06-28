@@ -1,6 +1,7 @@
-<?php $yes_percent = rand(0,100); ?>
+<?php $yes_percent = rand(0,100); $post_id = rand(1000, 5000); $question_id = rand(5000, 15000); ?>
 
-<div class="urtak-card <?php if($controls) { echo 'urtak-card-with-controls'; } ?>">
+
+<div data-post-id="<?php esc_attr_e($post_id); ?>" data-question-id="<?php esc_attr_e($question_id); ?>" class="urtak-card <?php if($controls) { echo 'urtak-card-with-controls'; } ?>">
 	<div class="urtak-card-plot">
 		<?php echo self::_get_pie_image($yes_percent); ?>
 	</div>

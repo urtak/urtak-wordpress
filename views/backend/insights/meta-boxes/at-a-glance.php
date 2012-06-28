@@ -18,8 +18,8 @@
 
 <script type="text/javascript">
 	var urtak_aag_days = jQuery.parseJSON('<?php echo json_encode($days); ?>')
-	, urtak_aag_weeks = urtak_aag_days
-	, urtak_aag_months = urtak_aag_weeks
+	, urtak_aag_weeks = jQuery.parseJSON('<?php echo json_encode($weeks); ?>')
+	, urtak_aag_months = jQuery.parseJSON('<?php echo json_encode($months); ?>')
 	, urtak_data_days = []
 	, urtak_data_weeks = []
 	, urtak_data_months =[]
@@ -50,35 +50,7 @@
 		jQuery.each(keys, function(index, element) {
 			var data = window['urtak_data_' + this], ticks = window['urtak_ticks_' + this];
 		
-			jQuery.plot(
-				jQuery('#urtak-at-a-glance-' + this + '-chart-placeholder'), 
-				[
-					{ 
-						data: data, 
-	            		bars: { 
-	            			align: 'center', 
-	            			fill: '#00aef0',
-	            			fillColor: '#00aef0',
-	            			show: true,
-	            			showNumbers: true
-	            		},
-	            		color: '#00aef0'
-	            	}
-	            ], 
-				{
-					grid: {
-						borderWidth: 0,
-						color: '#666666',
-						show: true
-					},
-					xaxis: {
-						max: (ticks.length * 2) - 1,
-						min: -1, 
-						tickLength: 0,
-						ticks: ticks 
-					}
-				}
-			);
+			UrtakDelegates.plot_bar_graph('#urtak-at-a-glance-' + this + '-chart-placeholder', data, ticks);
 		});
 	}
 
