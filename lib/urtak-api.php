@@ -17,7 +17,7 @@ class Urtak {
   
   protected $urtak_home   = 'https://urtak.com';      // Home Url
   // protected $api_home     = 'https://urtak.com/api';  // API Url dev-tunnel.urtak.com
-  protected $api_home     = 'https://dev-tunnel.urtak.com';  // API Url 
+  protected $api_home     = 'https://dev-tunnel.urtak.com/api';  // API Url 
   protected $api_format   = 'JSON';                   // XML or JSON
   protected $client_name  = 'Urtak API Wrapper for PHP v0.9.9';
 
@@ -91,7 +91,7 @@ class Urtak {
    * @return  UrtakResponse
    */
   public function create_account($options) {
-    return $this->make_request('/users', 'POST', array("account" => $options));
+    return $this->make_request('/accounts', 'POST', array("account" => $options));
   }
 
   // --------------------------------------------------------------------

@@ -553,10 +553,15 @@ if(!class_exists('UrtakPlugin')) {
 		public static function display_settings_page() {
 			$data = stripslashes_deep($_REQUEST);
 			$is_settings = true;
-			$publications = self::get_publications();
+
+			$publications = array();
+			if(self::has_credentials()) {
+				$publications = self::get_publications();
+			}
+
 			$settings = self::get_settings();
 
-			if(isset($settings['credentials']['publication-key'])) {
+			if(!empty($publications) && isset($settings['credentials']['publication-key'])) {
 				foreach($publications as $publication) {
 					if($publication['key'] == $settings['credentials']['publication-key']) {
 						$settings['language'] = $publication['language'];
@@ -565,8 +570,6 @@ if(!class_exists('UrtakPlugin')) {
 					}
 				}
 			}
-
-			$urtaks = self::get_urtaks();
 
 			include('views/backend/misc/header.php');
 

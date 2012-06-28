@@ -32,11 +32,18 @@
 
 	<h3><?php _e('This Site'); ?></h3>
 
+	<?php 
+	function get_host_var($host) {
+		return $host['host'];
+	}
+	?>
+
 	<div class="urtak-field">
 		<p class="urtak-help urtak-help-nomargin"><label for="urtak-credentials-publication-key"><?php _e('Select this site from the list or create a new one.'); ?></label></p>
 		<select name="urtak[credentials][publication-key]" id="urtak-credentials-publication-key">
-			<?php foreach($publications as $publication) { ?>
-			<option data-domains="<?php esc_attr_e(implode(', ', (isset($publication['domains']['url']) ? (array)$publication['domains']['url'] : array()))); ?>" <?php selected($settings['credentials']['publication-key'], $publication['key']); ?> value="<?php esc_attr_e($publication['key']); ?>"><?php esc_html_e($publication['name']); ?></option>
+			<?php foreach($publications as $publication) {
+				$hosts_string = isset($publication['hosts']) && is_array($publication['hosts']) ? implode(', ', array_map('get_host_var', $publication['hosts'])) : ''; ?>
+			<option data-domains="<?php esc_attr_e($hosts_string); ?>" <?php selected($settings['credentials']['publication-key'], $publication['key']); ?> value="<?php esc_attr_e($publication['key']); ?>"><?php esc_html_e($publication['name']); ?></option>
 			<?php } ?>
 			<option data-domains="<?php esc_attr_e(parse_url(home_url('/'), PHP_URL_HOST)); ?>" value="-1"><?php _e('Create a new site...'); ?></option>
 		</select>
