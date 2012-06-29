@@ -2,6 +2,9 @@
 
 if(!class_exists('WordPressUrtak') && class_exists('Urtak')) {
 	class WordPressUrtak extends Urtak {
+		private $wpdebug = false;
+		// private $wpdebug = true;
+
 		protected function make_request($path, $method, $data = array()) {
 			$request_args = array();
 			$request_args['headers'] = array();
@@ -17,7 +20,9 @@ if(!class_exists('WordPressUrtak') && class_exists('Urtak')) {
 			if('GET' === $method) {
 				$url = add_query_arg(urlencode_deep($signed_data), $url);
 
-				error_log($url);
+				if($this->wpdebug) {
+					error_log($url);
+				}
 			} else if('POST' === $method || 'PUT' === $method) {
 				$json = json_encode($signed_data);
 

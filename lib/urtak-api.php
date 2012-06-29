@@ -237,7 +237,7 @@ class Urtak {
       $path = '/urtaks/permalink/'.$value.'/questions';
     } 
 
-    return $this->make_request($path, 'GET', array());
+    return $this->make_request($path, 'GET', $options);
   }
 
   /** Retrieve a Question on an Urtak by Urtak ID, post id, or post permalink and Question ID
@@ -274,6 +274,18 @@ class Urtak {
     } 
 
     return $this->make_request($path, 'POST', array('questions' => $questions));
+  }
+
+  public function update_urtak_question($property, $value, $question_id, $options = array()) {
+    if($property == 'id') { 
+      $path = '/urtaks/'.$value.'/questions/'.$question_id;
+    } elseif($property == 'post_id') {
+      $path = '/urtaks/post/'.$value.'/questions/'.$question_id;
+    } elseif($property == 'permalink') {
+      $path = '/urtaks/permalink/'.$value.'/questions/'.$question_id;
+    } 
+
+    return $this->make_request($path, 'PUT', $options);
   }
 
 

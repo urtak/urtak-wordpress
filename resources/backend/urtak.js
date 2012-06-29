@@ -118,6 +118,7 @@ jQuery(document).ready(function($) {
 		event.preventDefault();
 
 		$(this).addClass('active').siblings('a').removeClass('active');
+		$('#urtak-meta-box-controls-page-number').val(1);
 		$('#urtak-meta-box-per-page').val($(this).text()).change();
 	});
 
@@ -147,6 +148,36 @@ jQuery(document).ready(function($) {
 
 		$card.slideUp('fast', function() { $card.remove(); });
 	});
+
+	var $help = $('#urtak-meta-box-help'), $cards = $('#urtak-meta-box-cards');
+
+	if($help.size() > 0) {
+		$help.css({
+			top: (parseInt($cards.outerHeight(true)) - parseInt($help.find('#urtak-meta-box-help-handle').outerHeight(true))) + 'px'
+		});
+	}
+
+	$('#urtak-meta-box-help-handle').click(function(event) {
+		event.preventDefault();
+
+		var $this = $(this);
+
+		if($this.hasClass('open')) {
+			$help.animate({
+				top: (parseInt($cards.outerHeight(true)) - parseInt($help.find('#urtak-meta-box-help-handle').outerHeight(true)))
+			});
+			$this.removeClass('open');
+			$this.text(Urtak_Vars.help_text);
+		} else {
+			$help.animate({
+				top: (parseInt($cards.outerHeight(true)) - parseInt($help.find('#urtak-meta-box-help-handle').outerHeight(true)) - parseInt($help.find('#urtak-meta-box-help-content').outerHeight(true)))
+			});
+			$this.addClass('open');
+			$this.text(Urtak_Vars.help_close);
+		}
+
+
+	});
 });
 
 var UrtakDelegates = (function(jQuery) {
@@ -165,7 +196,7 @@ var UrtakDelegates = (function(jQuery) {
 			vars,
 			function(data, status) {
 				$('#urtak-meta-box-controls-pager').empty().append(data.pager);
-				$cards.removeClass('loading').append(data.cards);
+				$cards.removeClass('loading').find('.urtak-card').after(data.cards);
 
 				if('function' === typeof(callback)) {
 					callback(data, status);

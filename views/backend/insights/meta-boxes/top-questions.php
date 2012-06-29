@@ -7,25 +7,25 @@
 
 <div id="urtak-pending-questions" data-tabbed-depend-on="urtak-questions-tabbed-control">
 	<?php for($i = 0; $i < 5; $i++) { ?>
-		<?php echo self::_get_card(array('question' => ''), true); ?>
+		<?php echo self::_get_card($question, $post_id, true); ?>
 	<?php } ?>
 </div>
 
 <div id="urtak-divided-questions" data-tabbed-depend-on="urtak-questions-tabbed-control">
 	<?php for($i = 0; $i < 5; $i++) { ?>
-		<?php echo self::_get_card(array('question' => '')); ?>
+		<?php echo self::_get_card($question, $post_id); ?>
 	<?php } ?>
 </div>
 
 <div id="urtak-cared-questions" data-tabbed-depend-on="urtak-questions-tabbed-control">
 	<?php for($i = 0; $i < 5; $i++) { ?>
-		<?php echo self::_get_card(array('question' => '')); ?>
+		<?php echo self::_get_card($question, $post_id); ?>
 	<?php } ?>
 </div>
 
 <div id="urtak-agreed-questions" data-tabbed-depend-on="urtak-questions-tabbed-control">
 	<?php for($i = 0; $i < 5; $i++) { ?>
-		<?php echo self::_get_card(array('question' => '')); ?>
+		<?php echo self::_get_card($question, $post_id); ?>
 	<?php } ?>
 </div>	
 

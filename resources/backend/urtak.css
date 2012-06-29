@@ -261,7 +261,6 @@ div.urtak-error p {
 	font-weight: bold;
 	height: 12px;
 	line-height: 1;
-	margin-top: 1px;
 	padding: 8px;
 	text-decoration: none;
 	z-index: 1000;
@@ -406,23 +405,23 @@ div.urtak-error p {
 	background-image: url(img/assets/status-approved-hover.png);
 }
 
-.urtak-card-controls-icon-reject {
+.urtak-card-controls-icon-rejected {
 	background-image: url(img/assets/status-rejected-off.png);
 }
-.urtak-card-controls-icon-reject.active {
+.urtak-card-controls-icon-rejected.active {
 	background-image: url(img/assets/status-rejected-on.png);
 }
-.urtak-card-controls-icon-reject:hover {
+.urtak-card-controls-icon-rejected:hover {
 	background-image: url(img/assets/status-rejected-hover.png);
 }
 
-.urtak-card-controls-icon-archive {
+.urtak-card-controls-icon-archived {
 	background-image: url(img/assets/status-archived-off.png);
 }
-.urtak-card-controls-icon-archive.active {
+.urtak-card-controls-icon-archived.active {
 	background-image: url(img/assets/status-archived-on.png);
 }
-.urtak-card-controls-icon-archive:hover {
+.urtak-card-controls-icon-archived:hover {
 	background-image: url(img/assets/status-archived-hover.png);
 }
 
@@ -454,9 +453,14 @@ div.urtak-error p {
 	border-bottom: 1px solid #dcdcdc;
 	border-top: 1px solid #dcdcdc;
 	height: 425px;
+	overflow: hidden;
+	position: relative;
+}
+
+#urtak-meta-box-cards-holder {
+	height: 365px;
 	overflow: auto;
 	padding: 30px 5px;
-	position: relative;
 }
 
 .urtak-card-remove {
@@ -544,4 +548,50 @@ div.urtak-error p {
 	background-image: url(img/next-page.png);
 	margin-left: 2px;
 	margin-right: 0;
+}
+
+/** Post Meta Box Help **/
+
+#urtak-meta-box-help {
+	position: absolute;
+
+	left: 20px;
+	right: 20px;
+	top: 425px;
+}
+
+#urtak-meta-box-help-handle {
+	background: #ffffff;
+	border: 1px solid #cccccc;
+	border-bottom: 0;
+	border-radius: 3px 3px 0 0;
+	color: #999999;
+	display: block;
+	float: left;
+	font-size: 11px;
+	height: 22px;
+	line-height: 22px;
+	position: absolute;
+	top: 0;
+	left: 0;
+	text-align: center;
+	text-decoration: none;
+	width: 50px;
+	z-index: 99999;
+}
+
+#urtak-meta-box-help-content {
+	background: #ffffff;
+	border: 1px solid #cccccc;
+	border-bottom: 0;
+	clear: both;
+	height: 300px;
+	overflow: auto;
+	padding: 10px;
+	position: absolute;
+	top: 22px;
+	bottom: 0;
+	right 0;
+	left: 0;
+	z-index: 99998;
 }

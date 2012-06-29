@@ -40,3 +40,11 @@ function make_urtak_widget($args = array()) {
 // We do this so people can insert the action into their template
 // instead of a function_exists(...) { ... } construct
 add_action('make_urtak_widget', 'make_urtak_widget');
+
+function urtak_the_responses_number($post_id = null) {
+	if(empty($post_id)) {
+		$post_id = get_the_ID();
+	}
+
+	printf('<span data-post-id="%d" class="urtak-responses-number"><span class="urtak-responses-number-interior">...</span></span>', $post_id);
+}
