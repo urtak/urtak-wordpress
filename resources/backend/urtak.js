@@ -182,28 +182,37 @@ jQuery(document).ready(function($) {
 
 var UrtakDelegates = (function(jQuery) {
 	var $ = jQuery
+	, _disable_requests = false
 	, _get_questions = null
 	, _get_search_vars = null
 	, _modify_question_status = null
 	, _plot_bar_graph = null;
 
 	_get_questions = function(vars) {
-		var $cards = $('#urtak-meta-box-cards').addClass('loading');
-		$cards.find('.urtak-card[data-question-id]').remove();
+		if(!_disable_requests) {
+			var $cards = $('#urtak-meta-box-cards').addClass('loading');
+			$cards.find('.urtak-card[data-question-id]').remove();
 
-		$.post(
-			ajaxurl,
-			vars,
-			function(data, status) {
-				$('#urtak-meta-box-controls-pager').empty().append(data.pager);
-				$cards.removeClass('loading').find('.urtak-card').after(data.cards);
+			$.post(
+				ajaxurl,
+				vars,
+				function(data, status) {
+					if(data.error) {
+						$cards.removeClass('loading').find('.urtak-card').remove()
+						$cards.find('#urtak-meta-box-cards-holder').append('<div id="urtak-get-questions-error" class="settings-error error"><p>' + data.error_message + '</p></div>');
+						_disable_requests = true;
+					} else {
+						$('#urtak-meta-box-controls-pager').empty().append(data.pager);
+						$cards.removeClass('loading').find('.urtak-card').after(data.cards);
+					}
 
-				if('function' === typeof(callback)) {
-					callback(data, status);
-				}
-			},
-			'json'
-		);
+					if('function' === typeof(callback)) {
+						callback(data, status);
+					}
+				},
+				'json'
+			);
+		}
 	};
 
 	_get_search_vars = function() {

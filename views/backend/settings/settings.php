@@ -39,6 +39,12 @@
 	?>
 
 	<div class="urtak-field">
+		<?php if(false === $publications) { ?>
+
+		<p class="urtak-help urtal-help-nomargin"><?php _e('Selecting a site has been disabled because communication with the Urtak service has been interrupted.'); ?></p>
+
+		<?php } else { ?>
+
 		<p class="urtak-help urtak-help-nomargin"><label for="urtak-credentials-publication-key"><?php _e('Select this site from the list or create a new one.'); ?></label></p>
 		<select name="urtak[credentials][publication-key]" id="urtak-credentials-publication-key">
 			<?php foreach($publications as $publication) {
@@ -57,6 +63,8 @@
 		<input type="text" class="text large-text code" name="urtak[publication][domains]" id="urtak-publication-domains" value="<?php ?>" />
 
 		<p class="urtak-help urtak-help-nomargin" id="urtak-publication-key-display-container"><?php _e('Site Key: <span id="urtak-publication-key-display"></span>'); ?></p>
+
+		<?php } ?>
 	</div>
 	<input type="hidden" name="urtak[publication][publication-data]" value="<?php esc_attr_e(json_encode($publications)); ?>" />
 

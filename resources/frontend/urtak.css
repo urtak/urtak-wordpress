@@ -1,4 +1,13 @@
 .urtak-responses-number {
 	background: transparent url(img/urtak-logo-12-desat.png) no-repeat left center;
+	display: none;
 	padding-left: 16px;
+}
+
+.urtak-responses-number:hover {
+	background-image: url(img/urtak-logo-12.png);
+}
+
+.urtak-responses-number.fetched {
+	display: inline;
 }

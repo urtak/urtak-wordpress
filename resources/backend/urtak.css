@@ -463,6 +463,11 @@ div.urtak-error p {
 	padding: 30px 5px;
 }
 
+#urtak-meta-box-cards-holder .settings-error {
+	margin: 0 auto;
+	max-width: 420px;
+}
+
 .urtak-card-remove {
 	display: none;
 }

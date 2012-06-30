@@ -16,8 +16,7 @@ class Urtak {
   protected $api_key            = ''; // API Key
   
   protected $urtak_home   = 'https://urtak.com';      // Home Url
-  // protected $api_home     = 'https://urtak.com/api';  // API Url dev-tunnel.urtak.com
-  protected $api_home     = 'https://dev-tunnel.urtak.com/api';  // API Url 
+  protected $api_home     = 'https://urtak.com/api';  // API Url
   protected $api_format   = 'JSON';                   // XML or JSON
   protected $client_name  = 'Urtak API Wrapper for PHP v0.9.9';
 
