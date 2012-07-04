@@ -550,47 +550,15 @@ if(!class_exists('UrtakPlugin')) {
 
 		public static function display_meta_box__dashboard($ajax = false) {
 			if($ajax) {
-				$maximum_responses = 0;
+				$page = 1;
+				$per_page = 5;
 
-				$days = array();
-				for($i = -7; $i <= 0; $i++) {
-					$responses = rand(100, 2000);
-					$yes = rand(0, $responses);
-					$no = $responses - $yes;
-
-					$days[] = $item = array(
-						'responses' => $responses,
-						'yes' => $yes,
-						'no' => $no,
-						'date' => date('D,<b\r />M j', strtotime("Today {$i} Days"))
-					);
+				$pending_response = self::get_publication_questions_response($page, $per_page, $order, 'st|pe');
+				if($pending_response) {
+					$pending = $pending_response['questions']['question'];
+				} else {
+					$pending = false;
 				}
-
-				$urtaks = array();
-
-				$item = new stdClass;
-				$item->title = 'Why do you play mobile games?';
-				$item->questions = rand(1, 20);
-				$item->responses = rand(100, 2000);
-				$item->users = rand($item->questions,$item->responses);
-
-				$urtaks[] = $item;
-
-				$item = new stdClass;
-				$item->title = 'Who is Francois Hollande?';
-				$item->questions = rand(1, 20);
-				$item->responses = rand(100, 2000);
-				$item->users = rand($item->questions,$item->responses);
-
-				$urtaks[] = $item;
-
-				$item = new stdClass;
-				$item->title = 'The Science of Concussions';
-				$item->questions = rand(1, 20);
-				$item->responses = rand(100, 2000);
-				$item->users = rand($item->questions,$item->responses);
-
-				$urtaks[] = $item;
 
 				include('views/backend/dashboard/widget.php');
 			} else {
@@ -1098,7 +1066,7 @@ if(!class_exists('UrtakPlugin')) {
 			return add_query_arg(array('action' => 'signup'), self::_get_settings_url());
 		}
 
-		private static function _get_card($question, $post_id, $controls = false) {
+		private static function _get_card($question, $post_id, $controls = false, $use_nested_urtak = false) {
 			ob_start();
 			include('views/backend/misc/card.php');
 			return ob_get_clean();

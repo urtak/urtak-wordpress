@@ -31,6 +31,11 @@ if(!class_exists('WordPressUrtak') && class_exists('Urtak')) {
 			}
 
 			$response = wp_remote_request($url, $request_args);
+
+			if($this->wpdebug && wp_remote_retrieve_response_code($response) >= 400) {
+				error_log(print_r($response, true));
+			}
+
 			if(is_wp_error($response)) {
 				return new UrtakResponse('', 500, 'JSON');
 			} else if(in_array($this->api_format, array('JSON', 'XML'))) {

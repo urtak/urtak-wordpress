@@ -1,19 +1,16 @@
-
-<table class="widefat">
-	<thead>
-		<tr valign="top">
-			<th scope="col" class="urtak-title-column"><?php _e('Top Urtaks'); ?></th>
-			<th scope="col" class="urtak-responses-column"><?php _e('Responses'); ?></th>
-			<th scope="col" class="urtak-questions-column"><?php _e('Questions'); ?></th>
-		</tr>
-	</thead>
-	<tbody>
-		<?php foreach($urtaks as $urtak) { ?>
-		<tr valign="top">
-			<td class="urtak-title-column"><?php esc_html_e($urtak->title); ?></td>
-			<td class="urtak-responses-column"><?php esc_html_e($urtak->responses); ?></td>
-			<td class="urtak-questions-column"><?php esc_html_e($urtak->questions); ?></td>
-		</tr>
+<br />
+<div id="urtak-pending-questions" data-tabbed-depend-on="urtak-questions-tabbed-control">
+	<?php if(false === $pending) { ?>
+	<div id="setting-error-settings_updated" class="settings-error error">
+		<p><?php _e('Your publication\'s pending questions could not be retrieved.'); ?></p>
+	</div>
+	<?php } else if(empty($pending)) { ?>
+	<div id="setting-error-settings_updated" class="settings-error error">
+		<p><?php _e('You don\'t have any pending questions.'); ?></p>
+	</div>
+	<?php } else { ?>
+		<?php foreach($pending as $question) { ?>
+			<?php echo self::_get_card($question, $post_id, true, true); ?>
 		<?php } ?>
-	</tbody>
-</table>
+	<?php } ?>
+</div>

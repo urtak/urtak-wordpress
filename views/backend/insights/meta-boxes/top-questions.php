@@ -16,7 +16,7 @@
 	</div>
 	<?php } else { ?>
 		<?php foreach($pending as $question) { ?>
-			<?php echo self::_get_card($question, $post_id, true); ?>
+			<?php echo self::_get_card($question, $post_id, true, true); ?>
 		<?php } ?>
 	<?php } ?>
 </div>
@@ -24,7 +24,7 @@
 <div id="urtak-divided-questions" data-tabbed-depend-on="urtak-questions-tabbed-control">
 	<?php if(false === $most_divided) { ?>
 	<div id="setting-error-settings_updated" class="settings-error error">
-		<p><?php _e('Your publication\'s pending questions could not be retrieved.'); ?></p>
+		<p><?php _e('Your publication\'s most cared divided questions could not be retrieved.'); ?></p>
 	</div>
 	<?php } else if(empty($most_divided)) { ?>
 	<div id="setting-error-settings_updated" class="settings-error error">
@@ -40,7 +40,7 @@
 <div id="urtak-cared-questions" data-tabbed-depend-on="urtak-questions-tabbed-control">
 	<?php if(false === $most_cared) { ?>
 	<div id="setting-error-settings_updated" class="settings-error error">
-		<p><?php _e('Your publication\'s pending questions could not be retrieved.'); ?></p>
+		<p><?php _e('Your publication\'s most cared about questions could not be retrieved.'); ?></p>
 	</div>
 	<?php } else if(empty($most_cared)) { ?>
 	<div id="setting-error-settings_updated" class="settings-error error">
@@ -56,7 +56,7 @@
 <div id="urtak-agreed-questions" data-tabbed-depend-on="urtak-questions-tabbed-control">
 	<?php if(false === $most_agreed) { ?>
 	<div id="setting-error-settings_updated" class="settings-error error">
-		<p><?php _e('Your publication\'s pending questions could not be retrieved.'); ?></p>
+		<p><?php _e('Your publication\'s most cared upon questions could not be retrieved.'); ?></p>
 	</div>
 	<?php } else if(empty($most_agreed)) { ?>
 	<div id="setting-error-settings_updated" class="settings-error error">

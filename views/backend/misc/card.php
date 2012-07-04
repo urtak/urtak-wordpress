@@ -1,3 +1,5 @@
+<?php if($use_nested_urtak) { $post_id = $question['urtak']['post_id']; } ?>
+
 <div data-post-id="<?php esc_attr_e($post_id); ?>" data-question-id="<?php esc_attr_e($question['id']); ?>" class="urtak-card <?php if($controls) { echo 'urtak-card-with-controls'; } ?>">
 	<div class="urtak-card-plot">
 		<?php $yes_percent = empty($question['responses']['percents']['yes']) && empty($question['responses']['percents']['no']) ? 'ND' : intval($question['responses']['percents']['yes']); ?>
