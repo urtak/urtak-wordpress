@@ -60,7 +60,7 @@ if(!class_exists('UrtakPlugin')) {
 
 			/// DISABLE COMMENTS CALLBACKS
 			add_action('widgets_init', array(__CLASS__, 'disable_comments__remove_widget'));
-			add_action('wp_loaded', array(__CLASS__, 'disable_comments'));	
+			add_action('wp_loaded', array(__CLASS__, 'disable_comments'));
 
 			/// AJAX
 			add_action('wp_ajax_urtak_display_meta_box__dashboard', array(__CLASS__, 'ajax_display_meta_box'));
@@ -203,7 +203,7 @@ if(!class_exists('UrtakPlugin')) {
 			if(!empty($posts_without_urtaks)) {
 				add_meta_box('urtak-posts-without-urtaks', __('Posts without Urtaks'), array(__CLASS__, 'display_meta_box__posts_without_urtaks'), 'urtak', 'left');
 			}
-			
+
 
 			add_meta_box('urtak-top-questions', __('Questions'), array(__CLASS__, 'display_meta_box__questions'), 'urtak', 'right');
 		}
@@ -251,7 +251,7 @@ if(!class_exists('UrtakPlugin')) {
 					}
 
 					$urtak = self::$manage_page_urtaks[$post_id];
-					
+
 					if(empty($urtak)) {
 						_e('N/A');
 					} else {
@@ -285,7 +285,7 @@ if(!class_exists('UrtakPlugin')) {
 		}
 
 		public static function automatically_append_urtak($content) {
-			if(in_array(get_post_type(), array('page', 'post')) 
+			if(in_array(get_post_type(), array('page', 'post'))
 				&& 'append' === self::get_settings('placement')
 				&& (is_singular() || is_page() || (is_home() && 'yes' === self::get_settings('homepage')))) {
 
@@ -311,11 +311,11 @@ if(!class_exists('UrtakPlugin')) {
 
 				add_filter('comments_open', array(__CLASS__, 'disable_comments__filter_comment_status'), 20, 2 );
 				add_filter('pings_open', array(__CLASS__, 'disable_comments__filter_comment_status'), 20, 2 );
-			
+
 				add_action('admin_head', array(__CLASS__, 'disable_comments__hide_discussion_rightnow'));
 				add_action('admin_menu', array(__CLASS__, 'disable_comments__filter_admin_menu'), 9999);
 				add_action('edit_form_advanced', array(__CLASS__, 'disable_comments__edit_form_inputs'));
-				add_action('edit_page_form', array(__CLASS__, 'disable_comments__edit_form_inputs'));				
+				add_action('edit_page_form', array(__CLASS__, 'disable_comments__edit_form_inputs'));
 				add_action('wp_dashboard_setup', array(__CLASS__, 'disable_comments__filter_dashboard'));
 
 				remove_action('admin_bar_menu', 'wp_admin_bar_comments_menu', 60);
@@ -390,8 +390,8 @@ if(!class_exists('UrtakPlugin')) {
 		public static function initialize_api_object() {
 			self::$urtak_api = new WordPressUrtak(
 				array(
-					'api_key' => self::get_credentials('api-key'), 
-					'email' => self::get_credentials('email'), 
+					'api_key' => self::get_credentials('api-key'),
+					'email' => self::get_credentials('email'),
 					'publication_key' => self::get_credentials('publication-key')
 				)
 			);
@@ -413,7 +413,7 @@ if(!class_exists('UrtakPlugin')) {
 				self::_process_settings_save($data['urtak']);
 			} else if(!empty($data['urtak-signup-nonce']) && wp_verify_nonce($data['urtak-signup-nonce'], 'urtak-signup')) {
 				self::_process_signup($data['urtak-signup-email']);
-			} 
+			}
 		}
 
 		public static function sanitize_and_validate_settings($settings) {
@@ -423,7 +423,7 @@ if(!class_exists('UrtakPlugin')) {
 			$settings['user-start'] = pd_yes_no($settings['user-start']);
 
 			$settings['moderation'] = 'publisher' === $settings['moderation'] ? 'publisher' : 'community';
-			
+
 			$settings['language'] = 'es' === $settings['language'] ? 'es' : 'en';
 
 			$settings['disable-comments'] = pd_yes_no($settings['disable-comments']);
@@ -438,29 +438,29 @@ if(!class_exists('UrtakPlugin')) {
 				if(empty($settings['credentials']['publication-key'])) {
 					$host = parse_url(home_url('/'), PHP_URL_HOST);
 					$name = get_bloginfo('name');
-					
+
 					$publication = self::create_or_get_publication_for_host(
-											$name, 
-											$host, 
-											$settings['language'], 
-											$settings['moderation'], 
-											$settings['credentials']['email'], 
+											$name,
+											$host,
+											$settings['language'],
+											$settings['moderation'],
+											$settings['credentials']['email'],
 											$urtak_api);
 
 					if($publication && isset($publication['key']) && !empty($publication['key'])) {
 						$settings['credentials']['publication-key'] = $publication['key'];
 					}
-				} else if(-1 == $settings['credentials']['publication-key']) { 
+				} else if(-1 == $settings['credentials']['publication-key']) {
 					// Let's create a new site
 					$name = $publication_fields['name'];
 					$host = empty($publication_fields['domains']) ? parse_url(home_url('/'), PHP_URL_HOST) : $publication_fields['domains'];
 
 					$publication = self::create_publication(
-											$name, 
-											$host, 
-											$settings['language'], 
-											$settings['moderation'], 
-											$settings['credentials']['email'], 
+											$name,
+											$host,
+											$settings['language'],
+											$settings['moderation'],
+											$settings['credentials']['email'],
 											$urtak_api);
 
 					if($publication && isset($publication['key']) && !empty($publication['key'])) {
@@ -479,11 +479,11 @@ if(!class_exists('UrtakPlugin')) {
 					$host = empty($publication_fields['domains']) ? parse_url(home_url('/'), PHP_URL_HOST) : $publication_fields['domains'];
 
 					$publication = self::update_publication(
-											$name, 
+											$name,
 											$host,
-											$settings['language'], 
-											$settings['moderation'], 
-											$settings['credentials']['publication-key'], 
+											$settings['language'],
+											$settings['moderation'],
+											$settings['credentials']['publication-key'],
 											$urtak_api);
 				}
 			}
@@ -506,7 +506,7 @@ if(!class_exists('UrtakPlugin')) {
 		      'permalink'   => get_permalink($post_id),
 		      'title'       => $post->post_title,
 		    );
-			
+
 			$questions = array_unique(array_filter($data['urtak']['question']));
 
 			$new_questions = array();
@@ -603,12 +603,12 @@ if(!class_exists('UrtakPlugin')) {
 			} else {
 				$base = add_query_arg(array('page' => self::SUB_LEVEL_SETTINGS_SLUG), admin_url('admin.php'));
 
-				$login_url = self::_get_login_url(); 
+				$login_url = self::_get_login_url();
 				$signup_url = self::_get_signup_url();
 
 				include('views/backend/insights/pre-credentials.php');
 			}
-			
+
 			include('views/backend/misc/footer.php');
 		}
 
@@ -635,8 +635,6 @@ if(!class_exists('UrtakPlugin')) {
 					}
 				}
 			}
-
-			$publications = false;
 
 			include('views/backend/misc/header.php');
 
@@ -667,7 +665,7 @@ if(!class_exists('UrtakPlugin')) {
 
 				$weeks = array();
 				$months = array();
-				
+
 				include('views/backend/insights/meta-boxes/at-a-glance.php');
 			} else {
 				self::echo_ajax_loading_action(__FUNCTION__);
@@ -738,7 +736,7 @@ if(!class_exists('UrtakPlugin')) {
 				wp_cache_set(self::SETTINGS_KEY, $settings, null, time() + self::CACHE_PERIOD);
 			}
 
-			return is_null($settings_key) ? $settings : 
+			return is_null($settings_key) ? $settings :
 					(isset($settings[$settings_key]) ? $settings[$settings_key] : false);
 		}
 
@@ -756,17 +754,17 @@ if(!class_exists('UrtakPlugin')) {
 
 		/**
 		 * Returns a hash of stored credentials or a single credential by name (depending
-		 * on if the parameter is passed or not). Returns false if the credential doesn't 
+		 * on if the parameter is passed or not). Returns false if the credential doesn't
 		 * exist.
 		 *
-		 * @param string $credential_key The name of the credential from the has to return 
+		 * @param string $credential_key The name of the credential from the has to return
 		 * @return false|mixed
 		 */
 		private static function get_credentials($credential_key = null) {
 			$credentials = self::get_settings('credentials');
 
-			return empty($credentials) ? false : 
-						(is_null($credential_key) ? $credentials : 
+			return empty($credentials) ? false :
+						(is_null($credential_key) ? $credentials :
 							(isset($credentials[$credential_key]) ? $credentials[$credential_key] : false));
 		}
 
@@ -774,15 +772,15 @@ if(!class_exists('UrtakPlugin')) {
 		 * Returns a boolean value indicating whether credentials have been stored for the site
 		 *
 		 * @return bool If the site has stored credentials, then return true. Otherwise, return false.
-		 */ 
+		 */
 		private static function has_credentials() {
 			$credentials = self::get_credentials();
 
-			return is_array($credentials) 
-					&& isset($credentials['api-key']) 
-					&& isset($credentials['email']) 
-					&& isset($credentials['id']) 
-					&& !empty($credentials['api-key']) 
+			return is_array($credentials)
+					&& isset($credentials['api-key'])
+					&& isset($credentials['email'])
+					&& isset($credentials['id'])
+					&& !empty($credentials['api-key'])
 					&& !empty($credentials['email'])
 					&& !empty($credentials['id']);
 		}
@@ -833,7 +831,7 @@ if(!class_exists('UrtakPlugin')) {
 
 			$publication = false;
 			if($create_response->success()) {
-				$publication = $create_response->body['publication'];				
+				$publication = $create_response->body['publication'];
 			}
 
 			return $publication;
@@ -870,7 +868,7 @@ if(!class_exists('UrtakPlugin')) {
 			} while($publications_response->success() && $page < $publications_response->body['publications']['pages']);
 
 			return $publications;
-		} 
+		}
 
 		private static function update_publication($name, $host, $language, $moderation, $key, $urtak_api = null) {
 			$urtak_api = self::get_urtak_api($urtak_api);
@@ -1071,7 +1069,7 @@ if(!class_exists('UrtakPlugin')) {
 			} else if(!is_email($email)) {
 				$error = true;
 				add_settings_error('general', 'settings_updated', __('Please provide a valid email address.'), 'error');
-			} 
+			}
 
 			if(empty($password)) {
 				$error = true;
@@ -1084,7 +1082,7 @@ if(!class_exists('UrtakPlugin')) {
 
 				if($account_response->success()) {
 					add_settings_error('general', 'settings_updated', __('Your account was successfully retrieved and your credentials saved.'), 'updated');
-	
+
 					$settings = self::get_settings();
 					$settings['credentials'] = array(
 						'api-key' => $account_response->body['account']['api_key'],
@@ -1158,7 +1156,7 @@ if(!class_exists('UrtakPlugin')) {
 		/// TEMPLATE TAGS
 
 		/**
-		 * Returns the embed code needed to display the Urtak widget for a particular 
+		 * Returns the embed code needed to display the Urtak widget for a particular
 		 * set of arguments. The arguments are as follows:
 		 * - post_id - the id of the post that you want to show the Urtak for - defaults to current global post if available
 		 *
@@ -1191,6 +1189,6 @@ if(!class_exists('UrtakPlugin')) {
 
 	require_once('lib/urtak-api.php');
 	require_once('lib/wordpress-urtak-api.php');
-	
+
 	UrtakPlugin::init();
 }

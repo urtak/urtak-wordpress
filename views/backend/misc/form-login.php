@@ -8,9 +8,9 @@
 	<?php $email = isset($data['urtak-login-email']) ? $data['urtak-login-email'] : get_the_author_meta('email');	?>
 
 	<div class="urtak-field">
-		<input type="text" class="text large-text" name="urtak-login-email" value="<?php esc_attr_e(get_the_author_meta('email')); ?>" placeholder="<?php _e('Email'); ?>" />
+		<input autocomplete="off" type="text" class="text large-text" name="urtak-login-email" value="<?php esc_attr_e(get_the_author_meta('email')); ?>" placeholder="<?php _e('Email'); ?>" />
 
-		<input type="password" class="text large-text" name="urtak-login-password" value="" placeholder="<?php _e('Password'); ?>" />
+		<input autocomplete="off" type="password" class="text large-text" name="urtak-login-password" value="" placeholder="<?php _e('Password'); ?>" />
 	</div>
 
 	<p class="submit">
