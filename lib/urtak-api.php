@@ -127,6 +127,17 @@ class Urtak {
     return $this->make_request('/publications/'.$key, 'GET', array());
   }
 
+  /**
+   * Gets all questions for a publication
+   *
+   * @access public
+   * @params Lookup a publication's questions
+   * @return UrtakResponse
+   */
+  public function get_publication_questions($options) {
+    return $this->make_request('/publication_urtak_questions', 'GET', $options);
+  }
+
   /** Create a Publication
    *
    * @access  @public

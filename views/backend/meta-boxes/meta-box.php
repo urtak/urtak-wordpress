@@ -11,6 +11,7 @@
 			<option value="st|ap"><?php _e('Approved'); ?></option>
 			<option value="st|ar"><?php _e('Archived'); ?></option>
 			<option value="st|nu"><?php _e('Rejected'); ?></option>
+			<option value="mine"><?php _e('Mine'); ?></option>
 		</select>&nbsp;&nbsp;
 		<label for="urtak-meta-box-order"><?php _e('Order By'); ?></label>
 		<select id="urtak-meta-box-order" data-urtak-attribute="order">
@@ -80,9 +81,9 @@
 	<div id="urtak-meta-box-cards-bottom-shadow" class="urtak-meta-box-cards-shadow"></div>
 
 	<div id="urtak-meta-box-controls-per-page" class="alignleft">
-		<?php _e('Show'); ?> 
-		<a class="urtak-meta-box-controls-per-page-link active" href="#">10</a> 
-		| <a class="urtak-meta-box-controls-per-page-link" href="#">50</a> 
+		<?php _e('Show'); ?>
+		<a class="urtak-meta-box-controls-per-page-link active" href="#">10</a>
+		| <a class="urtak-meta-box-controls-per-page-link" href="#">50</a>
 		| <a class="urtak-meta-box-controls-per-page-link" href="#">100</a> <?php _e('per page'); ?>
 	</div>
 
@@ -98,6 +99,6 @@
 
 <style type="text/css">
 #urtak-meta-box-cards.loading {
-	background: #f8f8f8 url(<?php echo admin_url('images/wpspin_light.gif'); ?>) no-repeat center center;	
+	background: #f8f8f8 url(<?php echo admin_url('images/wpspin_light.gif'); ?>) no-repeat center center;
 }
 </style>
