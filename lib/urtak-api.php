@@ -14,7 +14,7 @@ class Urtak {
   protected $email              = ''; // Email Address
   protected $publication_key    = ''; // Publication Key
   protected $api_key            = ''; // API Key
-  
+
   protected $urtak_home   = 'https://urtak.com';      // Home Url
   protected $api_home     = 'https://urtak.com/api';  // API Url
   protected $api_format   = 'JSON';                   // XML or JSON
@@ -74,7 +74,7 @@ class Urtak {
   // --------------------------------------------------------------------
 
   /** Lookup An Account
-   * 
+   *
    * @access  @public
    * @params  Lookup _your_ acccount
    * @return  UrtakResponse
@@ -84,7 +84,7 @@ class Urtak {
   }
 
   /** Create an Account
-   * 
+   *
    * @access  @public
    * @params  Create an acccount
    * @return  UrtakResponse
@@ -92,11 +92,11 @@ class Urtak {
   public function create_account($options) {
     return $this->make_request('/accounts', 'POST', array("account" => $options));
   }
-  
+
   /** Login an Account
    *
    * @access public
-   * @params 
+   * @params
    * @return UrtakResponse
    */
   public function login_account($options) {
@@ -108,7 +108,7 @@ class Urtak {
   // --------------------------------------------------------------------
 
   /** Get Publications
-   * 
+   *
    * @access  @public
    * @params  Lookup publications
    * @return  UrtakResponse
@@ -118,7 +118,7 @@ class Urtak {
   }
 
   /** Get a Publication
-   * 
+   *
    * @access  @public
    * @params  Lookup a publication
    * @return  UrtakResponse
@@ -128,7 +128,7 @@ class Urtak {
   }
 
   /** Create a Publication
-   * 
+   *
    * @access  @public
    * @params  Create a publication
    * @return  UrtakResponse
@@ -139,7 +139,7 @@ class Urtak {
   }
 
   /** Update a Publication
-   * 
+   *
    * @access  @public
    * @params  Updates a publication
    * @return  UrtakResponse
@@ -153,7 +153,7 @@ class Urtak {
   // --------------------------------------------------------------------
 
   /** Get Urtaks
-   * 
+   *
    * @access  @public
    * @params  property to lookup by, value of lookup property
    * @return  UrtakResponse
@@ -163,25 +163,25 @@ class Urtak {
   }
 
   /** Get an Urtak
-   * 
+   *
    * @access  @public
    * @params  property to lookup by, value of lookup property
    * @return  UrtakResponse
    */
   public function get_urtak($property, $value, $options) {
-    if($property == 'id') { 
+    if($property == 'id') {
       $path = '/urtaks/'.$value;
     } elseif($property == 'post_id') {
       $path = '/urtaks/post/'.$value;
     } elseif($property == 'permalink') {
       $path = '/urtaks/permalink/'.$value;
-    } 
+    }
 
     return $this->make_request($path, 'GET', $options);
   }
 
   /** Create an Urtak, with optional questions
-   * 
+   *
    * @access  @public
    * @params  urtak attribute array, array of questions
    * @return  UrtakResponse
@@ -193,7 +193,7 @@ class Urtak {
   }
 
   /** Update an Urtak
-   * 
+   *
    * @access  @public
    * @params  property to lookup by, urtak attribute array
    * @return  UrtakResponse
@@ -201,14 +201,14 @@ class Urtak {
   public function update_urtak($property, $urtak_attributes) {
     $value = $urtak_attributes[$property];
 
-    if($property == 'id') { 
+    if($property == 'id') {
       $path = '/urtaks/'.$value;
     } elseif($property == 'post_id') {
       $path = '/urtaks/post/'.$value;
     } elseif($property == 'permalink') {
       $path = '/urtaks/permalink/'.$value;
     }
-    
+
     // this is not a property we're trying to update just do a lookup by, so remove it
     unset($urtak_attributes[$property]);
 
@@ -222,31 +222,31 @@ class Urtak {
   // --------------------------------------------------------------------
 
   /** Retrieve Questions on an Urtak by Urtak ID, post id, or post permalink
-   * 
+   *
    * @access  @public
    * @params  property ('id', 'post_id', 'permalink') and the value ('1', '3-my-article', 'http://foo.com/my-great-content)
    * @return  UrtakResponse
    */
   public function get_urtak_questions($property, $value, $options) {
-    if($property == 'id') { 
+    if($property == 'id') {
       $path = '/urtaks/'.$value.'/questions';
     } elseif($property == 'post_id') {
       $path = '/urtaks/post/'.$value.'/questions';
     } elseif($property == 'permalink') {
       $path = '/urtaks/permalink/'.$value.'/questions';
-    } 
+    }
 
     return $this->make_request($path, 'GET', $options);
   }
 
   /** Retrieve a Question on an Urtak by Urtak ID, post id, or post permalink and Question ID
-   * 
+   *
    * @access  @public
    * @params  property ('id', 'post_id', 'permalink') and the value ('1', '3-my-article', 'http://foo.com/my-great-content)
    * @return  UrtakResponse
    */
   public function get_urtak_question($property, $value, $question_id) {
-    if($property == 'id') { 
+    if($property == 'id') {
       $path = '/urtaks/'.$value.'/questions/'.$question_id;
     } elseif($property == 'post_id') {
       $path = '/urtaks/post/'.$value.'/questions/'.$question_id;
@@ -258,104 +258,104 @@ class Urtak {
   }
 
   /** Create 1 or More Questions on an Urtak by Urtak ID, post id, or post permalink
-   * 
+   *
    * @access  @public
    * @params  property ('id', 'post_id', 'permalink'), the value ('1', '3-my-article', 'http://foo.com/my-great-content), questions array
    * @return  UrtakResponse
    */
   public function create_urtak_questions($property, $value, $questions) {
-    if($property == 'id') { 
+    if($property == 'id') {
       $path = '/urtaks/'.$value.'/questions';
     } elseif($property == 'post_id') {
       $path = '/urtaks/post/'.$value.'/questions';
     } elseif($property == 'permalink') {
       $path = '/urtaks/permalink/'.$value.'/questions';
-    } 
+    }
 
     return $this->make_request($path, 'POST', array('questions' => $questions));
   }
 
   public function update_urtak_question($property, $value, $question_id, $options = array()) {
-    if($property == 'id') { 
+    if($property == 'id') {
       $path = '/urtaks/'.$value.'/questions/'.$question_id;
     } elseif($property == 'post_id') {
       $path = '/urtaks/post/'.$value.'/questions/'.$question_id;
     } elseif($property == 'permalink') {
       $path = '/urtaks/permalink/'.$value.'/questions/'.$question_id;
-    } 
+    }
 
     return $this->make_request($path, 'PUT', $options);
   }
 
 
   /** Approve a Question on an Urtak by Urtak ID, post id, or post permalink
-   * 
+   *
    * @access  @public
    * @params  property ('id', 'post_id', 'permalink') and the value ('1', '3-my-article', 'http://foo.com/my-great-content)
    * @return  UrtakResponse
    */
   public function approve_urtak_question($property, $value, $question_id) {
-    if($property == 'id') { 
+    if($property == 'id') {
       $path = '/urtaks/'.$value.'/questions/'.$question_id.'/approve';
     } elseif($property == 'post_id') {
       $path = '/urtaks/post/'.$value.'/questions/'.$question_id.'/approve';
     } elseif($property == 'permalink') {
       $path = '/urtaks/permalink/'.$value.'/questions/'.$question_id.'/approve';
-    } 
+    }
 
     return $this->make_request($path, 'POST', array());
   }
 
   /** Reject a Question on an Urtak by Urtak ID, post id, or post permalink
-   * 
+   *
    * @access  @public
    * @params  property ('id', 'post_id', 'permalink') and the value ('1', '3-my-article', 'http://foo.com/my-great-content)
    * @return  UrtakResponse
    */
   public function reject_urtak_question($property, $value, $question_id) {
-    if($property == 'id') { 
+    if($property == 'id') {
       $path = '/urtaks/'.$value.'/questions/'.$question_id.'/reject';
     } elseif($property == 'post_id') {
       $path = '/urtaks/post/'.$value.'/questions/'.$question_id.'/reject';
     } elseif($property == 'permalink') {
       $path = '/urtaks/permalink/'.$value.'/questions/'.$question_id.'/reject';
-    } 
+    }
 
     return $this->make_request($path, 'POST', array());
   }
 
   /** Mark as spam a Question on an Urtak by Urtak ID, post id, or post permalink
-   * 
+   *
    * @access  @public
    * @params  property ('id', 'post_id', 'permalink') and the value ('1', '3-my-article', 'http://foo.com/my-great-content)
    * @return  UrtakResponse
    */
   public function spam_urtak_question($property, $value, $question_id) {
-    if($property == 'id') { 
+    if($property == 'id') {
       $path = '/urtaks/'.$value.'/questions/'.$question_id.'/spam';
     } elseif($property == 'post_id') {
       $path = '/urtaks/post/'.$value.'/questions/'.$question_id.'/spam';
     } elseif($property == 'permalink') {
       $path = '/urtaks/permalink/'.$value.'/questions/'.$question_id.'/spam';
-    } 
+    }
 
     return $this->make_request($path, 'POST', array());
   }
 
   /** Mark as ham a Question on an Urtak by Urtak ID, post id, or post permalink
-   * 
+   *
    * @access  @public
    * @params  property ('id', 'post_id', 'permalink') and the value ('1', '3-my-article', 'http://foo.com/my-great-content)
    * @return  UrtakResponse
    */
   public function ham_urtak_question($property, $value, $question_id) {
-    if($property == 'id') { 
+    if($property == 'id') {
       $path = '/urtaks/'.$value.'/questions/'.$question_id.'/ham';
     } elseif($property == 'post_id') {
       $path = '/urtaks/post/'.$value.'/questions/'.$question_id.'/ham';
     } elseif($property == 'permalink') {
       $path = '/urtaks/permalink/'.$value.'/questions/'.$question_id.'/ham';
-    } 
+    }
 
     return $this->make_request($path, 'POST', array());
   }
@@ -369,7 +369,7 @@ class Urtak {
    *
    * @access  private
    * @params  url | data
-   * @return  
+   * @return
    */
   protected function create_signature() {
     $timenow   = gmdate("U");
@@ -381,24 +381,24 @@ class Urtak {
       return array('timestamp' => $timenow, 'signature' => $signature, 'email' => $this->email);
     }
   }
-  
+
   /** Content Negotiation
-   * 
+   *
    * @access  @public
    * @params  null
    * @return  string
    */
-  protected function media_types() 
+  protected function media_types()
   {
     // Return output as XML/JSON w/ headers
     if(strtoupper($this->api_format) == 'XML') {
       return "application/vnd.urtak.urtak+xml; version=1.0";
-    } elseif(strtoupper($this->api_format) == 'JSON') {   
+    } elseif(strtoupper($this->api_format) == 'JSON') {
       return "application/vnd.urtak.urtak+json; version=1.0";
     }
   }
 
-  protected function make_request($path, $method, $data = array()) 
+  protected function make_request($path, $method, $data = array())
   {
   	return $this->curl_request($path, $method, $data);
   }
@@ -445,7 +445,7 @@ class Urtak {
       $headers[] = "Content-length: ".strlen($json_data);
 
     } elseif($method == 'PUT') {
-    
+
       $url = $this->api_home.$path;
       $json_data = json_encode(array_merge($data, $this->create_signature()));
 
@@ -466,7 +466,7 @@ class Urtak {
     $response = curl_exec($curl_handle);
     $code     = curl_getinfo($curl_handle, CURLINFO_HTTP_CODE);
     curl_close($curl_handle);
-    
+
     if($this->api_format == "JSON") {
       return new UrtakResponse($response, $code, 'JSON');
     } elseif($this->api_format == "XML") {
@@ -522,7 +522,7 @@ class UrtakResponse {
       $this->body = new SimpleXMLElement($this->raw_body);
     }
   }
-  
+
   /**
    * error message, returns error message if one exists
    *
@@ -534,48 +534,48 @@ class UrtakResponse {
   {
     return $this->body['error']['message'];
   }
-  
+
   /**
    * success, returns true if Urtak API Response was in the 200 or 300 range
    *
    * @access  public
-   * @params  
+   * @params
    * @return  boolean
    */
   public function success()
   {
     return (($this->code >= 200) && ($this->code < 400));
   }
-  
+
   /**
    * failure, returns true if Urtak API Response was in the 400 or 500 range
    *
    * @access  public
-   * @params  
+   * @params
    * @return  boolean
    */
   public function failure()
   {
     return ($this->code >= 400);
   }
-  
+
   /**
    * server error, returns true if Urtak API Response was in the 500 range
    *
    * @access  public
-   * @params  
+   * @params
    * @return  boolean
    */
   public function server_error()
   {
     return ($this->code >= 500);
   }
-  
+
   /**
    * found, returns true if the requested record was found
    *
    * @access  public
-   * @params  
+   * @params
    * @return  boolean
    */
   public function found()
@@ -588,7 +588,7 @@ class UrtakResponse {
    * not found, returns true if requested record was not found
    *
    * @access  public
-   * @params  
+   * @params
    * @return  boolean
    */
   public function not_found()

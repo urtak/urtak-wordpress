@@ -15,10 +15,10 @@
 	<h2><?php _e('Account'); ?></h2>
 
 	<?php foreach($settings['credentials'] as $credential_key => $credential_value) { ?>
-	<input type="hidden" name="urtak[credentials][<?php esc_attr_e($credential_key); ?>]" 
-			id="urtak-credentials-<?php esc_attr_e($credential_key); ?>-hidden" 
+	<input type="hidden" name="urtak[credentials][<?php esc_attr_e($credential_key); ?>]"
+			id="urtak-credentials-<?php esc_attr_e($credential_key); ?>-hidden"
 			value="<?php esc_attr_e($credential_value); ?>" />
-	
+
 	<?php } ?>
 
 	<div class="urtak-field">
@@ -32,7 +32,7 @@
 
 	<h3><?php _e('This Site'); ?></h3>
 
-	<?php 
+	<?php
 	function get_host_var($host) {
 		return $host['host'];
 	}
@@ -133,7 +133,7 @@
 	</div>
 
 	<h3><?php _e('Moderation'); ?></h3>
-	
+
 	<div class="urtak-field">
 		<div class="urtak-checkbox-container">
 			<label class="urtak-checkbox">
@@ -161,7 +161,7 @@
 	</div>
 
 	<h3><?php _e('Language'); ?></h3>
-	
+
 	<div class="urtak-field">
 		<select name="urtak[language]" id="urtak-language">
 			<option <?php selected($settings['language'], 'en'); ?> value="en"><?php _e('English'); ?></option>
@@ -174,7 +174,7 @@
 	<div class="urtak-field">
 		<input type="hidden" name="urtak[disable-comments]" id="urtak-disable-comments-hidden" value="no" />
 		<label class="urtak-checkbox">
-			<input <?php checked($settings['disable-comments'], 'yes'); ?> type="checkbox" name="urtak[disable-comments]" id="urtak-disable-comments" value="yes" /> 
+			<input <?php checked($settings['disable-comments'], 'yes'); ?> type="checkbox" name="urtak[disable-comments]" id="urtak-disable-comments" value="yes" />
 			<?php _e('Disable all commenting features'); ?>
 		</label>
 		<p class="urtak-help">
