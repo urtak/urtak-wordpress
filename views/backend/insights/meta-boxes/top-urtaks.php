@@ -8,8 +8,6 @@
 </div>
 <?php } else { ?>
 
-<?php error_log(print_r($urtaks, true)); ?>
-
 <table class="widefat">
 	<thead>
 		<tr valign="top">

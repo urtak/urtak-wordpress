@@ -30,7 +30,7 @@ if(!class_exists('WordPressUrtak') && class_exists('Urtak')) {
 				$request_args['headers']['Content-Type'] = 'application/json';
 			}
 
-			$response = wp_remote_request($url, $request_args); 
+			$response = wp_remote_request($url, $request_args);
 			if(is_wp_error($response)) {
 				return new UrtakResponse('', 500, 'JSON');
 			} else if(in_array($this->api_format, array('JSON', 'XML'))) {

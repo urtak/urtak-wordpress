@@ -691,9 +691,36 @@ if(!class_exists('UrtakPlugin')) {
 
 		public static function display_meta_box__questions($ajax = false) {
 			if($ajax) {
-				// $page = 1;
-				// $per_page = 10;
-				// $pending = self::get_publication_questions_response($page, $per_page, $order, $show);
+				$page = 1;
+				$per_page = 5;
+
+				$pending_response = self::get_publication_questions_response($page, $per_page, $order, 'st|pe');
+				if($pending_response) {
+					$pending = $pending_response['questions']['question'];
+				} else {
+					$pending = false;
+				}
+
+				$most_divided_response = self::get_publication_questions_response($page, $per_page, 'most_divided', 'st|aa');
+				if($most_divided_response) {
+					$most_divided = $most_divided_response['questions']['question'];
+				} else {
+					$most_divided = false;
+				}
+
+				$most_cared_response = self::get_publication_questions_response($page, $per_page, 'most_cared', 'st|aa');
+				if($most_cared_response) {
+					$most_cared = $most_cared_response['questions']['question'];
+				} else {
+					$most_cared = false;
+				}
+
+				$most_agreed_response = self::get_publication_questions_response($page, $per_page, 'most_agreed', 'st|aa');
+				if($most_agreed_response) {
+					$most_agreed = $most_agreed_response['questions']['question'];
+				} else {
+					$most_agreed = false;
+				}
 
 				include('views/backend/insights/meta-boxes/top-questions.php');
 			} else {
@@ -712,7 +739,9 @@ if(!class_exists('UrtakPlugin')) {
 		public static function display_meta_box__top_urtaks($ajax = false) {
 			if($ajax) {
 				$urtaks = self::get_urtaks(array('page' => 1, 'per_page' => 10, 'o' => 'n_responses'));
-				$urtaks = array_slice($urtaks, 0, 10);
+				if(is_array($urtaks)) {
+					$urtaks = array_slice($urtaks, 0, 10);
+				}
 
 				include('views/backend/insights/meta-boxes/top-urtaks.php');
 			} else {
@@ -953,7 +982,6 @@ if(!class_exists('UrtakPlugin')) {
 			$args = array('f' => $show, 'o' => $order, 'page' => $page, 'per_page' => $per_page);
 
 			$questions_response = $urtak_api->get_publication_questions($args);
-			error_log(print_r($questions_response, true));
 			if($questions_response->success()) {
 				$questions = (array)$questions_response->body;
 			} else if(404 === intval($questions_response->code)) {
