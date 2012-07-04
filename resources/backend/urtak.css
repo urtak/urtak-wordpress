@@ -25,7 +25,7 @@ div.urtak-error p {
 	background-image: url(img/urtak-logo-32.png);
 }
 
-.urtak-wrap div.updated, .urtak-wrap div.error {
+.urtak-wrap > div.updated, .urtak-wrap > div.error {
 	bottom: -25px;
 	margin-bottom: 0;
 	margin-left: 46px;
@@ -255,7 +255,7 @@ div.urtak-error p {
 	-moz-border-radius-topleft: 3px;
 	-moz-border-radius-topright: 3px;
 	border-top-left-radius: 3px;
-	border-top-right-radius: 3px;	
+	border-top-right-radius: 3px;
 	color: #000000;
 	display: block;
 	font-weight: bold;
