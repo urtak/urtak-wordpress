@@ -13,7 +13,10 @@
 		<div class="meta-box-sortables">
 			<?php self::display_meta_box__top_urtaks() ?>
 
-			<?php self::display_meta_box__stats(); ?>
+			<?php
+			// Removing this because the API doesn't suppot what we need it to
+			// self::display_meta_box__stats();
+			?>
 		</div>
 
 		<?php do_meta_boxes('urtak', 'left', ''); ?>

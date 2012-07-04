@@ -1,30 +1,42 @@
+<?php if(false === $urtaks) { ?>
+<div id="setting-error-settings_updated" class="settings-error error">
+	<p><?php _e('Your publication\'s Urtaks could not be retrieved.'); ?></p>
+</div>
+<?php } else if(empty($urtaks)) { ?>
+<div id="setting-error-settings_updated" class="settings-error error">
+	<p><?php _e('You haven\'t created any Urtaks yet.'); ?></p>
+</div>
+<?php } else { ?>
+
+<?php error_log(print_r($urtaks, true)); ?>
+
 <table class="widefat">
 	<thead>
 		<tr valign="top">
 			<th scope="col"><?php _e('Top Urtaks'); ?></th>
 			<th scope="col"><?php _e('Responses'); ?></th>
 			<th scope="col"><?php _e('Questions'); ?></th>
-			<th scope="col"><?php _e('Users'); ?></th>
 		</tr>
 	</thead>
 	<tbody>
+		<?php foreach($urtaks as $urtak) { ?>
 		<tr valign="top">
-			<td>Why do you play mobile games?</td>
-			<td>2,232,348</td>
-			<td>85</td>
-			<td>32,853</td>
+			<td><?php esc_html_e($urtak['title']); ?></td>
+			<td>
+				<?php esc_html_e(number_format_i18n($urtak['responses_count'], 0)); ?>
+			</td>
+			<td>
+				<?php esc_html_e(number_format_i18n($urtak['approved_questions_count']), 0); ?>
+
+				<?php
+				if($urtak['pending_questions_count'] > 0) {
+					printf('&nbsp;<span class="urtak-pending-count">+%s</span>', number_format_i18n((float)$urtak['pending_questions_count']));
+				}
+				?>
+			</td>
 		</tr>
-		<tr valign="top">
-			<td>Who is Francoise Hollande?</td>
-			<td>793</td>
-			<td>10</td>
-			<td>78</td>
-		</tr>
-		<tr valign="top">
-			<td>The Science of Concussions</td>
-			<td>634</td>
-			<td>14</td>
-			<td>52</td>
-		</tr>
+		<?php } ?>
 	</tbody>
 </table>
+
+<?php } ?>

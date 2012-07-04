@@ -234,7 +234,7 @@ if(!class_exists('UrtakPlugin')) {
 				global $wp_query;
 
 				self::$manage_page_ids = array();
-				foreach($wp_query->posts as $post) {
+				foreach((array)$wp_query->posts as $post) {
 					self::$manage_page_ids[] = $post->ID;
 				}
 			}
@@ -244,10 +244,14 @@ if(!class_exists('UrtakPlugin')) {
 				case 'urtak-questions':
 					// We're going to cache all the stuff we need right now
 					if(is_null(self::$manage_page_urtaks)) {
-						$urtaks = self::get_urtaks(array('post_ids' => self::$manage_page_ids));
+						if(empty(self::$manage_page_ids)) {
+							$urtaks = array();
+						} else {
+							$urtaks = self::get_urtaks(array('post_ids' => self::$manage_page_ids));
+						}
 
 						self::$manage_page_urtaks = array();
-						foreach($urtaks as $urtak) {
+						foreach((array)$urtaks as $urtak) {
 							self::$manage_page_urtaks[$urtak['post_id']] = $urtak;
 						}
 					}
@@ -687,6 +691,10 @@ if(!class_exists('UrtakPlugin')) {
 
 		public static function display_meta_box__questions($ajax = false) {
 			if($ajax) {
+				// $page = 1;
+				// $per_page = 10;
+				// $pending = self::get_publication_questions_response($page, $per_page, $order, $show);
+
 				include('views/backend/insights/meta-boxes/top-questions.php');
 			} else {
 				self::echo_ajax_loading_action(__FUNCTION__);
@@ -703,6 +711,9 @@ if(!class_exists('UrtakPlugin')) {
 
 		public static function display_meta_box__top_urtaks($ajax = false) {
 			if($ajax) {
+				$urtaks = self::get_urtaks(array('page' => 1, 'per_page' => 10, 'o' => 'n_responses'));
+				$urtaks = array_slice($urtaks, 0, 10);
+
 				include('views/backend/insights/meta-boxes/top-urtaks.php');
 			} else {
 				self::echo_ajax_loading_action(__FUNCTION__);
@@ -911,7 +922,7 @@ if(!class_exists('UrtakPlugin')) {
 
 		private static function get_questions_response($page, $per_page, $order, $show, $search, $post_id, $urtak_api = null) {
 			if(empty($per_page)) {
-				$per_page = 2;
+				$per_page = 10;
 			}
 
 			$urtak_api = self::get_urtak_api($urtak_api);
@@ -919,6 +930,30 @@ if(!class_exists('UrtakPlugin')) {
 			$args = array('f' => $show, 's' => $search, 'o' => $order, 'page' => $page, 'per_page' => $per_page);
 
 			$questions_response = $urtak_api->get_urtak_questions('post_id', $post_id, $args);
+			if($questions_response->success()) {
+				$questions = (array)$questions_response->body;
+			} else if(404 === intval($questions_response->code)) {
+				// We're trapping this particular thing because we want to make sure not to provide an error
+				// in case the Urtak for this post hasn't been created
+				$questions = array('questions' => array('question' => array(), 'pages' => 1));
+			} else {
+				$questions = false;
+			}
+
+			return $questions;
+		}
+
+		private static function get_publication_questions_response($page, $per_page, $order, $show, $urtak_api = null) {
+			if(empty($per_page)) {
+				$per_page = 10;
+			}
+
+			$urtak_api = self::get_urtak_api($urtak_api);
+
+			$args = array('f' => $show, 'o' => $order, 'page' => $page, 'per_page' => $per_page);
+
+			$questions_response = $urtak_api->get_publication_questions($args);
+			error_log(print_r($questions_response, true));
 			if($questions_response->success()) {
 				$questions = (array)$questions_response->body;
 			} else if(404 === intval($questions_response->code)) {
