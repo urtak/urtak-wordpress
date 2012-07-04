@@ -29,7 +29,7 @@ jQuery(document).ready(function($) {
 
 	$('.urtak-tabbed-control a').live('click', function(event) {
 		event.preventDefault();
-		
+
 		var $this = $(this)
 		, $control = $this.parents('ul')
 		, $item = $this.parents('li');
@@ -66,12 +66,20 @@ jQuery(document).ready(function($) {
 					question_id: $card.attr('data-question-id'),
 					action: $this.attr('data-action')
 				}
-			] 
+			]
 		};
 
 		$(this).addClass('active').siblings('a').removeClass('active');
 
 		UrtakDelegates.modify_question_status(vars);
+	});
+
+	$('.urtak-card-info-question input').keypress(function(event) {
+		if(13 === event.which) {
+			event.preventDefault();
+
+			$(this).parents('.urtak-card').find('input.urtak-card-add').click();
+		}
 	});
 
 	$('#urtak-meta-box-controls-alls a').live('click', function(event) {
@@ -87,7 +95,7 @@ jQuery(document).ready(function($) {
 
 		$cards.each(function(index, element) {
 			var $card = $(element);
-			
+
 			vars.questions.push({
 				post_id: $card.attr('data-post-id'),
 				question_id: $card.attr('data-question-id'),
@@ -240,12 +248,12 @@ var UrtakDelegates = (function(jQuery) {
 
 	_plot_bar_graph = function(selector, data, ticks) {
 		$.plot(
-			$(selector), 
+			$(selector),
 			[
-				{ 
-					data: data, 
-		    		bars: { 
-		    			align: 'center', 
+				{
+					data: data,
+		    		bars: {
+		    			align: 'center',
 		    			fill: '#00aef0',
 		    			fillColor: '#00aef0',
 		    			show: true,
@@ -253,7 +261,7 @@ var UrtakDelegates = (function(jQuery) {
 		    		},
 		    		color: '#00aef0'
 		    	}
-		    ], 
+		    ],
 			{
 				grid: {
 					borderWidth: 0,
@@ -262,9 +270,9 @@ var UrtakDelegates = (function(jQuery) {
 				},
 				xaxis: {
 					max: (ticks.length * 2) - 1,
-					min: -1, 
+					min: -1,
 					tickLength: 0,
-					ticks: ticks 
+					ticks: ticks
 				}
 			}
 		);

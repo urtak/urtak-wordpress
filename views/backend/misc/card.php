@@ -7,13 +7,13 @@
 		<div class="urtak-card-info-question"><?php esc_html_e($question['text']); ?></div>
 	</div>
 	<div class="urtak-card-controls-container">
-		<div class="urtak-card-info-asker"><?php printf(__('Asked by %1$s'), 'smombartz'); ?></div>
+		<div class="urtak-card-info-asker"><?php printf(__('Asked by %1$s'), empty($question['ugc']) ? 'the site' : 'a user'); ?></div>
 		<?php if($controls) { ?>
 		<div class="urtak-card-controls">
 			<a data-action="reject" class="urtak-card-controls-icon <?php if($question['status'] === 'rejected') { echo 'active'; } ?> urtak-card-controls-icon-rejected" href="#"></a>
 			<a data-action="archive" class="urtak-card-controls-icon <?php if($question['status'] === 'archived') { echo 'active'; } ?> urtak-card-controls-icon-archived" href="#"></a>
 			<a data-action="approve" class="urtak-card-controls-icon <?php if($question['status'] === 'approved') { echo 'active'; } ?> urtak-card-controls-icon-approved" href="#"></a>
-			
+
 			<?php if($question['status'] === 'pending') { ?>
 			<a data-action="pending" class="urtak-card-controls-icon <?php if($question['status'] === 'pending') { echo 'active'; } ?> urtak-card-controls-icon-pending" href="#"></a>
 			<?php } ?>

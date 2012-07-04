@@ -120,7 +120,7 @@ if(!class_exists('UrtakPlugin')) {
 		public static function ajax_fetch_responses_count() {
 			$data = stripslashes_deep($_REQUEST);
 
-			$post_ids = array_unique(array_filter($data['post_ids']));
+			$post_ids = array_unique(array_filter((array)$data['post_ids']));
 
 			$non_mapped_urtaks = self::get_urtaks(array('post_ids' => $post_ids));
 			$urtaks = array();
@@ -197,7 +197,8 @@ if(!class_exists('UrtakPlugin')) {
 
 			add_action("load-{$sub_level_settings}", array(__CLASS__, 'process_settings_actions'));
 
-			add_meta_box('urtak-at-a-glance', __('At a Glance'), array(__CLASS__, 'display_meta_box__insights'), 'urtak', 'top');
+			// This has been removed because the API functionality isn't there to support it at this point in time
+			// add_meta_box('urtak-at-a-glance', __('At a Glance'), array(__CLASS__, 'display_meta_box__insights'), 'urtak', 'top');
 
 			$posts_without_urtaks = self::get_nonassociated_post_ids();
 			if(!empty($posts_without_urtaks)) {
@@ -210,6 +211,7 @@ if(!class_exists('UrtakPlugin')) {
 
 		public static function add_dashboard_widget() {
 			if(self::has_credentials()) {
+				// This has been removed because the API functionality isn't there to support it at this point in time
 				wp_add_dashboard_widget('urtak', __('Urtak'), array(__CLASS__, 'display_meta_box__dashboard'));
 			}
 		}
@@ -507,7 +509,7 @@ if(!class_exists('UrtakPlugin')) {
 		      'title'       => $post->post_title,
 		    );
 
-			$questions = array_unique(array_filter($data['urtak']['question']));
+			$questions = array_unique(array_filter((array)$data['urtak']['question']));
 
 			$new_questions = array();
 			foreach($questions as $question) {
@@ -919,6 +921,10 @@ if(!class_exists('UrtakPlugin')) {
 			$questions_response = $urtak_api->get_urtak_questions('post_id', $post_id, $args);
 			if($questions_response->success()) {
 				$questions = (array)$questions_response->body;
+			} else if(404 === intval($questions_response->code)) {
+				// We're trapping this particular thing because we want to make sure not to provide an error
+				// in case the Urtak for this post hasn't been created
+				$questions = array('questions' => array('question' => array(), 'pages' => 1));
 			} else {
 				$questions = false;
 			}
