@@ -19,6 +19,7 @@ class Urtak {
   protected $api_home     = 'https://urtak.com/api';  // API Url
   protected $api_format   = 'JSON';                   // XML or JSON
   protected $client_name  = 'Urtak API Wrapper for PHP v0.9.9';
+  protected $requested_times = array();
 
   public function __construct($config = array())
   {
@@ -383,7 +384,12 @@ class Urtak {
    * @return
    */
   protected function create_signature() {
-    $timenow   = gmdate("U");
+    $timenow = gmdate("U");
+    while(in_array($timenow, $this->requested_times)) {
+      $timenow++;
+    }
+
+    $this->requested_times[] = $timenow;
     $signature = sha1($timenow.' '.$this->api_key);
 
     if($this->publication_key != "") {

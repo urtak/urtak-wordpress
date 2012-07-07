@@ -28,7 +28,10 @@
 	</div>
 
 	<div class="clear"></div>
+
+	<div id="urtak-meta-box-cards-top-shadow-left"></div>
 	<div id="urtak-meta-box-cards-top-shadow" class="urtak-meta-box-cards-shadow"></div>
+	<div id="urtak-meta-box-cards-top-shadow-right"></div>
 </div>
 
 <div id="urtak-meta-box-cards" class="loading">
@@ -36,21 +39,29 @@
 	<div id="urtak-meta-box-cards-holder">
 
 		<div class="urtak-card urtak-card-adder urtak-card-with-controls">
-			<div class="urtak-card-plot">
-				<?php echo self::_get_pie_image('PENDING'); ?>
+			<div class="urtak-card-plot urtak-card-plot-y">
+				<?php echo self::_get_pie_image(100); ?>
+			</div>
+			<div class="urtak-card-plot urtak-card-plot-n">
+				<?php echo self::_get_pie_image(0); ?>
+			</div>
+			<div class="urtak-card-plot urtak-card-plot-controls">
+				<a href="#" data-answer="y" class="yes"><?php _e('Yes'); ?></a>
+				<a href="#" data-answer="n" class="no"><?php _e('No'); ?></a>
+				<a href="#" class="cancel"><?php _e('Cancel'); ?></a>
 			</div>
 			<div class="urtak-card-info">
 				<div class="urtak-card-info-question">
-					<input type="text" class="large-text" name="urtak[question][]" placeholder="<?php _e('Ask a Yes or No Question.'); ?>" />
+					<textarea class="large-text" name="urtak[question][text][]" placeholder="<?php _e('Ask a Yes or No Question.'); ?>"></textarea>
+					<input class="urtak-adder-answer" type="hidden" name="urtak[question][answer][]" value="" />
 				</div>
 			</div>
+			<div class="clear"></div>
 			<div class="urtak-card-controls-container">
-				<div class="urtak-card-info-asker"></div>
+				<div class="urtak-card-info-asker"><?php _e('Asked by the site'); ?></div>
 				<div class="urtak-card-controls">
-					<div class="alignright">
-						<input type="button" class="button button-secondary urtak-card-remove" value="<?php _e('Remove Question'); ?>" />
-						<input type="button" class="button button-primary urtak-card-add" value="<?php _e('Add Question'); ?>" />
-					</div>
+					<span class="urtak-update-message"><?php _e('Update or Publish this post to submit this question.'); ?></span>
+					<a data-action="reject" class="urtak-card-controls-icon-special urtak-card-controls-icon <?php if($question['status'] === 'rejected') { echo 'active'; } ?> urtak-card-controls-icon-rejected" href="#"></a>
 					<div class="clear"></div>
 				</div>
 			</div>
@@ -59,26 +70,24 @@
 	</div>
 
 	<div id="urtak-meta-box-help">
-		<a href="#" id="urtak-meta-box-help-handle"><?php _e('Help'); ?></a>
-
 		<div id="urtak-meta-box-help-content">
-			<h4><?php _e('How It Works'); ?></h4>
+			<a href="#" id="urtak-meta-box-help-handle"><?php _e('Help'); ?></a>
 
-			<?php echo wpautop('Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla congue, justo in dictum fermentum, metus turpis ullamcorper ligula, sit amet lobortis libero nulla in velit. Aliquam purus turpis, adipiscing eu gravida a, luctus nec felis. Suspendisse a dui justo. Donec iaculis sagittis sapien quis auctor. Duis ante augue, ultricies non venenatis sed, molestie placerat odio. Duis purus justo, tincidunt vel malesuada vitae, ullamcorper quis purus. Curabitur semper gravida egestas. Vivamus quis quam sit amet lorem faucibus facilisis porta sed felis. Cras iaculis, dolor non molestie consectetur, tortor augue sodales risus, ac adipiscing libero sapien in est. Aliquam eget elit lorem. Nullam luctus condimentum purus ac eleifend. Quisque dictum aliquam urna in pulvinar.
+			<div id="urtak-meta-box-help-content-inner">
+				<h4><?php _e('How It Works'); ?></h4>
 
-								Integer felis ante, pellentesque ut porttitor eget, aliquet et turpis. Morbi non placerat magna. Cras mauris mi, commodo sed commodo quis, ullamcorper et mauris. Curabitur id sem vitae augue tristique tempus. Suspendisse vehicula sapien quis neque tempus malesuada in nec neque. Nulla ante purus, adipiscing vitae cursus at, sollicitudin iaculis magna. Pellentesque tempor volutpat dolor at sollicitudin. Nam metus leo, interdum et tempus id, iaculis sed nisi. Ut molestie auctor elementum. Vestibulum libero erat, vestibulum in commodo et, mattis ac dui. Donec leo odio, hendrerit sed feugiat ut, egestas sed lorem. Nam et mauris ipsum, non gravida mauris.
+				<?php echo wpautop('Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla congue, justo in dictum fermentum, metus turpis ullamcorper ligula, sit amet lobortis libero nulla in velit. Aliquam purus turpis, adipiscing eu gravida a, luctus nec felis. Suspendisse a dui justo. Donec iaculis sagittis sapien quis auctor. Duis ante augue, ultricies non venenatis sed, molestie placerat odio. Duis purus justo, tincidunt vel malesuada vitae, ullamcorper quis purus. Curabitur semper gravida egestas. Vivamus quis quam sit amet lorem faucibus facilisis porta sed felis. Cras iaculis, dolor non molestie consectetur, tortor augue sodales risus, ac adipiscing libero sapien in est. Aliquam eget elit lorem. Nullam luctus condimentum purus ac eleifend. Quisque dictum aliquam urna in pulvinar.
 
-								Cras non enim quam, nec dapibus velit. Pellentesque dictum, ipsum vitae consequat vestibulum, ligula dolor elementum dolor, sit amet tempor metus neque sit amet risus. Maecenas id sapien non justo lobortis vehicula. Aliquam at malesuada est. Vivamus eleifend ligula sit amet metus lacinia mattis. Integer congue enim a enim vulputate eu faucibus diam vulputate. Proin blandit nunc vitae odio consequat varius. Fusce tempor sapien quis metus egestas posuere.
-
-								Quisque in urna neque. Donec a ligula sit amet risus viverra rutrum sit amet non metus. Nunc suscipit, neque feugiat aliquam sagittis, augue nisl tristique dui, sit amet tincidunt mauris nibh eu enim. Quisque pulvinar vulputate aliquam. Fusce et placerat lacus. Sed venenatis luctus auctor. Aenean nec pharetra dui. Nunc id nulla quis massa gravida mattis. Duis quis felis nibh. Nunc leo mauris, consectetur non vestibulum at, pretium non orci. Quisque tincidunt enim sit amet justo imperdiet luctus a eu odio. Donec et diam id nisl dapibus euismod non nec metus. Nulla luctus dolor vestibulum dui imperdiet id molestie justo posuere. Vivamus ut tincidunt tortor.
-
-								Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Aliquam congue varius aliquam. Aenean porttitor tempor dui, pellentesque ullamcorper arcu eleifend eu. Curabitur congue congue cursus. Pellentesque ante elit, placerat sit amet sagittis nec, placerat nec risus. Sed condimentum mattis convallis. Pellentesque semper tortor sed urna imperdiet vestibulum.'); ?>
+									Integer felis ante, pellentesque ut porttitor eget, aliquet et turpis. Morbi non placerat magna. Cras mauris mi, commodo sed commodo quis, ullamcorper et mauris. Curabitur id sem vitae augue tristique tempus. Suspendisse vehicula sapien quis neque tempus malesuada in nec neque. Nulla ante purus, adipiscing vitae cursus at, sollicitudin iaculis magna. Pellentesque tempor volutpat dolor at sollicitudin. Nam metus leo, interdum et tempus id, iaculis sed nisi. Ut molestie auctor elementum. Vestibulum libero erat, vestibulum in commodo et, mattis ac dui. Donec leo odio, hendrerit sed feugiat ut, egestas sed lorem. Nam et mauris ipsum, non gravida mauris.'); ?>
+			</div>
 		</div>
 	</div>
 </div>
 
 <div class="urtak-meta-box-actions" id="urtak-meta-box-controls">
+	<div id="urtak-meta-box-cards-bottom-shadow-left"></div>
 	<div id="urtak-meta-box-cards-bottom-shadow" class="urtak-meta-box-cards-shadow"></div>
+	<div id="urtak-meta-box-cards-bottom-shadow-right"></div>
 
 	<div id="urtak-meta-box-controls-per-page" class="alignleft">
 		<?php _e('Show'); ?>

@@ -1,3 +1,27 @@
+// Textarea and select clone() bug workaround | Spencer Tipping
+// Licensed under the terms of the MIT source code license
+
+// Motivation.
+// jQuery's clone() method works in most cases, but it fails to copy the value of textareas and select elements. This patch replaces jQuery's clone() method with a wrapper that fills in the
+// values after the fact.
+
+// An interesting error case submitted by Piotr Przybył: If two <select> options had the same value, the clone() method would select the wrong one in the cloned box. The fix, suggested by Piotr
+// and implemented here, is to use the selectedIndex property on the <select> box itself rather than relying on jQuery's value-based val().
+(function(original) {
+  jQuery.fn.clone = function() {
+    var result = original.apply(this, arguments),
+      my_textareas = this.find('textarea').add(this.filter('textarea')),
+      result_textareas = result.find('textarea').add(result.filter('textarea')),
+      my_selects = this.find('select').add(this.filter('select')),
+      result_selects = result.find('select').add(result.filter('select'));
+
+    for (var i = 0, l = my_textareas.length; i < l; ++i) jQuery(result_textareas[i]).val(jQuery(my_textareas[i]).val());
+    for (var i = 0, l = my_selects.length; i < l; ++i) result_selects[i].selectedIndex = my_selects[i].selectedIndex;
+
+    return result;
+  };
+})(jQuery.fn.clone); // via https://github.com/spencertipping/jquery.fix.clone/blob/master/jquery.fix.clone.js
+
 jQuery(document).ready(function($) {
 	$('.urtak-login-signup-settings h2 a').click(function(event) {
 		event.preventDefault();
@@ -53,7 +77,7 @@ jQuery(document).ready(function($) {
 		);
 	});
 
-	$('.urtak-card-controls-icon').live('click', function(event) {
+	$('.urtak-card-controls-icon:not(.urtak-card-controls-icon-special)').live('click', function(event) {
 		event.preventDefault();
 
 		var $this = $(this)
@@ -74,11 +98,9 @@ jQuery(document).ready(function($) {
 		UrtakDelegates.modify_question_status(vars);
 	});
 
-	$('.urtak-card-info-question input').keypress(function(event) {
+	$('.urtak-card-info-question textarea').keypress(function(event) {
 		if(13 === event.which) {
 			event.preventDefault();
-
-			$(this).parents('.urtak-card').find('input.urtak-card-add').click();
 		}
 	});
 
@@ -130,27 +152,39 @@ jQuery(document).ready(function($) {
 		$('#urtak-meta-box-per-page').val($(this).text()).change();
 	});
 
-	$('.urtak-card-add').live('click', function(event) {
+	$('.urtak-card-plot-controls a').live('click', function(event) {
 		event.preventDefault();
 
 		var $this = $(this)
 		, $card = $this.parents('.urtak-card')
 		, $clone = $card.clone()
 		, $question = $clone.find('.large-text')
-		, $remove = $this.siblings('.urtak-card-remove')
-		, question = $question.val();
+		, $answer = $clone.find('.urtak-adder-answer')
+		, $controls = $clone.find('.urtak-card-controls')
+		, answer = $this.attr('data-answer')
+		, question = $.trim($question.val());
+
+
+		if(!$this.hasClass('cancel') && '' != question) {
+			$clone.hide();
+			$clone.find('.urtak-card-plot-controls').hide();
+			$clone.find('.urtak-card-plot-' + answer).show();
+			$clone.find('.urtak-card-info-question').append(question);
+
+			$answer.val(answer);
+
+			$controls.show();
+			$question.hide();
+
+			$clone.insertAfter($card);
+			$clone.slideDown('fast');
+		}
 
 		$card.find('.large-text').val('');
 
-		$clone.hide();
-		$clone.find('.urtak-card-remove').show();
-		$clone.find('.urtak-card-add').hide();
-		$question.after(question).hide();
-		$clone.insertAfter($card);
-		$clone.slideDown('fast');
 	});
 
-	$('.urtak-card-remove').live('click', function(event) {
+	$('.urtak-card-controls-icon-special').live('click', function(event) {
 		event.preventDefault();
 		var $card = $(this).parents('.urtak-card');
 
@@ -178,7 +212,7 @@ jQuery(document).ready(function($) {
 			$this.text(Urtak_Vars.help_text);
 		} else {
 			$help.animate({
-				top: (parseInt($cards.outerHeight(true)) - parseInt($help.find('#urtak-meta-box-help-handle').outerHeight(true)) - parseInt($help.find('#urtak-meta-box-help-content').outerHeight(true)))
+				top: (parseInt($cards.outerHeight(true)) - parseInt($help.find('#urtak-meta-box-help-content').outerHeight(true)))
 			});
 			$this.addClass('open');
 			$this.text(Urtak_Vars.help_close);

@@ -19,7 +19,7 @@
 	<tbody>
 		<?php foreach($urtaks as $urtak) { ?>
 		<tr valign="top">
-			<td><?php esc_html_e($urtak['title']); ?></td>
+			<td><a target="_blank" href="<?php esc_attr_e(esc_url(get_permalink($urtak['post_id']))); ?>"><?php esc_html_e($urtak['title']); ?></a></td>
 			<td>
 				<?php esc_html_e(number_format_i18n($urtak['responses_count'], 0)); ?>
 			</td>

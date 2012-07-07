@@ -46,5 +46,5 @@ function urtak_the_responses_number($post_id = null) {
 		$post_id = get_the_ID();
 	}
 
-	printf('<span data-post-id="%d" class="urtak-responses-number"><span class="urtak-responses-number-interior">...</span></span>', $post_id);
+	printf('<a href="%s#embedded-urtak-%d" data-post-id="%d" class="urtak-responses-number"><span class="urtak-responses-number-interior">...</span></a>', get_permalink($post_id), $post_id, $post_id);
 }

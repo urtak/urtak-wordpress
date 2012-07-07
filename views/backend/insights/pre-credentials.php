@@ -13,10 +13,4 @@
 			</p>
 		</div>
 	</form>
-
-	<h2><?php _e('How It Works'); ?></h2>
-
-	<div id="urtak-video-container">
-		<iframe width="640" height="360" src="http://www.youtube.com/embed/VXDAdqgfZxA" frameborder="0" allowfullscreen></iframe>
-	</div>
 </div>

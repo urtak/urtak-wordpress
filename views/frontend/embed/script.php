@@ -1,4 +1,5 @@
 <!-- URTAK EMBED CODE START -->
+<a name="embedded-urtak-<?php the_ID(); ?>"></a>
 <script src="https://d39v39m55yawr.cloudfront.net/assets/clr.js" type='text/javascript'></script>
 <div data-publication-key = '<?php esc_attr_e($publication_key); ?>'
 	 data-post-title      = '<?php esc_attr_e($title); ?>'

@@ -9,7 +9,7 @@
 		<div class="urtak-card-info-question"><?php esc_html_e($question['text']); ?></div>
 	</div>
 	<div class="urtak-card-controls-container">
-		<div class="urtak-card-info-asker"><?php printf(__('Asked by %1$s'), empty($question['ugc']) ? 'the site' : 'a user'); ?></div>
+		<div class="urtak-card-info-asker"><?php printf(__('Asked by %1$s'), empty($question['ugc']) ? __('the site') : __('a user')); ?></div>
 		<?php if($controls) { ?>
 		<div class="urtak-card-controls">
 			<a data-action="reject" class="urtak-card-controls-icon <?php if($question['status'] === 'rejected') { echo 'active'; } ?> urtak-card-controls-icon-rejected" href="#"></a>

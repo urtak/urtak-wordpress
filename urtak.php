@@ -128,8 +128,6 @@ if(!class_exists('UrtakPlugin')) {
 				$urtaks[$urtak['post_id']] = number_format_i18n((float)$urtak['responses_count'], 0);
 			}
 
-			$urtaks[111] = number_format_i18n(123122234, 0);
-
 			echo json_encode(compact('urtaks'));
 			exit;
 		}
@@ -511,11 +509,11 @@ if(!class_exists('UrtakPlugin')) {
 		      'title'       => $post->post_title,
 		    );
 
-			$questions = array_unique(array_filter((array)$data['urtak']['question']));
+			$questions = array_unique(array_filter((array)$data['urtak']['question']['text']));
 
 			$new_questions = array();
-			foreach($questions as $question) {
-				$new_questions[] = array('text' => $question);
+			foreach($questions as $key => $question) {
+				$new_questions[] = array('text' => $question, 'response' => $data['urtak']['question']['answer'][$key]);
 			}
 
 			$urtak = self::get_urtak($post_id);
@@ -815,8 +813,10 @@ if(!class_exists('UrtakPlugin')) {
 			$publications = self::get_publications($urtak_api);
 
 			foreach($publications as $publication) {
-				if(in_array($host, $publication['domains'])) {
-					return $publication;
+				foreach($publication['hosts'] as $phost) {
+					if($host === $phost['host']) {
+						return $publication;
+					}
 				}
 			}
 
@@ -1129,7 +1129,7 @@ if(!class_exists('UrtakPlugin')) {
 					set_transient('settings_errors', get_settings_errors(), 30);
 					wp_redirect(add_query_arg(array('settings-updated' => 'true'), self::_get_settings_url()));
 				} else {
-					add_settings_error('general', 'settings_updated', __('Your account could not be created. Please try again.'), 'error');
+					add_settings_error('general', 'settings_updated', __('Your account could not be retrieved. Please check your credentials and try again.'), 'error');
 				}
 			}
 		}

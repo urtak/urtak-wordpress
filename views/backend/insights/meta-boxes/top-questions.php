@@ -11,7 +11,7 @@
 		<p><?php _e('Your publication\'s pending questions could not be retrieved.'); ?></p>
 	</div>
 	<?php } else if(empty($pending)) { ?>
-	<div id="setting-error-settings_updated" class="settings-error error">
+	<div id="setting-error-settings_updated" class="settings-error updated">
 		<p><?php _e('You don\'t have any pending questions.'); ?></p>
 	</div>
 	<?php } else { ?>

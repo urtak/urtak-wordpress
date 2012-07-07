@@ -9,14 +9,31 @@
 
 /** Settings Notice **/
 
+#urtak-credential-notice.urtak-moved-notice {
+	margin-left: 0;
+	width: auto;
+}
+
 div.urtak-error {
 	background: #edf8fd;
 	border-color: #ebebeb;
+	color: #666666;
+	font-size: 18px;
 }
 
 div.urtak-error p {
-	background: transparent url(img/urtak-logo-20.png) no-repeat left center;
-	padding-left: 27px;
+	background: transparent url(img/assets/u.png) no-repeat left center;
+	line-height: 30px;
+	padding: 9px 0 4px 37px;
+}
+
+div.urtak-error .globe {
+	background: transparent url(img/assets/globe.png) no-repeat bottom right;
+	float: right;
+	margin-right: -6px;
+	margin-top: 5px;
+	height: 56px;
+	width: 155px;
 }
 
 /** Settings Page **/
@@ -31,6 +48,11 @@ div.urtak-error p {
 	margin-left: 46px;
 	position: relative;
 	width: 472px;
+}
+
+.urtak-wrap input.large-text, .urtak-wrap select {
+	height: auto;
+	padding: 10px 5px;
 }
 
 .urtak-wrap-title {
@@ -111,12 +133,18 @@ div.urtak-error p {
 
 .urtak-field {
 	background: #f8f8f8;
+	border: 1px solid #f8f8f8;
 	border-radius: 3px;
 	font-family: 'Droid Sans', sans-serif;
 	font-size: 13px;
 	font-weight: 400;
 	margin-bottom: 1px;
 	padding: 21px;
+}
+
+.urtak-field-highlighted {
+	background: #ffffe0;
+	border: 1px solid #e6db55;
 }
 
 .urtak-field > *:first-child {
@@ -368,10 +396,50 @@ div.urtak-error p {
 	width: 60px;
 }
 
+.urtak-card-adder .urtak-card-plot {
+	display: none;
+}
+
+.urtak-card-adder .urtak-card-plot-controls {
+	display: block;
+}
+
+.urtak-card-adder .urtak-card-plot-controls a {
+	background: #999999;
+	border: 1px solid #999999;
+	border-radius: 3px;
+	color: #ffffff;
+	display: block;
+	font-size: 10px;
+	font-weight: bold;
+	line-height: 18px;
+	margin-bottom: 4px;
+	text-align: center;
+	text-decoration: none;
+}
+
+.urtak-card-adder .urtak-card-plot-controls a.yes {
+	background: #00aef0;
+}
+
+.urtak-card-adder .urtak-card-plot-controls a.no {
+	background: #ff7100;
+}
+
+.urtak-card-adder .urtak-card-controls {
+	display: none;
+}
+
 .urtak-card-info-asker {
 	color: #999999;
 	font-size: 9px;
 	padding: 10px;
+}
+
+.urtak-update-message {
+	color: #999999;
+	font-size: 9px;
+	line-height: 22px;
 }
 
 .urtak-card-controls-container {
@@ -476,27 +544,81 @@ div.urtak-error p {
 	position: relative;
 }
 
-.urtak-meta-box-cards-shadow {
-	background: transparent url(img/background-shadow-top.png) no-repeat top center;
-	position: absolute;
-
-	left: 0;
-	right: 0;
-	height: 6px;
-	z-index: 1000000;
-}
-
 .urtak-disabled {
 	cursor: default;
 }
 
-#urtak-meta-box-cards-bottom-shadow {
-	background: transparent url(img/background-shadow-bottom.png) no-repeat bottom center;
-	top: -6px;
+.urtak-card-info-question textarea {
+	background: transparent url(img/question-area-background.png) repeat top left;
+	border: 0;
+	height: 45px;
+	line-height: 19px;
+	resize: none;
+}
+
+.urtak-card-info-question textarea:focus {
+	outline: 0;
+}
+
+/** Shadows **/
+
+.urtak-meta-box-cards-shadow {
+	background: transparent url(img/shadow-top-middle.png) repeat-x top center;
+	position: absolute;
+
+	left: 102px;
+	right: 102px;
+	height: 5px;
+	z-index: 1000000;
+}
+
+#urtak-meta-box-cards-top-shadow-left {
+	background: transparent url(img/shadow-top-left.png) no-repeat top left;
+	height: 5px;
+	position: absolute;
+	bottom: -5px;
+	left: 0;
+	width: 102px;
+	z-index: 1000000;
+}
+
+#urtak-meta-box-cards-top-shadow-right {
+	background: transparent url(img/shadow-top-right.png) no-repeat top right;
+	height: 5px;
+	position: absolute;
+	bottom: -5px;
+	right: 0;
+	width: 102px;
+	z-index: 1000000;
 }
 
 #urtak-meta-box-cards-top-shadow {
-	bottom: -6px;
+	bottom: -5px;
+}
+
+#urtak-meta-box-cards-bottom-shadow-left {
+	background: transparent url(img/shadow-bottom-left.png) no-repeat bottom left;
+	height: 5px;
+	position: absolute;
+	top: -5px;
+	left: 0;
+	width: 102px;
+	z-index: 1000000;
+}
+
+#urtak-meta-box-cards-bottom-shadow-right {
+	background: transparent url(img/shadow-bottom-right.png) no-repeat bottom right;
+	height: 5px;
+	position: absolute;
+	top: -5px;
+	right: 0;
+	width: 102px;
+	z-index: 1000000;
+}
+
+#urtak-meta-box-cards-bottom-shadow {
+	background: transparent url(img/shadow-bottom-middle.png) repeat-x bottom center;
+	top: -5px;
 }
 
 #urtak-meta-box-cards .urtak-card:last-child {
@@ -577,8 +699,8 @@ div.urtak-error p {
 	height: 22px;
 	line-height: 22px;
 	position: absolute;
-	top: 0;
-	left: 0;
+	top: -23px;
+	left: -1px;
 	text-align: center;
 	text-decoration: none;
 	width: 50px;
@@ -590,13 +712,14 @@ div.urtak-error p {
 	border: 1px solid #cccccc;
 	border-bottom: 0;
 	clear: both;
+	padding: 10px;
+	position: relative;
+	margin: 22px auto 0;
+	max-width: 800px;
+	z-index: 99998;
+}
+
+#urtak-meta-box-help-content-inner {
 	height: 300px;
 	overflow: auto;
-	padding: 10px;
-	position: absolute;
-	top: 22px;
-	bottom: 0;
-	right 0;
-	left: 0;
-	z-index: 99998;
 }

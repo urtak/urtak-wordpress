@@ -30,7 +30,7 @@
 		</p>
 	</div>
 
-	<h3><?php _e('This Site'); ?></h3>
+	<h3 id="urtak-site"><?php _e('This Site'); ?></h3>
 
 	<?php
 	function get_host_var($host) {
@@ -38,7 +38,7 @@
 	}
 	?>
 
-	<div class="urtak-field">
+	<div class="urtak-field <?php if(is_array($publications) && empty($settings['credentials']['publication-key'])) { echo 'urtak-field-highlighted'; } ?>">
 		<?php if(false === $publications) { ?>
 
 		<p class="urtak-help urtal-help-nomargin"><?php _e('Selecting a site has been disabled because communication with the Urtak service has been interrupted.'); ?></p>
@@ -51,7 +51,7 @@
 				$hosts_string = isset($publication['hosts']) && is_array($publication['hosts']) ? implode(', ', array_map('get_host_var', $publication['hosts'])) : ''; ?>
 			<option data-domains="<?php esc_attr_e($hosts_string); ?>" <?php selected($settings['credentials']['publication-key'], $publication['key']); ?> value="<?php esc_attr_e($publication['key']); ?>"><?php esc_html_e($publication['name']); ?></option>
 			<?php } ?>
-			<option data-domains="<?php esc_attr_e(parse_url(home_url('/'), PHP_URL_HOST)); ?>" value="-1"><?php _e('Create a new site...'); ?></option>
+			<option <?php selected(true, empty($settings['credentials']['publication-key'])); ?> data-domains="<?php esc_attr_e(parse_url(home_url('/'), PHP_URL_HOST)); ?>" value="-1"><?php _e('Create a new site...'); ?></option>
 		</select>
 
 		<div id="urtak-new-site-dependencies">
@@ -63,6 +63,13 @@
 		<input type="text" class="text large-text code" name="urtak[publication][domains]" id="urtak-publication-domains" value="<?php ?>" />
 
 		<p class="urtak-help urtak-help-nomargin" id="urtak-publication-key-display-container"><?php _e('Site Key: <span id="urtak-publication-key-display"></span>'); ?></p>
+
+		<?php if(is_array($publications) && empty($settings['credentials']['publication-key'])) { ?>
+		<div class="alignright">
+			<input class="button button-primary" type="submit" value="<?php _e('Create New Site'); ?>" />
+		</div>
+		<div class="clear"></div>
+		<?php } ?>
 
 		<?php } ?>
 	</div>

@@ -2,8 +2,6 @@
 
 if(!class_exists('WordPressUrtak') && class_exists('Urtak')) {
 	class WordPressUrtak extends Urtak {
-		private $wpdebug = false;
-		// private $wpdebug = true;
 
 		protected function make_request($path, $method, $data = array()) {
 			$request_args = array();
@@ -11,6 +9,7 @@ if(!class_exists('WordPressUrtak') && class_exists('Urtak')) {
 			$request_args['headers']['Accept'] = $this->media_types();
 			$request_args['method'] = $method;
 			$request_args['redirection'] = 0;
+			$request_args['sslverify'] = false;
 			$request_args['user-agent'] = $this->client_name;
 
 			$signed_data = array_filter(array_merge($data, $this->create_signature()));
@@ -19,10 +18,6 @@ if(!class_exists('WordPressUrtak') && class_exists('Urtak')) {
 
 			if('GET' === $method) {
 				$url = add_query_arg(urlencode_deep($signed_data), $url);
-
-				if($this->wpdebug) {
-					error_log($url);
-				}
 			} else if('POST' === $method || 'PUT' === $method) {
 				$json = json_encode($signed_data);
 
@@ -31,11 +26,6 @@ if(!class_exists('WordPressUrtak') && class_exists('Urtak')) {
 			}
 
 			$response = wp_remote_request($url, $request_args);
-
-			if($this->wpdebug && wp_remote_retrieve_response_code($response) >= 400) {
-				error_log(print_r($response, true));
-			}
-
 			if(is_wp_error($response)) {
 				return new UrtakResponse('', 500, 'JSON');
 			} else if(in_array($this->api_format, array('JSON', 'XML'))) {
