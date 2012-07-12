@@ -152,7 +152,7 @@ jQuery(document).ready(function($) {
 		$('#urtak-meta-box-per-page').val($(this).text()).change();
 	});
 
-	$('.urtak-card-plot-controls a').live('click', function(event) {
+	$('.urtak-card-plot-controls li').live('click', function(event) {
 		event.preventDefault();
 
 		var $this = $(this)
@@ -165,7 +165,7 @@ jQuery(document).ready(function($) {
 		, question = $.trim($question.val());
 
 
-		if(!$this.hasClass('cancel') && '' != question) {
+		if(!$this.hasClass('card-question-answers-d') && '' != question) {
 			$clone.hide();
 			$clone.find('.urtak-card-plot-controls').hide();
 			$clone.find('.urtak-card-plot-' + answer).show();

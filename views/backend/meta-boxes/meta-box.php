@@ -46,9 +46,11 @@
 				<?php echo self::_get_pie_image(0); ?>
 			</div>
 			<div class="urtak-card-plot urtak-card-plot-controls">
-				<a href="#" data-answer="y" class="yes"><?php _e('Yes'); ?></a>
-				<a href="#" data-answer="n" class="no"><?php _e('No'); ?></a>
-				<a href="#" class="cancel"><?php _e('Cancel'); ?></a>
+				<ul class="card-question-answers">
+					<li class="card-question-answers-y" data-answer="y">Yes</li>
+					<li class="card-question-answers-n" data-answer="n">No</li>
+					<li class="card-question-answers-d" data-answer="d">Don't Care</li>
+				</ul>
 			</div>
 			<div class="urtak-card-info">
 				<div class="urtak-card-info-question">
