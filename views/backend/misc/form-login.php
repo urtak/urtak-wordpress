@@ -11,6 +11,11 @@
 		<input autocomplete="off" type="text" class="text large-text" name="urtak-login-email" value="<?php esc_attr_e(get_the_author_meta('email')); ?>" placeholder="<?php _e('Email'); ?>" />
 
 		<input autocomplete="off" type="password" class="text large-text" name="urtak-login-password" value="" placeholder="<?php _e('Password'); ?>" />
+
+		<div class="alignright" style="margin-right: 10px;">
+			<a href="https://urtak.com/users/password/new" target="_blank"><?php _e('Forgot your password?'); ?></a>
+		</div>
+		<div class="clear"></div>
 	</div>
 
 	<p class="submit">
