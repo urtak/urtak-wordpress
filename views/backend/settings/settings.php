@@ -38,7 +38,7 @@
 	}
 	?>
 
-	<div class="urtak-field <?php if(is_array($publications) && empty($settings['credentials']['publication-key'])) { echo 'urtak-field-highlighted'; } ?>">
+	<div class="urtak-field">
 		<?php if(false === $publications) { ?>
 
 		<p class="urtak-help urtal-help-nomargin"><?php _e('Selecting a site has been disabled because communication with the Urtak service has been interrupted.'); ?></p>
@@ -64,12 +64,12 @@
 
 		<p class="urtak-help urtak-help-nomargin" id="urtak-publication-key-display-container"><?php _e('Site Key: <span id="urtak-publication-key-display"></span>'); ?></p>
 
-		<?php if(is_array($publications) && empty($settings['credentials']['publication-key'])) { ?>
-		<div class="alignright">
-			<input class="button button-primary" type="submit" value="<?php _e('Create New Site'); ?>" />
+		<div id="urtak-create-site-button-container">
+			<div class="alignright">
+				<input class="button button-primary" type="submit" value="<?php _e('Create New Site'); ?>" />
+			</div>
+			<div class="clear"></div>
 		</div>
-		<div class="clear"></div>
-		<?php } ?>
 
 		<?php } ?>
 	</div>

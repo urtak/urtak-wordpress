@@ -147,6 +147,14 @@ div.urtak-error .globe {
 	border: 1px solid #e6db55;
 }
 
+#urtak-create-site-button-container {
+	display: none;
+}
+
+.urtak-field-highlighted #urtak-create-site-button-container {
+	display: block;
+}
+
 .urtak-field > *:first-child {
 	margin-top: 0;
 }

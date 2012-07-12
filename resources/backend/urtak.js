@@ -37,6 +37,7 @@ jQuery(document).ready(function($) {
 		var $this = $(this)
 		, $dependencies = $('#urtak-new-site-dependencies')
 		, $domains = $('#urtak-publication-domains')
+		, $field = $this.parents('.urtak-field')
 		, $site_key_container = $('#urtak-publication-key-display-container')
 		, $site_key = $('#urtak-publication-key-display');
 
@@ -44,10 +45,12 @@ jQuery(document).ready(function($) {
 		if(-1 == $this.val()) {
 			$dependencies.show();
 			$site_key_container.hide();
+			$field.addClass('urtak-field-highlighted');
 		} else {
 			$dependencies.hide();
 			$site_key_container.show();
 			$site_key.text($this.val());
+			$field.removeClass('urtak-field-highlighted');
 		}
 	}).change();
 
