@@ -252,7 +252,7 @@ var UrtakDelegates = (function(jQuery) {
 						_disable_requests = true;
 					} else {
 						$('#urtak-meta-box-controls-pager').empty().append(data.pager);
-						$cards.removeClass('loading').find('.urtak-card').after(data.cards);
+						$cards.removeClass('loading').find('.urtak-card:last').after(data.cards);
 					}
 
 					if('function' === typeof(callback)) {
