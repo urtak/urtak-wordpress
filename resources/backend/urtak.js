@@ -169,7 +169,6 @@ jQuery(document).ready(function($) {
 
 
 		if(!$this.hasClass('card-question-answers-d') && '' != question) {
-			$clone.hide();
 			$clone.find('.urtak-card-plot-controls').hide();
 			$clone.find('.urtak-card-plot-' + answer).show();
 			$clone.find('.urtak-card-info-question').append(question);
@@ -179,8 +178,7 @@ jQuery(document).ready(function($) {
 			$controls.show();
 			$question.hide();
 
-			$clone.insertAfter($card);
-			$clone.slideDown('fast');
+			$clone.css({ opacity: 0 }).insertAfter($card).animate({ opacity: 1 }, { duration: 600 });
 		}
 
 		$card.find('.large-text').val('');
@@ -189,9 +187,15 @@ jQuery(document).ready(function($) {
 
 	$('.urtak-card-controls-icon-special').live('click', function(event) {
 		event.preventDefault();
-		var $card = $(this).parents('.urtak-card');
+		var $card = $(this).parents('.urtak-card')
+		, $next = $card.nextAll('.urtak-card')
+		, top = $card.outerHeight(true);
 
-		$card.slideUp('fast', function() { $card.remove(); });
+		$card.animate({ opacity: 0 }, { duration: 600, complete: function() {
+			$card.remove();
+			$next.css({ top: top + 'px' });
+			$next.animate({ top: 0 }, { duration: 600 });
+		} });
 	});
 
 	var $help = $('#urtak-meta-box-help'), $cards = $('#urtak-meta-box-cards');
