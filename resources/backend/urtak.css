@@ -191,13 +191,15 @@ div.urtak-error .globe {
 	display: block;
 }
 
-.urtak-checkbox input {
-	margin-right: 5px;
+.urtak-checkbox-input-container {
+	display: inline-block;
+	text-align: left;
+	width: 20px;
 }
 
 .urtak-help {
 	color: #999999;
-	margin: 0 0 5px 23px;
+	margin: 0 0 5px 20px;
 }
 
 .urtak-help-nomargin {

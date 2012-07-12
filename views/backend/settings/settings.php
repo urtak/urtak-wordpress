@@ -84,8 +84,9 @@
 	<div class="urtak-field" style="padding-bottom: 5px;">
 		<div class="urtak-checkbox-container">
 			<label class="urtak-checkbox">
-				<input <?php checked($settings['placement'], 'append'); ?> type="radio" name="urtak[placement]" id="urtak-placement-append" value="append" />
-				<?php _e('I want Urtaks automatically appended to my posts'); ?>
+				<div class="urtak-checkbox-input-container">
+					<input <?php checked($settings['placement'], 'append'); ?> type="radio" name="urtak[placement]" id="urtak-placement-append" value="append" />
+				</div><?php _e('I want Urtaks automatically appended to my posts'); ?>
 			</label>
 			<p class="urtak-help">
 				<label for="urtak-placement-append">
@@ -96,8 +97,9 @@
 
 		<div class="urtak-checkbox-container">
 			<label class="urtak-checkbox">
-				<input <?php checked($settings['placement'], 'manual'); ?> type="radio" name="urtak[placement]" id="urtak-placement-manual" value="manual" />
-				<?php _e('I will insert Urtaks manually'); ?>
+				<div class="urtak-checkbox-input-container">
+					<input <?php checked($settings['placement'], 'manual'); ?> type="radio" name="urtak[placement]" id="urtak-placement-manual" value="manual" />
+				</div><?php _e('I will insert Urtaks manually'); ?>
 			</label>
 			<p class="urtak-help">
 				<label for="urtak-placement-manual">
@@ -115,8 +117,9 @@
 		<div class="urtak-checkbox-container">
 			<input type="hidden" name="urtak[homepage]" id="urtak-homepage-hidden" value="no" />
 			<label class="urtak-checkbox">
-				<input <?php checked($settings['homepage'], 'yes'); ?> type="checkbox" name="urtak[homepage]" id="urtak-homepage" value="yes" />
-				<?php _e('Include on Homepage'); ?>
+				<div class="urtak-checkbox-input-container">
+					<input <?php checked($settings['homepage'], 'yes'); ?> type="checkbox" name="urtak[homepage]" id="urtak-homepage" value="yes" />
+				</div><?php _e('Include on Homepage'); ?>
 			</label>
 			<p class="urtak-help">
 				<label for="urtak-homepage">
@@ -128,8 +131,9 @@
 		<div class="urtak-checkbox-container">
 			<input type="hidden" name="urtak[user-start]" id="urtak-user-start-hidden" value="no" />
 			<label class="urtak-checkbox">
-				<input <?php checked($settings['user-start'], 'yes'); ?> type="checkbox" name="urtak[user-start]" id="urtak-user-start" value="yes" />
-				<?php _e('Let Users Start Urtaks'); ?>
+				<div class="urtak-checkbox-input-container">
+					<input <?php checked($settings['user-start'], 'yes'); ?> type="checkbox" name="urtak[user-start]" id="urtak-user-start" value="yes" />
+				</div><?php _e('Let Users Start Urtaks'); ?>
 			</label>
 			<p class="urtak-help">
 				<label for="urtak-user-start">
@@ -144,8 +148,9 @@
 	<div class="urtak-field">
 		<div class="urtak-checkbox-container">
 			<label class="urtak-checkbox">
-				<input <?php checked($settings['moderation'], 'community'); ?> type="radio" name="urtak[moderation]" id="urtak-moderation-community" value="community" />
-				<?php _e('Community Moderation'); ?>
+				<div class="urtak-checkbox-input-container">
+					<input <?php checked($settings['moderation'], 'community'); ?> type="radio" name="urtak[moderation]" id="urtak-moderation-community" value="community" />
+				</div><?php _e('Community Moderation'); ?>
 			</label>
 			<p class="urtak-help">
 				<label for="urtak-moderation-community">
@@ -156,8 +161,9 @@
 
 		<div class="urtak-checkbox-container">
 			<label class="urtak-checkbox">
-				<input <?php checked($settings['moderation'], 'publisher'); ?> type="radio" name="urtak[moderation]" id="urtak-moderation-publisher" value="publisher" />
-				<?php _e('Publisher Moderation'); ?>
+				<div class="urtak-checkbox-input-container">
+					<input <?php checked($settings['moderation'], 'publisher'); ?> type="radio" name="urtak[moderation]" id="urtak-moderation-publisher" value="publisher" />
+				</div><?php _e('Publisher Moderation'); ?>
 			</label>
 			<p class="urtak-help">
 				<label for="urtak-moderation-publisher">
@@ -181,8 +187,9 @@
 	<div class="urtak-field">
 		<input type="hidden" name="urtak[disable-comments]" id="urtak-disable-comments-hidden" value="no" />
 		<label class="urtak-checkbox">
-			<input <?php checked($settings['disable-comments'], 'yes'); ?> type="checkbox" name="urtak[disable-comments]" id="urtak-disable-comments" value="yes" />
-			<?php _e('Disable all commenting features'); ?>
+			<div class="urtak-checkbox-input-container">
+				<input <?php checked($settings['disable-comments'], 'yes'); ?> type="checkbox" name="urtak[disable-comments]" id="urtak-disable-comments" value="yes" />
+			</div><?php _e('Disable all commenting features'); ?>
 		</label>
 		<p class="urtak-help">
 			<label for="urtak-disable-comments">
