@@ -55,11 +55,11 @@
 		</select>
 
 		<div id="urtak-new-site-dependencies">
-			<p class="urtak-help urtak-help-nomargin"><label for="urtak-publication-name"><?php _e('What do you want to name this site?'); ?></label></p>
+			<p class="urtak-help urtak-help-nomargin"><label for="urtak-publication-name"><?php _e('This will help you organize your Urtak activity in your Account page.'); ?></label></p>
 			<input type="text" class="text large-text" name="urtak[publication][name]" value="<?php _e(''); ?>" placeholder="<?php _e('Site Name'); ?>" />
 		</div>
 
-		<p class="urtak-help urtak-help-nomargin"><label for="urtak-publication-domains"><?php _e('Domains this Urtak Site will run on.'); ?></label></p>
+		<p class="urtak-help urtak-help-nomargin"><label for="urtak-publication-domains"><?php _e('Please enter the domains on which you will be using Urtak. Urtak will only load on these domains.'); ?></label></p>
 		<input type="text" class="text large-text code" name="urtak[publication][domains]" id="urtak-publication-domains" value="<?php ?>" />
 
 		<p class="urtak-help urtak-help-nomargin" id="urtak-publication-key-display-container"><?php _e('Site Key: <span id="urtak-publication-key-display"></span>'); ?></p>
@@ -82,6 +82,8 @@
 	<h3 id="urtak-settings-subheader"><?php _e('Placement'); ?></h3>
 
 	<div class="urtak-field" style="padding-bottom: 5px;">
+		<p class="urtak-help urtak-help-nomargin" style="margin-bottom: 20px;"><?php _e('You have full control over where the Urtak widget will load on your posts.'); ?></p>
+
 		<div class="urtak-checkbox-container">
 			<label class="urtak-checkbox">
 				<div class="urtak-checkbox-input-container">
@@ -90,7 +92,7 @@
 			</label>
 			<p class="urtak-help">
 				<label for="urtak-placement-append">
-					<?php _e('Select this option if you want Urtaks to automatically be added to the end of all your posts.'); ?>
+					<?php _e('The Urtak widget will load right at the end of your article.'); ?>
 				</label>
 			</p>
 		</div>
@@ -103,7 +105,7 @@
 			</label>
 			<p class="urtak-help">
 				<label for="urtak-placement-manual">
-					<?php _e('Select this option if you want to place your Urtaks manually by using the template tag. Simply copy the following into your theme.'); ?>
+					<?php _e('Select the precise location you wish the widget to load in by placing the following code into your template.'); ?>
 				</label>
 			</p>
 			<p class="urtak-help">
@@ -123,7 +125,7 @@
 			</label>
 			<p class="urtak-help">
 				<label for="urtak-homepage">
-					<?php _e('If this is unchecked, Urtaks are only displayed on posts and pages.'); ?>
+					<?php _e('Urtak widgets will be displayed on articles on your front page.'); ?>
 				</label>
 			</p>
 		</div>
@@ -137,7 +139,7 @@
 			</label>
 			<p class="urtak-help">
 				<label for="urtak-user-start">
-					<?php _e('Display Urtaks even if they don\'t have any questions and let users start the conversation.'); ?>
+					<?php _e('No need to ask questions. Let your readers start the conversation by asking the first question.'); ?>
 				</label>
 			</p>
 		</div>
@@ -154,7 +156,7 @@
 			</label>
 			<p class="urtak-help">
 				<label for="urtak-moderation-community">
-					<?php _e('Some text goes here about what community moderation means, exactly.'); ?>
+					<?php printf(__('No effort required. All questions will be approved by default. But don’t worry, our algorithm will take care of any bad questions automatically. <a href="%1$s" target="_blank">Read more here</a>.'), 'http://about.urtak.com/algorithm/'); ?>
 				</label>
 			</p>
 		</div>
@@ -167,7 +169,7 @@
 			</label>
 			<p class="urtak-help">
 				<label for="urtak-moderation-publisher">
-					<?php _e('Some text goes here about what publisher moderation means, exactly.'); ?>
+					<?php _e('Full control. You’ll receive notifications when new questions are asked, and you’ll have to explicitly approve before anyone else can see or answer them.'); ?>
 				</label>
 			</p>
 		</div>
@@ -193,7 +195,7 @@
 		</label>
 		<p class="urtak-help">
 			<label for="urtak-disable-comments">
-				<?php _e('Prevent visitors to your site from commenting on your content by checking the box above.'); ?>
+				<?php _e('Do away with comments on your site. Conversations are better when people ask questions.'); ?>
 			</label>
 		</p>
 	</div>

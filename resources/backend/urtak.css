@@ -802,6 +802,26 @@ div.urtak-error .globe {
 }
 
 #urtak-meta-box-help-content-inner {
-	height: 300px;
+	height: 200px;
 	overflow: auto;
+}
+
+#urtak-meta-box-help-content-inner h4 {
+	margin-top: 0;
+}
+
+#urtak-meta-box-help-content-inner-icon-indicators {
+	padding: 0 0 10px;
+}
+
+.urtak-help-content-inner-icon {
+	color: #999999;
+	float: left;
+	margin-right: 10px;
+}
+
+.urtak-help-content-inner-icon a {
+	cursor: default;
+	float: none;
+	margin: 0;
 }

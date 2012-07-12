@@ -78,9 +78,32 @@
 			<div id="urtak-meta-box-help-content-inner">
 				<h4><?php _e('How It Works'); ?></h4>
 
-				<?php echo wpautop('Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla congue, justo in dictum fermentum, metus turpis ullamcorper ligula, sit amet lobortis libero nulla in velit. Aliquam purus turpis, adipiscing eu gravida a, luctus nec felis. Suspendisse a dui justo. Donec iaculis sagittis sapien quis auctor. Duis ante augue, ultricies non venenatis sed, molestie placerat odio. Duis purus justo, tincidunt vel malesuada vitae, ullamcorper quis purus. Curabitur semper gravida egestas. Vivamus quis quam sit amet lorem faucibus facilisis porta sed felis. Cras iaculis, dolor non molestie consectetur, tortor augue sodales risus, ac adipiscing libero sapien in est. Aliquam eget elit lorem. Nullam luctus condimentum purus ac eleifend. Quisque dictum aliquam urna in pulvinar.
+				<p><?php _e('Getting started with Urtak couldn’t be easier. We recommend kicking off the conversation with 3-5 questions, but the more you ask, the more people will answer! At any time, you can archive questions that are out of date, reject questions that you think are inappropriate or simply explore results from your urtak.com Dashboard. And when participation is winding down, Urtak will send you a detailed report of your community’s activity.'); ?></p>
 
-									Integer felis ante, pellentesque ut porttitor eget, aliquet et turpis. Morbi non placerat magna. Cras mauris mi, commodo sed commodo quis, ullamcorper et mauris. Curabitur id sem vitae augue tristique tempus. Suspendisse vehicula sapien quis neque tempus malesuada in nec neque. Nulla ante purus, adipiscing vitae cursus at, sollicitudin iaculis magna. Pellentesque tempor volutpat dolor at sollicitudin. Nam metus leo, interdum et tempus id, iaculis sed nisi. Ut molestie auctor elementum. Vestibulum libero erat, vestibulum in commodo et, mattis ac dui. Donec leo odio, hendrerit sed feugiat ut, egestas sed lorem. Nam et mauris ipsum, non gravida mauris.'); ?>
+				<h4><?php _e('Icon Guide'); ?></h4>
+
+				<div id="urtak-meta-box-help-content-inner-icon-indicators">
+					<div class="urtak-help-content-inner-icon">
+						<a class="urtak-card-controls-icon active urtak-card-controls-icon-pending" href="#"></a>
+						<span><?php _e('Pending'); ?></span>
+					</div>
+
+					<div class="urtak-help-content-inner-icon">
+						<a class="urtak-card-controls-icon active urtak-card-controls-icon-approved" href="#"></a>
+						<span><?php _e('Approve'); ?></span>
+					</div>
+
+					<div class="urtak-help-content-inner-icon">
+						<a class="urtak-card-controls-icon active urtak-card-controls-icon-archived" href="#"></a>
+						<span><?php _e('Archive'); ?></span>
+					</div>
+
+					<div class="urtak-help-content-inner-icon">
+						<a class="urtak-card-controls-icon active urtak-card-controls-icon-rejected" href="#"></a>
+						<span><?php _e('Reject'); ?></span>
+					</div>
+					<div class="clear"></div>
+				</div>
 			</div>
 		</div>
 	</div>

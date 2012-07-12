@@ -80,7 +80,7 @@ jQuery(document).ready(function($) {
 		);
 	});
 
-	$('.urtak-card-controls-icon:not(.urtak-card-controls-icon-special)').live('click', function(event) {
+	$('.urtak-card-controls-icon:not(.urtak-card-controls-icon-special)[data-action]').live('click', function(event) {
 		event.preventDefault();
 
 		var $this = $(this)
@@ -100,6 +100,8 @@ jQuery(document).ready(function($) {
 
 		UrtakDelegates.modify_question_status(vars);
 	});
+
+	$('.urtak-help-content-inner-icon a').click(function(event) { event.preventDefault(); });
 
 	$('.urtak-card-info-question textarea').keypress(function(event) {
 		if(13 === event.which) {
