@@ -1,4 +1,4 @@
-<div id="urtak-credential-notice" class="settings-error updated urtak-error">
+<div id="urtak-credential-notice" class="settings-error updated urtak-error urtak-moved-notice">
 	<div class="globe"></div>
 	<p>
 		<strong><?php printf(__('Urtak is almost ready. To get started

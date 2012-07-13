@@ -586,12 +586,14 @@ if(!class_exists('UrtakPlugin')) {
 			if(self::has_credentials()) {
 				include('views/backend/insights/insights.php');
 			} else {
-				$base = add_query_arg(array('page' => self::SUB_LEVEL_SETTINGS_SLUG), admin_url('admin.php'));
+				include('views/backend/misc/admin-notice.php');
 
-				$login_url = self::_get_login_url();
-				$signup_url = self::_get_signup_url();
+				// $base = add_query_arg(array('page' => self::SUB_LEVEL_SETTINGS_SLUG), admin_url('admin.php'));
 
-				include('views/backend/insights/pre-credentials.php');
+				// $login_url = self::_get_login_url();
+				// $signup_url = self::_get_signup_url();
+
+				// include('views/backend/insights/pre-credentials.php');
 			}
 
 			include('views/backend/misc/footer.php');
