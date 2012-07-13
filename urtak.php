@@ -3,7 +3,7 @@
  Plugin Name: Urtak
  Plugin URI: http://urtak.com/wordpress/
  Description: Urtak is collaborative polling - everyone can ask questions. It's easy to engage a great number of people in a structured conversation that produces thousands of responses.
- Version: 1.0.0-RC3
+ Version: 1.0.0-RC4
  Author: Urtak, Inc.
  Author URI: http://urtak.com
  */
@@ -13,7 +13,7 @@ if(!class_exists('UrtakPlugin')) {
 		/// CONSTANTS
 
 		//// VERSION
-		const VERSION = '1.0.0-RC3';
+		const VERSION = '1.0.0-RC4';
 
 		//// KEYS
 		const SETTINGS_KEY = '_urtak_settings';
@@ -48,6 +48,7 @@ if(!class_exists('UrtakPlugin')) {
 				add_action('admin_enqueue_scripts', array(__CLASS__, 'enqueue_administrative_resources'));
 				add_action('admin_menu', array(__CLASS__, 'add_administrative_interface_items'));
 				add_action('admin_notices', array(__CLASS__, 'show_credentials_notice'));
+				add_action('add_meta_boxes_page', array(__CLASS__, 'add_meta_boxes'));
 				add_action('add_meta_boxes_post', array(__CLASS__, 'add_meta_boxes'));
 				add_action('manage_posts_custom_column', array(__CLASS__, 'add_posts_columns_output'), 10, 2);
 				add_action('save_post', array(__CLASS__, 'save_post_meta'), 10, 2);
@@ -145,6 +146,10 @@ if(!class_exists('UrtakPlugin')) {
 				if(false === $questions_response) {
 					$data = array('error' => true, 'error_message' => __('The questions for the Urtak related to this post could not be retrieved. Please try again later.'));
 				} else {
+					if('st|ap' === $show && empty($search) && empty($questions_response['questions']['question'])) {
+						delete_post_meta($post_id, self::QUESTION_CREATED_KEY);
+					}
+
 					$cards = '';
 					foreach($questions_response['questions']['question'] as $question) {
 						$cards .= self::_get_card($question, $post_id, true);
@@ -163,10 +168,20 @@ if(!class_exists('UrtakPlugin')) {
 		public static function ajax_modify_question_status() {
 			$data = stripslashes_deep($_REQUEST);
 
+			$approved_questions = array();
 			$questions = (array)$data['questions'];
+
 			$updated = array();
 			foreach($questions as $question) {
+				if('approve' === $question['action']) {
+					$approved_questions[] = $question['post_id'];
+				}
+
 				$updated[$question['question_id']] = self::update_urtak_question($question['post_id'], $question['question_id'], array('question' => array('state_status_admin_event' => $question['action'])));
+			}
+
+			foreach(array_unique($approved_questions) as $approved_question_post_id) {
+				update_post_meta($approved_question_post_id, self::QUESTION_CREATED_KEY, 'yes');
 			}
 
 			echo json_encode($updated);

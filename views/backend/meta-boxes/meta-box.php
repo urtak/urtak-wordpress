@@ -8,7 +8,7 @@
 		<select id="urtak-meta-box-show" data-urtak-attribute="show">
 			<option value="st|all"><?php _e('All'); ?></option>
 			<option value="st|pe"><?php _e('Pending'); ?></option>
-			<option value="st|ap"><?php _e('Approved'); ?></option>
+			<option selected="selected" value="st|ap"><?php _e('Approved'); ?></option>
 			<option value="st|ar"><?php _e('Archived'); ?></option>
 			<option value="st|nu"><?php _e('Rejected'); ?></option>
 			<option value="mine"><?php _e('Mine'); ?></option>
