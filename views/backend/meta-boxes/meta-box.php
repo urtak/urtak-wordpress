@@ -125,6 +125,14 @@
 		<?php echo self::_get_pager(1, 1); ?>
 	</div>
 
+	<div id="urtak-meta-box-controls-alls">
+		<input type="hidden" name="urtak-force-hide-urtak" value="no" />
+		<label>
+			<input type="checkbox" name="urtak-force-hide-urtak" value="yes" />
+			<?php _e('Hide the Urtak for this post'); ?>
+		</label>
+	</div>
+
 	<div class="clear"></div>
 </div>
 

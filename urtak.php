@@ -551,6 +551,10 @@ if(!class_exists('UrtakPlugin')) {
 			if(false === $urtak) {
 				set_transient('urtak_failed_update_' . $post_id, array($new_questions), 30);
 			}
+
+			if(isset($data['urtak-force-hide-urtak']) && 'yes' === $data['urtak-force-hide-urtak']) {
+				delete_post_meta($post_id, self::QUESTION_CREATED_KEY);
+			}
 		}
 
 		public static function show_credentials_notice() {
