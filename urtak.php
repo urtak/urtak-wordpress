@@ -90,6 +90,9 @@ if(!class_exists('UrtakPlugin')) {
 			// We want the Urtaks to appear by default, so let's append them
 			self::$default_settings['placement'] = 'append';
 
+			// We want users to be able to start Urtaks by default
+			self::$default_settings['user-start'] = 'yes';
+
 			// We want Urtaks to support community moderation by default so that we get more questions and responses
 			self::$default_settings['moderation'] = 'community';
 
@@ -437,6 +440,7 @@ if(!class_exists('UrtakPlugin')) {
 			$settings['placement'] = 'manual' === $settings['placement'] ? 'manual' : 'append';
 
 			$settings['homepage'] = pd_yes_no($settings['homepage']);
+
 			$settings['user-start'] = pd_yes_no($settings['user-start']);
 
 			$settings['moderation'] = 'publisher' === $settings['moderation'] ? 'publisher' : 'community';
@@ -587,13 +591,6 @@ if(!class_exists('UrtakPlugin')) {
 				include('views/backend/insights/insights.php');
 			} else {
 				include('views/backend/misc/admin-notice.php');
-
-				// $base = add_query_arg(array('page' => self::SUB_LEVEL_SETTINGS_SLUG), admin_url('admin.php'));
-
-				// $login_url = self::_get_login_url();
-				// $signup_url = self::_get_signup_url();
-
-				// include('views/backend/insights/pre-credentials.php');
 			}
 
 			include('views/backend/misc/footer.php');
