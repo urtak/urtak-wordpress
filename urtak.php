@@ -3,7 +3,7 @@
  Plugin Name: Urtak
  Plugin URI: http://urtak.com/wordpress/
  Description: Urtak is collaborative polling - everyone can ask questions. It's easy to engage a great number of people in a structured conversation that produces thousands of responses.
- Version: 1.0.0-RC5
+ Version: 1.0.0-RC6
  Author: Urtak, Inc.
  Author URI: http://urtak.com
  */
@@ -13,7 +13,7 @@ if(!class_exists('UrtakPlugin')) {
 		/// CONSTANTS
 
 		//// VERSION
-		const VERSION = '1.0.0-RC5';
+		const VERSION = '1.0.0-RC6';
 
 		//// KEYS
 		const SETTINGS_KEY = '_urtak_settings';
@@ -314,7 +314,10 @@ if(!class_exists('UrtakPlugin')) {
 				&& 'append' === self::get_settings('placement')
 				&& (is_singular() || is_page() || (is_home() && 'yes' === self::get_settings('homepage')))) {
 
-				if('yes' === self::get_settings('user-start') || ('yes' === get_post_meta(get_the_ID(), self::QUESTION_CREATED_KEY, true) && 'yes' !== get_post_meta(get_the_ID(), self::FORCE_HIDE_KEY, true))) {
+				if('yes' !== get_post_meta(get_the_ID(), self::FORCE_HIDE_KEY, true)
+					&& ('yes' === self::get_settings('user-start')
+						|| 'yes' === get_post_meta(get_the_ID(), self::QUESTION_CREATED_KEY, true))) {
+
 					$content .= urtak_get_embeddable_widget();
 				}
 			}
