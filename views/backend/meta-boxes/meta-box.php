@@ -128,7 +128,7 @@
 	<div id="urtak-meta-box-controls-alls">
 		<input type="hidden" name="urtak-force-hide-urtak" value="no" />
 		<label>
-			<input type="checkbox" name="urtak-force-hide-urtak" value="yes" />
+			<input <?php checked('yes', $force_hide); ?> type="checkbox" name="urtak-force-hide-urtak" value="yes" />
 			<?php _e('Hide the Urtak for this post'); ?>
 		</label>
 	</div>

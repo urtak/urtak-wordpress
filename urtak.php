@@ -3,7 +3,7 @@
  Plugin Name: Urtak
  Plugin URI: http://urtak.com/wordpress/
  Description: Urtak is collaborative polling - everyone can ask questions. It's easy to engage a great number of people in a structured conversation that produces thousands of responses.
- Version: 1.0.0-RC4
+ Version: 1.0.0-RC5
  Author: Urtak, Inc.
  Author URI: http://urtak.com
  */
@@ -13,10 +13,11 @@ if(!class_exists('UrtakPlugin')) {
 		/// CONSTANTS
 
 		//// VERSION
-		const VERSION = '1.0.0-RC4';
+		const VERSION = '1.0.0-RC5';
 
 		//// KEYS
 		const SETTINGS_KEY = '_urtak_settings';
+		const FORCE_HIDE_KEY = '_urtak_never_show';
 		const QUESTION_CREATED_KEY = '_urtak_created_question';
 
 		//// SLUGS
@@ -151,6 +152,8 @@ if(!class_exists('UrtakPlugin')) {
 				} else {
 					if('st|ap' === $show && empty($search) && empty($questions_response['questions']['question'])) {
 						delete_post_meta($post_id, self::QUESTION_CREATED_KEY);
+					} else if('st|ap' === $show && !empty($questions_response['questions']['question'])) {
+						update_post_meta($post_id, self::QUESTION_CREATED_KEY, 'yes');
 					}
 
 					$cards = '';
@@ -311,7 +314,7 @@ if(!class_exists('UrtakPlugin')) {
 				&& 'append' === self::get_settings('placement')
 				&& (is_singular() || is_page() || (is_home() && 'yes' === self::get_settings('homepage')))) {
 
-				if('yes' === self::get_settings('user-start') || 'yes' === get_post_meta(get_the_ID(), self::QUESTION_CREATED_KEY, true)) {
+				if('yes' === self::get_settings('user-start') || ('yes' === get_post_meta(get_the_ID(), self::QUESTION_CREATED_KEY, true) && 'yes' !== get_post_meta(get_the_ID(), self::FORCE_HIDE_KEY, true))) {
 					$content .= urtak_get_embeddable_widget();
 				}
 			}
@@ -553,7 +556,9 @@ if(!class_exists('UrtakPlugin')) {
 			}
 
 			if(isset($data['urtak-force-hide-urtak']) && 'yes' === $data['urtak-force-hide-urtak']) {
-				delete_post_meta($post_id, self::QUESTION_CREATED_KEY);
+				update_post_meta($post_id, self::FORCE_HIDE_KEY, 'yes');
+			} else {
+				delete_post_meta($post_id, self::FORCE_HIDE_KEY);
 			}
 		}
 
@@ -601,6 +606,8 @@ if(!class_exists('UrtakPlugin')) {
 		}
 
 		public static function display_meta_box($post) {
+			$force_hide = get_post_meta($post->ID, self::FORCE_HIDE_KEY, true);
+
 			include('views/backend/meta-boxes/meta-box.php');
 		}
 
