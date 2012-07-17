@@ -1,7 +1,7 @@
 <ul class="urtak-tabbed-control" id="urtak-at-a-glance-tabbed-control">
-	<li class="active"><a data-key="days" href="#urtak-at-a-glance-days-chart"><?php _e('Days'); ?></a></li>
-	<li><a data-key="weeks" href="#urtak-at-a-glance-weeks-chart"><?php _e('Weeks'); ?></a></li>
-	<li><a data-key="months" href="#urtak-at-a-glance-months-chart"><?php _e('Months'); ?></a></li>
+	<li class="active"><a data-key="days" href="#urtak-at-a-glance-days-chart"><?php _e('Days', 'urtak'); ?></a></li>
+	<li><a data-key="weeks" href="#urtak-at-a-glance-weeks-chart"><?php _e('Weeks', 'urtak'); ?></a></li>
+	<li><a data-key="months" href="#urtak-at-a-glance-months-chart"><?php _e('Months', 'urtak'); ?></a></li>
 </ul>
 
 <div id="urtak-at-a-glance-days-chart" data-tabbed-depend-on="urtak-at-a-glance-tabbed-control">

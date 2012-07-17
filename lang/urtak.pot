@@ -1,0 +1,545 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: Urtak\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2012-07-17 15:12-0800\n"
+"PO-Revision-Date: 2012-07-17 15:13-0800\n"
+"Last-Translator: Nick Ohrn <nohrn@ohrnventures.com>\n"
+"Language-Team: Urtak, Inc.\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Poedit-KeywordsList: _;gettext;gettext_noop;__;_e\n"
+"X-Poedit-Basepath: .\n"
+"X-Poedit-SourceCharset: utf-8\n"
+"X-Poedit-SearchPath-0: /var/www/vhosts/urtak.local/wp-content/plugins/urtak\n"
+
+#: /var/www/vhosts/urtak.local/wp-content/plugins/urtak/urtak.php:148
+msgid "No post id was provided so the appropriate questions could not be retrieved."
+msgstr ""
+
+#: /var/www/vhosts/urtak.local/wp-content/plugins/urtak/urtak.php:153
+msgid "The questions for the Urtak related to this post could not be retrieved. Please try again later."
+msgstr ""
+
+#: /var/www/vhosts/urtak.local/wp-content/plugins/urtak/urtak.php:207
+#, php-format
+msgid "+%s"
+msgstr ""
+
+#: /var/www/vhosts/urtak.local/wp-content/plugins/urtak/urtak.php:215
+#: /var/www/vhosts/urtak.local/wp-content/plugins/urtak/urtak.php:216
+msgid "Urtak Insights"
+msgstr ""
+
+#: /var/www/vhosts/urtak.local/wp-content/plugins/urtak/urtak.php:215
+#: /var/www/vhosts/urtak.local/wp-content/plugins/urtak/urtak.php:236
+#: /var/www/vhosts/urtak.local/wp-content/plugins/urtak/urtak.php:299
+msgid "Urtak"
+msgstr ""
+
+#: /var/www/vhosts/urtak.local/wp-content/plugins/urtak/urtak.php:216
+#: /var/www/vhosts/urtak.local/wp-content/plugins/urtak/urtak.php:306
+msgid "Insights"
+msgstr ""
+
+#: /var/www/vhosts/urtak.local/wp-content/plugins/urtak/urtak.php:217
+msgid "Urtak Settings"
+msgstr ""
+
+#: /var/www/vhosts/urtak.local/wp-content/plugins/urtak/urtak.php:217
+#: /var/www/vhosts/urtak.local/wp-content/plugins/urtak/urtak.php:309
+msgid "Settings"
+msgstr ""
+
+#: /var/www/vhosts/urtak.local/wp-content/plugins/urtak/urtak.php:226
+msgid "Posts without Urtaks"
+msgstr ""
+
+#: /var/www/vhosts/urtak.local/wp-content/plugins/urtak/urtak.php:230
+#: /var/www/vhosts/urtak.local/wp-content/plugins/urtak/urtak.php:245
+#: /var/www/vhosts/urtak.local/wp-content/plugins/urtak/views/backend/insights/meta-boxes/stats.php:27
+#: /var/www/vhosts/urtak.local/wp-content/plugins/urtak/views/backend/insights/meta-boxes/top-urtaks.php:16
+msgid "Questions"
+msgstr ""
+
+#: /var/www/vhosts/urtak.local/wp-content/plugins/urtak/urtak.php:246
+#: /var/www/vhosts/urtak.local/wp-content/plugins/urtak/views/backend/insights/meta-boxes/stats.php:20
+#: /var/www/vhosts/urtak.local/wp-content/plugins/urtak/views/backend/insights/meta-boxes/top-urtaks.php:15
+#: /var/www/vhosts/urtak.local/wp-content/plugins/urtak/views/backend/meta-boxes/meta-box.php:24
+msgid "Responses"
+msgstr ""
+
+#: /var/www/vhosts/urtak.local/wp-content/plugins/urtak/urtak.php:283
+msgid "N/A"
+msgstr ""
+
+#: /var/www/vhosts/urtak.local/wp-content/plugins/urtak/urtak.php:401
+msgid "See all..."
+msgstr ""
+
+#: /var/www/vhosts/urtak.local/wp-content/plugins/urtak/urtak.php:402
+msgid "Close"
+msgstr ""
+
+#: /var/www/vhosts/urtak.local/wp-content/plugins/urtak/urtak.php:403
+#: /var/www/vhosts/urtak.local/wp-content/plugins/urtak/views/backend/meta-boxes/meta-box.php:76
+msgid "Help"
+msgstr ""
+
+#: /var/www/vhosts/urtak.local/wp-content/plugins/urtak/urtak.php:747
+msgid "Loading..."
+msgstr ""
+
+#: /var/www/vhosts/urtak.local/wp-content/plugins/urtak/urtak.php:1110
+msgid "No"
+msgstr ""
+
+#: /var/www/vhosts/urtak.local/wp-content/plugins/urtak/urtak.php:1133
+#: /var/www/vhosts/urtak.local/wp-content/plugins/urtak/urtak.php:1191
+msgid "Please provide an email address."
+msgstr ""
+
+#: /var/www/vhosts/urtak.local/wp-content/plugins/urtak/urtak.php:1136
+#: /var/www/vhosts/urtak.local/wp-content/plugins/urtak/urtak.php:1193
+msgid "Please provide a valid email address."
+msgstr ""
+
+#: /var/www/vhosts/urtak.local/wp-content/plugins/urtak/urtak.php:1141
+msgid "Please provide a password."
+msgstr ""
+
+#: /var/www/vhosts/urtak.local/wp-content/plugins/urtak/urtak.php:1149
+msgid "Your account was successfully retrieved and your credentials saved."
+msgstr ""
+
+#: /var/www/vhosts/urtak.local/wp-content/plugins/urtak/urtak.php:1162
+msgid "Your account could not be retrieved. Please check your credentials and try again."
+msgstr ""
+
+#: /var/www/vhosts/urtak.local/wp-content/plugins/urtak/urtak.php:1172
+msgid "Your credentials were successfully cleared."
+msgstr ""
+
+#: /var/www/vhosts/urtak.local/wp-content/plugins/urtak/urtak.php:1182
+msgid "Settings saved."
+msgstr ""
+
+#: /var/www/vhosts/urtak.local/wp-content/plugins/urtak/urtak.php:1207
+msgid "Your account was successfully created and your credentials saved."
+msgstr ""
+
+#: /var/www/vhosts/urtak.local/wp-content/plugins/urtak/urtak.php:1211
+msgid "An account with that email address already exists. Please login below."
+msgstr ""
+
+#: /var/www/vhosts/urtak.local/wp-content/plugins/urtak/views/backend/dashboard/widget.php:7
+#: /var/www/vhosts/urtak.local/wp-content/plugins/urtak/views/backend/insights/meta-boxes/top-questions.php:11
+msgid "Your publication's pending questions could not be retrieved."
+msgstr ""
+
+#: /var/www/vhosts/urtak.local/wp-content/plugins/urtak/views/backend/dashboard/widget.php:11
+#: /var/www/vhosts/urtak.local/wp-content/plugins/urtak/views/backend/insights/meta-boxes/top-questions.php:15
+msgid "You don't have any pending questions."
+msgstr ""
+
+#: /var/www/vhosts/urtak.local/wp-content/plugins/urtak/views/backend/insights/insights.php:6
+#, php-format
+msgid "Urtak is almost ready. <a href=\"%1$s#urtak-site\">Select or create a site to get started</a>."
+msgstr ""
+
+#: /var/www/vhosts/urtak.local/wp-content/plugins/urtak/views/backend/insights/meta-boxes/at-a-glance.php:2
+msgid "Days"
+msgstr ""
+
+#: /var/www/vhosts/urtak.local/wp-content/plugins/urtak/views/backend/insights/meta-boxes/at-a-glance.php:3
+msgid "Weeks"
+msgstr ""
+
+#: /var/www/vhosts/urtak.local/wp-content/plugins/urtak/views/backend/insights/meta-boxes/at-a-glance.php:4
+msgid "Months"
+msgstr ""
+
+#: /var/www/vhosts/urtak.local/wp-content/plugins/urtak/views/backend/insights/meta-boxes/posts-without-urtaks.php:4
+msgid "Edit"
+msgstr ""
+
+#: /var/www/vhosts/urtak.local/wp-content/plugins/urtak/views/backend/insights/meta-boxes/stats.php:4
+msgid "Stats"
+msgstr ""
+
+#: /var/www/vhosts/urtak.local/wp-content/plugins/urtak/views/backend/insights/meta-boxes/stats.php:5
+msgid "Today"
+msgstr ""
+
+#: /var/www/vhosts/urtak.local/wp-content/plugins/urtak/views/backend/insights/meta-boxes/stats.php:6
+msgid "Yesterday"
+msgstr ""
+
+#: /var/www/vhosts/urtak.local/wp-content/plugins/urtak/views/backend/insights/meta-boxes/stats.php:7
+msgid "This Week"
+msgstr ""
+
+#: /var/www/vhosts/urtak.local/wp-content/plugins/urtak/views/backend/insights/meta-boxes/stats.php:8
+msgid "Last Week"
+msgstr ""
+
+#: /var/www/vhosts/urtak.local/wp-content/plugins/urtak/views/backend/insights/meta-boxes/stats.php:13
+msgid "Unique Users"
+msgstr ""
+
+#: /var/www/vhosts/urtak.local/wp-content/plugins/urtak/views/backend/insights/meta-boxes/top-questions.php:2
+#: /var/www/vhosts/urtak.local/wp-content/plugins/urtak/views/backend/meta-boxes/meta-box.php:10
+#: /var/www/vhosts/urtak.local/wp-content/plugins/urtak/views/backend/meta-boxes/meta-box.php:88
+msgid "Pending"
+msgstr ""
+
+#: /var/www/vhosts/urtak.local/wp-content/plugins/urtak/views/backend/insights/meta-boxes/top-questions.php:3
+#: /var/www/vhosts/urtak.local/wp-content/plugins/urtak/views/backend/meta-boxes/meta-box.php:22
+msgid "Most Divided"
+msgstr ""
+
+#: /var/www/vhosts/urtak.local/wp-content/plugins/urtak/views/backend/insights/meta-boxes/top-questions.php:4
+msgid "Most Cared"
+msgstr ""
+
+#: /var/www/vhosts/urtak.local/wp-content/plugins/urtak/views/backend/insights/meta-boxes/top-questions.php:5
+msgid "Most Agreed"
+msgstr ""
+
+#: /var/www/vhosts/urtak.local/wp-content/plugins/urtak/views/backend/insights/meta-boxes/top-questions.php:27
+msgid "Your publication's most cared divided questions could not be retrieved."
+msgstr ""
+
+#: /var/www/vhosts/urtak.local/wp-content/plugins/urtak/views/backend/insights/meta-boxes/top-questions.php:31
+msgid "You don't have any divided questions."
+msgstr ""
+
+#: /var/www/vhosts/urtak.local/wp-content/plugins/urtak/views/backend/insights/meta-boxes/top-questions.php:43
+msgid "Your publication's most cared about questions could not be retrieved."
+msgstr ""
+
+#: /var/www/vhosts/urtak.local/wp-content/plugins/urtak/views/backend/insights/meta-boxes/top-questions.php:47
+msgid "You don't have any cared about questions."
+msgstr ""
+
+#: /var/www/vhosts/urtak.local/wp-content/plugins/urtak/views/backend/insights/meta-boxes/top-questions.php:59
+msgid "Your publication's most cared upon questions could not be retrieved."
+msgstr ""
+
+#: /var/www/vhosts/urtak.local/wp-content/plugins/urtak/views/backend/insights/meta-boxes/top-questions.php:63
+msgid "You don't have any agreed on questions."
+msgstr ""
+
+#: /var/www/vhosts/urtak.local/wp-content/plugins/urtak/views/backend/insights/meta-boxes/top-urtaks.php:3
+msgid "Your publication's Urtaks could not be retrieved."
+msgstr ""
+
+#: /var/www/vhosts/urtak.local/wp-content/plugins/urtak/views/backend/insights/meta-boxes/top-urtaks.php:7
+msgid "You haven't created any Urtaks yet."
+msgstr ""
+
+#: /var/www/vhosts/urtak.local/wp-content/plugins/urtak/views/backend/insights/meta-boxes/top-urtaks.php:14
+msgid "Top Urtaks"
+msgstr ""
+
+#: /var/www/vhosts/urtak.local/wp-content/plugins/urtak/views/backend/meta-boxes/meta-box.php:7
+#: /var/www/vhosts/urtak.local/wp-content/plugins/urtak/views/backend/meta-boxes/meta-box.php:118
+msgid "Show"
+msgstr ""
+
+#: /var/www/vhosts/urtak.local/wp-content/plugins/urtak/views/backend/meta-boxes/meta-box.php:9
+msgid "All"
+msgstr ""
+
+#: /var/www/vhosts/urtak.local/wp-content/plugins/urtak/views/backend/meta-boxes/meta-box.php:11
+msgid "Approved"
+msgstr ""
+
+#: /var/www/vhosts/urtak.local/wp-content/plugins/urtak/views/backend/meta-boxes/meta-box.php:12
+msgid "Archived"
+msgstr ""
+
+#: /var/www/vhosts/urtak.local/wp-content/plugins/urtak/views/backend/meta-boxes/meta-box.php:13
+msgid "Rejected"
+msgstr ""
+
+#: /var/www/vhosts/urtak.local/wp-content/plugins/urtak/views/backend/meta-boxes/meta-box.php:14
+msgid "Mine"
+msgstr ""
+
+#: /var/www/vhosts/urtak.local/wp-content/plugins/urtak/views/backend/meta-boxes/meta-box.php:16
+msgid "Order By"
+msgstr ""
+
+#: /var/www/vhosts/urtak.local/wp-content/plugins/urtak/views/backend/meta-boxes/meta-box.php:18
+msgid "Newest"
+msgstr ""
+
+#: /var/www/vhosts/urtak.local/wp-content/plugins/urtak/views/backend/meta-boxes/meta-box.php:19
+msgid "Oldest"
+msgstr ""
+
+#: /var/www/vhosts/urtak.local/wp-content/plugins/urtak/views/backend/meta-boxes/meta-box.php:20
+msgid "Most Cared About"
+msgstr ""
+
+#: /var/www/vhosts/urtak.local/wp-content/plugins/urtak/views/backend/meta-boxes/meta-box.php:21
+msgid "Least Cared About"
+msgstr ""
+
+#: /var/www/vhosts/urtak.local/wp-content/plugins/urtak/views/backend/meta-boxes/meta-box.php:23
+msgid "Most Agreed On"
+msgstr ""
+
+#: /var/www/vhosts/urtak.local/wp-content/plugins/urtak/views/backend/meta-boxes/meta-box.php:26
+msgid "Search"
+msgstr ""
+
+#: /var/www/vhosts/urtak.local/wp-content/plugins/urtak/views/backend/meta-boxes/meta-box.php:57
+msgid "Ask a Yes or No Question."
+msgstr ""
+
+#: /var/www/vhosts/urtak.local/wp-content/plugins/urtak/views/backend/meta-boxes/meta-box.php:63
+msgid "Asked by the site"
+msgstr ""
+
+#: /var/www/vhosts/urtak.local/wp-content/plugins/urtak/views/backend/meta-boxes/meta-box.php:65
+msgid "Update or Publish this post to submit this question."
+msgstr ""
+
+#: /var/www/vhosts/urtak.local/wp-content/plugins/urtak/views/backend/meta-boxes/meta-box.php:79
+msgid "How It Works"
+msgstr ""
+
+#: /var/www/vhosts/urtak.local/wp-content/plugins/urtak/views/backend/meta-boxes/meta-box.php:81
+msgid "Getting started with Urtak couldn’t be easier. We recommend kicking off the conversation with 3-5 questions, but the more you ask, the more people will answer! At any time, you can archive questions that are out of date, reject questions that you think are inappropriate or simply explore results from your urtak.com Dashboard. And when participation is winding down, Urtak will send you a detailed report of your community’s activity."
+msgstr ""
+
+#: /var/www/vhosts/urtak.local/wp-content/plugins/urtak/views/backend/meta-boxes/meta-box.php:83
+msgid "Icon Guide"
+msgstr ""
+
+#: /var/www/vhosts/urtak.local/wp-content/plugins/urtak/views/backend/meta-boxes/meta-box.php:93
+msgid "Approve"
+msgstr ""
+
+#: /var/www/vhosts/urtak.local/wp-content/plugins/urtak/views/backend/meta-boxes/meta-box.php:98
+msgid "Archive"
+msgstr ""
+
+#: /var/www/vhosts/urtak.local/wp-content/plugins/urtak/views/backend/meta-boxes/meta-box.php:103
+msgid "Reject"
+msgstr ""
+
+#: /var/www/vhosts/urtak.local/wp-content/plugins/urtak/views/backend/meta-boxes/meta-box.php:121
+msgid "per page"
+msgstr ""
+
+#: /var/www/vhosts/urtak.local/wp-content/plugins/urtak/views/backend/meta-boxes/meta-box.php:132
+msgid "Hide the Urtak for this post"
+msgstr ""
+
+#: /var/www/vhosts/urtak.local/wp-content/plugins/urtak/views/backend/misc/admin-notice.php:4
+#, php-format
+msgid "Urtak is almost ready. To get started <a href=\"%1$s\">Sign Up</a> or <a href=\"%2$s\">Login</a>."
+msgstr ""
+
+#: /var/www/vhosts/urtak.local/wp-content/plugins/urtak/views/backend/misc/card.php:12
+#, php-format
+msgid "Asked by %1$s"
+msgstr ""
+
+#: /var/www/vhosts/urtak.local/wp-content/plugins/urtak/views/backend/misc/card.php:12
+msgid "the site"
+msgstr ""
+
+#: /var/www/vhosts/urtak.local/wp-content/plugins/urtak/views/backend/misc/card.php:12
+msgid "a user"
+msgstr ""
+
+#: /var/www/vhosts/urtak.local/wp-content/plugins/urtak/views/backend/misc/form-login.php:5
+msgid "Account Login"
+msgstr ""
+
+#: /var/www/vhosts/urtak.local/wp-content/plugins/urtak/views/backend/misc/form-login.php:6
+msgid "or Sign Up"
+msgstr ""
+
+#: /var/www/vhosts/urtak.local/wp-content/plugins/urtak/views/backend/misc/form-login.php:11
+#: /var/www/vhosts/urtak.local/wp-content/plugins/urtak/views/backend/misc/form-signup.php:11
+msgid "Email"
+msgstr ""
+
+#: /var/www/vhosts/urtak.local/wp-content/plugins/urtak/views/backend/misc/form-login.php:13
+msgid "Password"
+msgstr ""
+
+#: /var/www/vhosts/urtak.local/wp-content/plugins/urtak/views/backend/misc/form-login.php:16
+msgid "Forgot your password?"
+msgstr ""
+
+#: /var/www/vhosts/urtak.local/wp-content/plugins/urtak/views/backend/misc/form-login.php:23
+msgid "Login"
+msgstr ""
+
+#: /var/www/vhosts/urtak.local/wp-content/plugins/urtak/views/backend/misc/form-signup.php:5
+msgid "Account Sign Up"
+msgstr ""
+
+#: /var/www/vhosts/urtak.local/wp-content/plugins/urtak/views/backend/misc/form-signup.php:6
+msgid "or Login"
+msgstr ""
+
+#: /var/www/vhosts/urtak.local/wp-content/plugins/urtak/views/backend/misc/form-signup.php:16
+msgid "Sign Up"
+msgstr ""
+
+#: /var/www/vhosts/urtak.local/wp-content/plugins/urtak/views/backend/misc/header.php:15
+#: /var/www/vhosts/urtak.local/wp-content/plugins/urtak/views/backend/settings/settings.php:26
+#, php-format
+msgid "Logged in as <a href=\"https://urtak.com/account/edit\" target=\"_blank\">%1$s</a>"
+msgstr ""
+
+#: /var/www/vhosts/urtak.local/wp-content/plugins/urtak/views/backend/misc/header.php:18
+msgid "Blog"
+msgstr ""
+
+#: /var/www/vhosts/urtak.local/wp-content/plugins/urtak/views/backend/misc/header.php:22
+msgid "Privacy &amp; Terms"
+msgstr ""
+
+#: /var/www/vhosts/urtak.local/wp-content/plugins/urtak/views/backend/settings/settings.php:15
+msgid "Account"
+msgstr ""
+
+#: /var/www/vhosts/urtak.local/wp-content/plugins/urtak/views/backend/settings/settings.php:26
+msgid "Log out"
+msgstr ""
+
+#: /var/www/vhosts/urtak.local/wp-content/plugins/urtak/views/backend/settings/settings.php:33
+msgid "This Site"
+msgstr ""
+
+#: /var/www/vhosts/urtak.local/wp-content/plugins/urtak/views/backend/settings/settings.php:44
+msgid "Selecting a site has been disabled because communication with the Urtak service has been interrupted."
+msgstr ""
+
+#: /var/www/vhosts/urtak.local/wp-content/plugins/urtak/views/backend/settings/settings.php:48
+msgid "Select this site from the list or create a new one."
+msgstr ""
+
+#: /var/www/vhosts/urtak.local/wp-content/plugins/urtak/views/backend/settings/settings.php:54
+msgid "Create a new site..."
+msgstr ""
+
+#: /var/www/vhosts/urtak.local/wp-content/plugins/urtak/views/backend/settings/settings.php:58
+msgid "This will help you organize your Urtak activity in your Account page."
+msgstr ""
+
+#: /var/www/vhosts/urtak.local/wp-content/plugins/urtak/views/backend/settings/settings.php:59
+msgid "Site Name"
+msgstr ""
+
+#: /var/www/vhosts/urtak.local/wp-content/plugins/urtak/views/backend/settings/settings.php:62
+msgid "Please enter the domains on which you will be using Urtak. Urtak will only load on these domains."
+msgstr ""
+
+#: /var/www/vhosts/urtak.local/wp-content/plugins/urtak/views/backend/settings/settings.php:65
+msgid "Site Key: <span id=\"urtak-publication-key-display\"></span>"
+msgstr ""
+
+#: /var/www/vhosts/urtak.local/wp-content/plugins/urtak/views/backend/settings/settings.php:69
+msgid "Create New Site"
+msgstr ""
+
+#: /var/www/vhosts/urtak.local/wp-content/plugins/urtak/views/backend/settings/settings.php:82
+msgid "Placement"
+msgstr ""
+
+#: /var/www/vhosts/urtak.local/wp-content/plugins/urtak/views/backend/settings/settings.php:85
+msgid "You have full control over where the Urtak widget will load on your posts."
+msgstr ""
+
+#: /var/www/vhosts/urtak.local/wp-content/plugins/urtak/views/backend/settings/settings.php:91
+msgid "I want Urtaks automatically appended to my posts"
+msgstr ""
+
+#: /var/www/vhosts/urtak.local/wp-content/plugins/urtak/views/backend/settings/settings.php:95
+msgid "The Urtak widget will load right at the end of your article."
+msgstr ""
+
+#: /var/www/vhosts/urtak.local/wp-content/plugins/urtak/views/backend/settings/settings.php:104
+msgid "I will insert Urtaks manually"
+msgstr ""
+
+#: /var/www/vhosts/urtak.local/wp-content/plugins/urtak/views/backend/settings/settings.php:108
+msgid "Select the precise location you wish the widget to load in by placing the following code into your template."
+msgstr ""
+
+#: /var/www/vhosts/urtak.local/wp-content/plugins/urtak/views/backend/settings/settings.php:124
+msgid "Include on Homepage"
+msgstr ""
+
+#: /var/www/vhosts/urtak.local/wp-content/plugins/urtak/views/backend/settings/settings.php:128
+msgid "Urtak widgets will be displayed on articles on your front page."
+msgstr ""
+
+#: /var/www/vhosts/urtak.local/wp-content/plugins/urtak/views/backend/settings/settings.php:138
+msgid "Let Users Start Urtaks"
+msgstr ""
+
+#: /var/www/vhosts/urtak.local/wp-content/plugins/urtak/views/backend/settings/settings.php:142
+msgid "No need to ask questions. Let your readers start the conversation by asking the first question."
+msgstr ""
+
+#: /var/www/vhosts/urtak.local/wp-content/plugins/urtak/views/backend/settings/settings.php:148
+msgid "Moderation"
+msgstr ""
+
+#: /var/www/vhosts/urtak.local/wp-content/plugins/urtak/views/backend/settings/settings.php:155
+msgid "Community Moderation"
+msgstr ""
+
+#: /var/www/vhosts/urtak.local/wp-content/plugins/urtak/views/backend/settings/settings.php:159
+#, php-format
+msgid "No effort required. All questions will be approved by default. But don’t worry, our algorithm will take care of any bad questions automatically. <a href=\"%1$s\" target=\"_blank\">Read more here</a>."
+msgstr ""
+
+#: /var/www/vhosts/urtak.local/wp-content/plugins/urtak/views/backend/settings/settings.php:168
+msgid "Publisher Moderation"
+msgstr ""
+
+#: /var/www/vhosts/urtak.local/wp-content/plugins/urtak/views/backend/settings/settings.php:172
+msgid "Full control. You’ll receive notifications when new questions are asked, and you’ll have to explicitly approve before anyone else can see or answer them."
+msgstr ""
+
+#: /var/www/vhosts/urtak.local/wp-content/plugins/urtak/views/backend/settings/settings.php:178
+msgid "Language"
+msgstr ""
+
+#: /var/www/vhosts/urtak.local/wp-content/plugins/urtak/views/backend/settings/settings.php:182
+msgid "English"
+msgstr ""
+
+#: /var/www/vhosts/urtak.local/wp-content/plugins/urtak/views/backend/settings/settings.php:183
+msgid "Spanish"
+msgstr ""
+
+#: /var/www/vhosts/urtak.local/wp-content/plugins/urtak/views/backend/settings/settings.php:187
+msgid "Disable Comments"
+msgstr ""
+
+#: /var/www/vhosts/urtak.local/wp-content/plugins/urtak/views/backend/settings/settings.php:194
+msgid "Disable all commenting features"
+msgstr ""
+
+#: /var/www/vhosts/urtak.local/wp-content/plugins/urtak/views/backend/settings/settings.php:198
+msgid "Do away with comments on your site. Conversations are better when people ask questions."
+msgstr ""
+
+#: /var/www/vhosts/urtak.local/wp-content/plugins/urtak/views/backend/settings/settings.php:205
+msgid "Save Changes"
+msgstr ""
+

@@ -3,7 +3,7 @@
 <div id="urtak-credential-notice" class="settings-error updated urtak-error urtak-moved-notice">
 	<div class="globe"></div>
 	<p>
-		<strong><?php printf(__('Urtak is almost ready. <a href="%1$s#urtak-site">Select or create a site to get started</a>.'),
+		<strong><?php printf(__('Urtak is almost ready. <a href="%1$s#urtak-site">Select or create a site to get started</a>.', 'urtak'),
 								self::_get_settings_url()); ?></strong>
 	</p>
 	<div class="clear"></div>

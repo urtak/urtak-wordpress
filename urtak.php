@@ -38,6 +38,8 @@ if(!class_exists('UrtakPlugin')) {
 		private static $urtaks_fetched = array();
 
 		public static function init() {
+			load_plugin_textdomain('urtak', null, path_join(dirname(plugin_basename(__FILE__)), 'lang/'));
+
 			self::add_actions();
 			self::add_filters();
 			self::initialize_defaults();
@@ -143,12 +145,12 @@ if(!class_exists('UrtakPlugin')) {
 
 			extract($atts);
 			if(empty($post_id)) {
-				$data = array('error' => true, 'error_message' => __('No post id was provided so the appropriate questions could not be retrieved.'));
+				$data = array('error' => true, 'error_message' => __('No post id was provided so the appropriate questions could not be retrieved.', 'urtak'));
 			} else {
 				$questions_response = self::get_questions_response($page, $per_page, $order, $show, $search, $post_id);
 
 				if(false === $questions_response) {
-					$data = array('error' => true, 'error_message' => __('The questions for the Urtak related to this post could not be retrieved. Please try again later.'));
+					$data = array('error' => true, 'error_message' => __('The questions for the Urtak related to this post could not be retrieved. Please try again later.', 'urtak'));
 				} else {
 					if('st|ap' === $show && empty($search) && empty($questions_response['questions']['question'])) {
 						delete_post_meta($post_id, self::QUESTION_CREATED_KEY);
@@ -202,7 +204,7 @@ if(!class_exists('UrtakPlugin')) {
 				if($pending_questions_count) {
 					$wp_admin_bar->add_menu( array(
 						'id' => 'urtak',
-						'title' => sprintf(__('+%s'), number_format_i18n($pending_questions_count)),
+						'title' => sprintf(__('+%s', 'urtak'), number_format_i18n($pending_questions_count)),
 						'href' => self::_get_insights_url()
 					));
 				}
@@ -210,9 +212,9 @@ if(!class_exists('UrtakPlugin')) {
 		}
 
 		public static function add_administrative_interface_items() {
-			self::$admin_page_hooks[] = $top_level = add_menu_page(__('Urtak Insights'), __('Urtak'), 'manage_options', self::TOP_LEVEL_PAGE_SLUG, array(__CLASS__, 'display_insights_page'), plugins_url('resources/backend/img/urtak-logo-15.png', __FILE__), 56);
-			self::$admin_page_hooks[] = $sub_level_insights = add_submenu_page(self::TOP_LEVEL_PAGE_SLUG, __('Urtak Insights'), __('Insights'), 'manage_options', self::SUB_LEVEL_INSIGHTS_SLUG, array(__CLASS__, 'display_insights_page'));
-			self::$admin_page_hooks[] = $sub_level_settings = add_submenu_page(self::TOP_LEVEL_PAGE_SLUG, __('Urtak Settings'), __('Settings'), 'manage_options', self::SUB_LEVEL_SETTINGS_SLUG, array(__CLASS__, 'display_settings_page'));
+			self::$admin_page_hooks[] = $top_level = add_menu_page(__('Urtak Insights', 'urtak'), __('Urtak', 'urtak'), 'manage_options', self::TOP_LEVEL_PAGE_SLUG, array(__CLASS__, 'display_insights_page'), plugins_url('resources/backend/img/urtak-logo-15.png', __FILE__), 56);
+			self::$admin_page_hooks[] = $sub_level_insights = add_submenu_page(self::TOP_LEVEL_PAGE_SLUG, __('Urtak Insights', 'urtak'), __('Insights', 'urtak'), 'manage_options', self::SUB_LEVEL_INSIGHTS_SLUG, array(__CLASS__, 'display_insights_page'));
+			self::$admin_page_hooks[] = $sub_level_settings = add_submenu_page(self::TOP_LEVEL_PAGE_SLUG, __('Urtak Settings', 'urtak'), __('Settings', 'urtak'), 'manage_options', self::SUB_LEVEL_SETTINGS_SLUG, array(__CLASS__, 'display_settings_page'));
 
 			add_action("load-{$sub_level_settings}", array(__CLASS__, 'process_settings_actions'));
 
@@ -221,17 +223,17 @@ if(!class_exists('UrtakPlugin')) {
 
 			$posts_without_urtaks = self::get_nonassociated_post_ids();
 			if(!empty($posts_without_urtaks)) {
-				add_meta_box('urtak-posts-without-urtaks', __('Posts without Urtaks'), array(__CLASS__, 'display_meta_box__posts_without_urtaks'), 'urtak', 'left');
+				add_meta_box('urtak-posts-without-urtaks', __('Posts without Urtaks', 'urtak'), array(__CLASS__, 'display_meta_box__posts_without_urtaks'), 'urtak', 'left');
 			}
 
 
-			add_meta_box('urtak-top-questions', __('Questions'), array(__CLASS__, 'display_meta_box__questions'), 'urtak', 'right');
+			add_meta_box('urtak-top-questions', __('Questions', 'urtak'), array(__CLASS__, 'display_meta_box__questions'), 'urtak', 'right');
 		}
 
 		public static function add_dashboard_widget() {
 			if(self::has_credentials()) {
 				// This has been removed because the API functionality isn't there to support it at this point in time
-				wp_add_dashboard_widget('urtak', __('Urtak'), array(__CLASS__, 'display_meta_box__dashboard'));
+				wp_add_dashboard_widget('urtak', __('Urtak', 'urtak'), array(__CLASS__, 'display_meta_box__dashboard'));
 			}
 		}
 
@@ -240,8 +242,8 @@ if(!class_exists('UrtakPlugin')) {
 				$date = $columns['date'];
 				unset($columns['date']);
 
-				$columns['urtak-questions'] = __('Questions');
-				$columns['urtak-responses'] = __('Responses');
+				$columns['urtak-questions'] = __('Questions', 'urtak');
+				$columns['urtak-responses'] = __('Responses', 'urtak');
 				$columns['date'] = $date;
 			}
 
@@ -278,7 +280,7 @@ if(!class_exists('UrtakPlugin')) {
 					$urtak = self::$manage_page_urtaks[$post_id];
 
 					if(empty($urtak)) {
-						_e('N/A');
+						_e('N/A', 'urtak');
 					} else {
 						if('urtak-responses' === $column) {
 							echo number_format_i18n((float)$urtak['responses_count'], 0);
@@ -294,17 +296,17 @@ if(!class_exists('UrtakPlugin')) {
 		}
 
 		public static function add_meta_boxes($post) {
-			add_meta_box('urtak-meta-box', __('Urtak'), array(__CLASS__, 'display_meta_box'), $post->post_type, 'normal');
+			add_meta_box('urtak-meta-box', __('Urtak', 'urtak'), array(__CLASS__, 'display_meta_box'), $post->post_type, 'normal');
 		}
 
 		public static function add_plugin_links($links) {
 			$new_links = array();
 
 			if(self::has_credentials()) {
-				$new_links[] = $insights_link = sprintf('<a href="%s">%s</a>', self::_get_insights_url(), __('Insights'));
+				$new_links[] = $insights_link = sprintf('<a href="%s">%s</a>', self::_get_insights_url(), __('Insights', 'urtak'));
 			}
 
-			$new_links[] = $settings_link = sprintf('<a href="%s">%s</a>', self::_get_settings_url(), __('Settings'));
+			$new_links[] = $settings_link = sprintf('<a href="%s">%s</a>', self::_get_settings_url(), __('Settings', 'urtak'));
 
 			return array_merge($new_links, $links);
 		}
@@ -396,9 +398,9 @@ if(!class_exists('UrtakPlugin')) {
 
 			wp_enqueue_script('urtak-backend', plugins_url('resources/backend/urtak.js', __FILE__), array('jquery', 'postbox'), self::VERSION);
 			wp_localize_script('urtak-backend', 'Urtak_Vars', array(
-				'see_all' => __('See all...'),
-				'help_close' => __('Close'),
-				'help_text' => __('Help')
+				'see_all' => __('See all...', 'urtak'),
+				'help_close' => __('Close', 'urtak'),
+				'help_text' => __('Help', 'urtak')
 			));
 
 			add_action('admin_print_footer_scripts', array(__CLASS__, 'print_excanvas_script'));
@@ -742,7 +744,7 @@ if(!class_exists('UrtakPlugin')) {
 		}
 
 		private static function echo_ajax_loading_action($action) {
-			printf('<div class="urtak-ajax-loader" data-action="urtak_%s"><img src="%s" alt="" /> %s</div>', $action, admin_url('images/wpspin_light.gif'), __('Loading...'));
+			printf('<div class="urtak-ajax-loader" data-action="urtak_%s"><img src="%s" alt="" /> %s</div>', $action, admin_url('images/wpspin_light.gif'), __('Loading...', 'urtak'));
 		}
 
 		/// SHORTCODE CALLBACKS
@@ -1105,7 +1107,7 @@ if(!class_exists('UrtakPlugin')) {
 		}
 
 		private static function _get_pie_image($percent) {
-			return sprintf('<img src="%s" alt="%1$d%% %s" />', self::_get_pie_url($percent), $percent, __('No'));
+			return sprintf('<img src="%s" alt="%1$d%% %s" />', self::_get_pie_url($percent), $percent, __('No', 'urtak'));
 		}
 
 		private static function _get_pie_url($percent) {
@@ -1128,15 +1130,15 @@ if(!class_exists('UrtakPlugin')) {
 		private static function _process_login($email, $password) {
 			if(empty($email)) {
 				$error = true;
-				add_settings_error('general', 'settings_updated', __('Please provide an email address.'), 'error');
+				add_settings_error('general', 'settings_updated', __('Please provide an email address.', 'urtak'), 'error');
 			} else if(!is_email($email)) {
 				$error = true;
-				add_settings_error('general', 'settings_updated', __('Please provide a valid email address.'), 'error');
+				add_settings_error('general', 'settings_updated', __('Please provide a valid email address.', 'urtak'), 'error');
 			}
 
 			if(empty($password)) {
 				$error = true;
-				add_settings_error('general', 'settings_updated', __('Please provide a password.'), 'error');
+				add_settings_error('general', 'settings_updated', __('Please provide a password.', 'urtak'), 'error');
 			}
 
 			if(!$error) {
@@ -1144,7 +1146,7 @@ if(!class_exists('UrtakPlugin')) {
 				$account_response = self::$urtak_api->login_account(compact('password'));
 
 				if($account_response->success()) {
-					add_settings_error('general', 'settings_updated', __('Your account was successfully retrieved and your credentials saved.'), 'updated');
+					add_settings_error('general', 'settings_updated', __('Your account was successfully retrieved and your credentials saved.', 'urtak'), 'updated');
 
 					$settings = self::get_settings();
 					$settings['credentials'] = array(
@@ -1157,7 +1159,7 @@ if(!class_exists('UrtakPlugin')) {
 					set_transient('settings_errors', get_settings_errors(), 30);
 					wp_redirect(add_query_arg(array('settings-updated' => 'true'), self::_get_settings_url()));
 				} else {
-					add_settings_error('general', 'settings_updated', __('Your account could not be retrieved. Please check your credentials and try again.'), 'error');
+					add_settings_error('general', 'settings_updated', __('Your account could not be retrieved. Please check your credentials and try again.', 'urtak'), 'error');
 				}
 			}
 		}
@@ -1167,7 +1169,7 @@ if(!class_exists('UrtakPlugin')) {
 			$settings['credentials'] = array();
 			$settings = self::set_settings($settings);
 
-			add_settings_error('general', 'settings_updated', __('Your credentials were successfully cleared.'), 'updated');
+			add_settings_error('general', 'settings_updated', __('Your credentials were successfully cleared.', 'urtak'), 'updated');
 			set_transient('settings_errors', get_settings_errors(), 30);
 
 			wp_redirect(add_query_arg(array('settings-updated' => 'true'), self::_get_settings_url()));
@@ -1177,7 +1179,7 @@ if(!class_exists('UrtakPlugin')) {
 		private static function _process_settings_save($settings) {
 			$settings = self::set_settings($settings);
 
-			add_settings_error('general', 'settings_updated', __('Settings saved.'), 'updated');
+			add_settings_error('general', 'settings_updated', __('Settings saved.', 'urtak'), 'updated');
 			set_transient('settings_errors', get_settings_errors(), 30);
 
 			wp_redirect(add_query_arg(array('settings-updated' => 'true'), self::_get_settings_url()));
@@ -1186,9 +1188,9 @@ if(!class_exists('UrtakPlugin')) {
 
 		private static function _process_signup($email) {
 			if(empty($email)) {
-				add_settings_error('general', 'settings_updated', __('Please provide an email address.'), 'error');
+				add_settings_error('general', 'settings_updated', __('Please provide an email address.', 'urtak'), 'error');
 			} else if(!is_email($email)) {
-				add_settings_error('general', 'settings_updated', __('Please provide a valid email address.'), 'error');
+				add_settings_error('general', 'settings_updated', __('Please provide a valid email address.', 'urtak'), 'error');
 			} else {
 				$account_response = self::$urtak_api->create_account(array('email' => $email));
 
@@ -1202,11 +1204,11 @@ if(!class_exists('UrtakPlugin')) {
 					);
 					$settings = self::set_settings($settings);
 
-					add_settings_error('general', 'settings_updated', __('Your account was successfully created and your credentials saved.'), 'updated');
+					add_settings_error('general', 'settings_updated', __('Your account was successfully created and your credentials saved.', 'urtak'), 'updated');
 				} else {
 					$redirect_url = add_query_arg(array('action' => 'login'), $redirect_url);
 
-					add_settings_error('general', 'settings_updated', __('An account with that email address already exists. Please login below.'), 'error');
+					add_settings_error('general', 'settings_updated', __('An account with that email address already exists. Please login below.', 'urtak'), 'error');
 				}
 
 				set_transient('settings_errors', get_settings_errors(), 30);

@@ -4,26 +4,26 @@
 	<input type="hidden" id="urtak-meta-box-per-page" data-urtak-attribute="per_page" value="10" />
 
 	<div class="alignright">
-		<label for="urtak-meta-box-show"><?php _e('Show'); ?></label>
+		<label for="urtak-meta-box-show"><?php _e('Show', 'urtak'); ?></label>
 		<select id="urtak-meta-box-show" data-urtak-attribute="show">
-			<option value="st|all"><?php _e('All'); ?></option>
-			<option value="st|pe"><?php _e('Pending'); ?></option>
-			<option selected="selected" value="st|ap"><?php _e('Approved'); ?></option>
-			<option value="st|ar"><?php _e('Archived'); ?></option>
-			<option value="st|nu"><?php _e('Rejected'); ?></option>
-			<option value="mine"><?php _e('Mine'); ?></option>
+			<option value="st|all"><?php _e('All', 'urtak'); ?></option>
+			<option value="st|pe"><?php _e('Pending', 'urtak'); ?></option>
+			<option selected="selected" value="st|ap"><?php _e('Approved', 'urtak'); ?></option>
+			<option value="st|ar"><?php _e('Archived', 'urtak'); ?></option>
+			<option value="st|nu"><?php _e('Rejected', 'urtak'); ?></option>
+			<option value="mine"><?php _e('Mine', 'urtak'); ?></option>
 		</select>&nbsp;&nbsp;
-		<label for="urtak-meta-box-order"><?php _e('Order By'); ?></label>
+		<label for="urtak-meta-box-order"><?php _e('Order By', 'urtak'); ?></label>
 		<select id="urtak-meta-box-order" data-urtak-attribute="order">
-			<option value="time|DESC"><?php _e('Newest'); ?></option>
-			<option value="time|ASC"><?php _e('Oldest'); ?></option>
-			<option value="care|DESC"><?php _e('Most Cared About'); ?></option>
-			<option value="care|ASC"><?php _e('Least Cared About'); ?></option>
-			<option value="domi|ASC"><?php _e('Most Divided'); ?></option>
-			<option value="domi|DESC"><?php _e('Most Agreed On'); ?></option>
-			<option value="resp|DESC"><?php _e('Responses'); ?></option>
+			<option value="time|DESC"><?php _e('Newest', 'urtak'); ?></option>
+			<option value="time|ASC"><?php _e('Oldest', 'urtak'); ?></option>
+			<option value="care|DESC"><?php _e('Most Cared About', 'urtak'); ?></option>
+			<option value="care|ASC"><?php _e('Least Cared About', 'urtak'); ?></option>
+			<option value="domi|ASC"><?php _e('Most Divided', 'urtak'); ?></option>
+			<option value="domi|DESC"><?php _e('Most Agreed On', 'urtak'); ?></option>
+			<option value="resp|DESC"><?php _e('Responses', 'urtak'); ?></option>
 		</select>&nbsp;&nbsp;
-		<label for="urtak-meta-box-search"><?php _e('Search'); ?></label>
+		<label for="urtak-meta-box-search"><?php _e('Search', 'urtak'); ?></label>
 		<input type="text" class="text" data-urtak-attribute="search" value="" />
 	</div>
 
@@ -54,15 +54,15 @@
 			</div>
 			<div class="urtak-card-info">
 				<div class="urtak-card-info-question">
-					<textarea class="large-text" name="urtak[question][text][]" placeholder="<?php _e('Ask a Yes or No Question.'); ?>"></textarea>
+					<textarea class="large-text" name="urtak[question][text][]" placeholder="<?php _e('Ask a Yes or No Question.', 'urtak'); ?>"></textarea>
 					<input class="urtak-adder-answer" type="hidden" name="urtak[question][answer][]" value="" />
 				</div>
 			</div>
 			<div class="clear"></div>
 			<div class="urtak-card-controls-container">
-				<div class="urtak-card-info-asker"><?php _e('Asked by the site'); ?></div>
+				<div class="urtak-card-info-asker"><?php _e('Asked by the site', 'urtak'); ?></div>
 				<div class="urtak-card-controls">
-					<span class="urtak-update-message"><?php _e('Update or Publish this post to submit this question.'); ?></span>
+					<span class="urtak-update-message"><?php _e('Update or Publish this post to submit this question.', 'urtak'); ?></span>
 					<a data-action="reject" class="urtak-card-controls-icon-special urtak-card-controls-icon <?php if($question['status'] === 'rejected') { echo 'active'; } ?> urtak-card-controls-icon-rejected" href="#"></a>
 					<div class="clear"></div>
 				</div>
@@ -73,34 +73,34 @@
 
 	<div id="urtak-meta-box-help">
 		<div id="urtak-meta-box-help-content">
-			<a href="#" id="urtak-meta-box-help-handle"><?php _e('Help'); ?></a>
+			<a href="#" id="urtak-meta-box-help-handle"><?php _e('Help', 'urtak'); ?></a>
 
 			<div id="urtak-meta-box-help-content-inner">
-				<h4><?php _e('How It Works'); ?></h4>
+				<h4><?php _e('How It Works', 'urtak'); ?></h4>
 
-				<p><?php _e('Getting started with Urtak couldn’t be easier. We recommend kicking off the conversation with 3-5 questions, but the more you ask, the more people will answer! At any time, you can archive questions that are out of date, reject questions that you think are inappropriate or simply explore results from your urtak.com Dashboard. And when participation is winding down, Urtak will send you a detailed report of your community’s activity.'); ?></p>
+				<p><?php _e('Getting started with Urtak couldn’t be easier. We recommend kicking off the conversation with 3-5 questions, but the more you ask, the more people will answer! At any time, you can archive questions that are out of date, reject questions that you think are inappropriate or simply explore results from your urtak.com Dashboard. And when participation is winding down, Urtak will send you a detailed report of your community’s activity.', 'urtak'); ?></p>
 
-				<h4><?php _e('Icon Guide'); ?></h4>
+				<h4><?php _e('Icon Guide', 'urtak'); ?></h4>
 
 				<div id="urtak-meta-box-help-content-inner-icon-indicators">
 					<div class="urtak-help-content-inner-icon">
 						<a class="urtak-card-controls-icon active urtak-card-controls-icon-pending" href="#"></a>
-						<span><?php _e('Pending'); ?></span>
+						<span><?php _e('Pending', 'urtak'); ?></span>
 					</div>
 
 					<div class="urtak-help-content-inner-icon">
 						<a class="urtak-card-controls-icon active urtak-card-controls-icon-approved" href="#"></a>
-						<span><?php _e('Approve'); ?></span>
+						<span><?php _e('Approve', 'urtak'); ?></span>
 					</div>
 
 					<div class="urtak-help-content-inner-icon">
 						<a class="urtak-card-controls-icon active urtak-card-controls-icon-archived" href="#"></a>
-						<span><?php _e('Archive'); ?></span>
+						<span><?php _e('Archive', 'urtak'); ?></span>
 					</div>
 
 					<div class="urtak-help-content-inner-icon">
 						<a class="urtak-card-controls-icon active urtak-card-controls-icon-rejected" href="#"></a>
-						<span><?php _e('Reject'); ?></span>
+						<span><?php _e('Reject', 'urtak'); ?></span>
 					</div>
 					<div class="clear"></div>
 				</div>
@@ -115,10 +115,10 @@
 	<div id="urtak-meta-box-cards-bottom-shadow-right"></div>
 
 	<div id="urtak-meta-box-controls-per-page" class="alignleft">
-		<?php _e('Show'); ?>
+		<?php _e('Show', 'urtak'); ?>
 		<a class="urtak-meta-box-controls-per-page-link active" href="#">10</a>
 		| <a class="urtak-meta-box-controls-per-page-link" href="#">50</a>
-		| <a class="urtak-meta-box-controls-per-page-link" href="#">100</a> <?php _e('per page'); ?>
+		| <a class="urtak-meta-box-controls-per-page-link" href="#">100</a> <?php _e('per page', 'urtak'); ?>
 	</div>
 
 	<div id="urtak-meta-box-controls-pager" class="alignright">
@@ -129,7 +129,7 @@
 		<input type="hidden" name="urtak-force-hide-urtak" value="no" />
 		<label>
 			<input <?php checked('yes', $force_hide); ?> type="checkbox" name="urtak-force-hide-urtak" value="yes" />
-			<?php _e('Hide the Urtak for this post'); ?>
+			<?php _e('Hide the Urtak for this post', 'urtak'); ?>
 		</label>
 	</div>
 
