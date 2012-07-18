@@ -1,42 +1,68 @@
 === Urtak ===
-Contributors: Nick Ohrn, Urtak
-Tags: urtak, surveys, questions, polls, comments, engagement
+Contributors: nickohrn, urtak
+Tags: urtak, questions, comments, surveys, polls, engagement, insights
 Requires at least: 3.4
 Tested up to: 3.4.1
 Stable tag: 1.0.0
 License: MIT
 
+Upgrade your comments – Urtak questions deliver 10X more engagement than any
+comments section.
+
 == Description ==
 
-[Urtak](https://urtak.com) is collaborative polling — everyone can ask
-questions. It's easy to engage a great number of people in a structured
-conversation that produces thousands of responses.
+[Urtak](https://urtak.com) delivers 10X more engagement than any comments
+section. Why? Because Urtak’s simple yes or no questions are the friendliest
+invitation you can make to your audience. Get everyone involved in the
+conversation!
 
-= Powered by the people =
-By letting everyone ask questions, you will discover answers to questions you
-never thought to ask.
+= General Features =
 
-= Structured engagement =
-Presented as a series of simple Yes/No questions, Urtak provides instant data
-and organizes opinions into a useful resource.
+* **Community Questions**<br/>
+  Urtak turns static polls into a structured conversations. You’ll get answers
+  to questions you wouldn’t have thought to ask.
+* **Community or Publisher Moderation**<br/>
+  Urtak gives you full control of question moderation. You can let our
+  question-rating algorithm automatically filter questions that people don’t
+  care about, or you can do the work yourself.
+* **Email results and reports**<br/>
+  Whenever you create an Urtak or ask a question, a detailed report of the
+  outcome will be sent straight to your inbox. Urtak gives both users and
+  publishers a resource they’ve never had before.
+* **Cross-tabulation**<br/>
+  Dig deeper into the results with our cross-tabulation tool. Are men more
+  likely to enjoy your articles? Do first-time visitors think the same as your
+  current community. The power to find out is yours.
+* **Log in with Facebook and Twitter**<br/>
+  It couldn’t be easier for your audience to sign up with their social profiles
+  to ask questions and share the results with their networks.
+* **Intelligent algorithm**<br/>
+  We’ve developed a powerful algorithm that makes sure that the questions
+  people care about get asked more often.
+* **Robust and reliable**<br/>
+  Our technology is designed to handle massive traffic. Huge brands like
+  Mashable, The Daily Beast, and The Huffington Post have used Urtak. We worked
+  for them, we’ll work for you.
+* **Available in English and Spanish**<br/>
+  Sí, no, no me importa? We develop and fully support Urtak en español. We’re
+  huge in Colombia.
 
-= Easy moderation =
-Filter spam and bad questions out automatically with community moderation, or
-approve them manually without leaving the WP dashboard.
+= WordPress Plugin Features =
 
-= Ask the right questions =
-Our algorithm prioritizes questions so that the most cared about ones are
-presented first.
-
-= Instant Results =
-View immediate results to any question without leaving your WordPress
-dashboard.
-
-= Back-end Analytics =
-All the information generated is structured and easy to parse at Urtak.com.
-Link directly to your Urtak dashboard to view your comprehensive data.
+* **Use from the WP Dashboard**<br/>
+  One click installation. Ask questions and manage Urtak conversations right
+  from your Dashboard.
+* **Front facing counter**<br/>
+  People love answering questions. Show your audience how much activity is
+  happening with our responses counter.
+* **Deactivate Comments**<br/>
+  Had enough of the headaches and hassles that comments can bring. Turn ‘em off
+  with one-click, and elevate the discourse with Urtak questions. Troll-proof!
 
 == Installation ==
+
+TODO Sascha
+
 After installing the plugin from the WordPress Plugin Directory, proceed to
 activate the plugin. Just enter your email address, if you are a new user, we
 will sign you up automatically and generate an API key for you. If you already
@@ -44,6 +70,9 @@ have an account we will help you retrieve your key. Hit "Let's Get Started" and
 you are ready to go.
 
 = Settings =
+
+TODO Sascha
+
 Settings can be modified at any time at the Urtak Configuration page, just
 click "Toggle Advanced Options" to see them. By default, an Urtak will be
 created whenever a user visits your page. It is loaded in the background and
@@ -56,6 +85,9 @@ user-submitted question. If you deselect this option, an e-mail will be sent
 each time a question is submitted and you must approve or reject it manually.
 
 = Using the Plugin =
+
+TODO Sascha
+
 When you create a new post, a new Urtak is automatically generated that can be
 moderated at anytime within the Post interface. It is simple to get started.
 Simply enter a few questions into the question box and you are ready to go. The
@@ -71,15 +103,11 @@ Questions](http://about.urtak.com/faq).
 
 == Screenshots ==
 
-TODO
+TODO Sascha
 
 1. Screenshot The Urtak Widget
 2. Screenshot Simple Configuration Page
 3. Screenshot Admin Interface
-
-== Known Issues ==
-
-Requires PHP-cURL
 
 == Changelog ==
 
