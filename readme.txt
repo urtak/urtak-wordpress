@@ -105,9 +105,10 @@ Questions](http://about.urtak.com/faq).
 
 TODO Sascha
 
-1. Screenshot The Urtak Widget
-2. Screenshot Simple Configuration Page
-3. Screenshot Admin Interface
+1. Screenshot The Urtak Widget.
+2. Screenshot The Post edit page with Urtak admin console. You can easily add, archive and reject questions from here.
+3. Screenshot Simple settings page.
+4. Screenshot The dashboard prvides insights into Urtaks, responses, pending questions and more.
 
 == Changelog ==
 
