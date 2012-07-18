@@ -61,49 +61,30 @@ conversation!
 
 == Installation ==
 
-TODO Sascha
-
-After installing the plugin from the WordPress Plugin Directory, proceed to
-activate the plugin. Just enter your email address, if you are a new user, we
-will sign you up automatically and generate an API key for you. If you already
-have an account we will help you retrieve your key. Hit "Let's Get Started" and
-you are ready to go.
-
-= Settings =
-
-TODO Sascha
-
-Settings can be modified at any time at the Urtak Configuration page, just
-click "Toggle Advanced Options" to see them. By default, an Urtak will be
-created whenever a user visits your page. It is loaded in the background and
-will not slow your page down. If you prefer, you can opt out, and an Urtak will
-only be created when you kick off the conversation by asking a question in the
-Post interface. The Urtak widget appears underneath your content, but you can
-opt to place it on your page manually. Questions will be automatically approved
-by community moderation, which prevents manual moderation of each
-user-submitted question. If you deselect this option, an e-mail will be sent
-each time a question is submitted and you must approve or reject it manually.
+After installing the plugin from the WordPress Plugin Directory, a banner will
+show up asking you to log in or sign up. If you have an account just log in and
+choose which of your existing sites you would like to use. If you're signing up
+Urtak will automatically create a publication. In both cases the plugin will also
+automatically fill in the domain field, which should be the URL of the domain on
+which your WordPress site is running. If you are using the same Urtak site on multiple
+domains you can add them separated by a comma. Don't forget to hit the save changes
+button at the bottom if you change any of the settings. And you're ready to go.
 
 = Using the Plugin =
 
-TODO Sascha
-
-When you create a new post, a new Urtak is automatically generated that can be
-moderated at anytime within the Post interface. It is simple to get started.
-Simply enter a few questions into the question box and you are ready to go. The
-more questions your audience answers, the better insight you get and you can
-keep them answering by making each question simple, but entertaining. Return to
-the Edit Post interface at anytime to moderate questions by approving,
-rejecting or marking them as spam. To view results, either visit the widget on
-your published page or your dashboard on Urtak.com where all of your data is
-stored and organized.
+On the post edit page you'll find a new console from which you can easily add,
+approve, reject or archive, your Urtak questions. Each post has an Urtak associated
+with it and each Urtak consists of a set of questions. These questions are served to
+the user in a random order. A user also has to answer the current question to get a
+new one. Answering questions does not to be signed up but to ask a question a user
+needs to sign up. You as the publisher will also receive an email report with usage
+stats. To view results, either visit the widget on your published page or your
+dashboard on Urtak.com where all of your data is stored and organized.
 
 For more information on settings and features, [visit the Frequently Asked
 Questions](http://about.urtak.com/faq).
 
 == Screenshots ==
-
-TODO Sascha
 
 1. Screenshot The Urtak Widget.
 2. Screenshot The Post edit page with Urtak admin console. You can easily add, archive and reject questions from here.
