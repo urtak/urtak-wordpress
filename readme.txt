@@ -62,24 +62,27 @@ conversation!
 == Installation ==
 
 After installing the plugin from the WordPress Plugin Directory, a banner will
-show up asking you to log in or sign up. If you have an account just log in and
-choose which of your existing sites you would like to use. If you're signing up
-Urtak will automatically create a publication. In both cases the plugin will also
-automatically fill in the domain field, which should be the URL of the domain on
-which your WordPress site is running. If you are using the same Urtak site on multiple
-domains you can add them separated by a comma. Don't forget to hit the save changes
-button at the bottom if you change any of the settings. And you're ready to go.
+show up asking you to log in or sign up. If you have an account, just log in
+and choose which of your existing Urtak sites you would like to use. If you’re
+signing up, the plugin will automatically create a new Urtak site for you. In
+both cases the plugin will also automatically fill in the domain field, which
+should be the URL of the domain on which your WordPress site is running. If you
+are using the same Urtak site on multiple domains you can add them separated by
+a comma. Don’t forget to hit the save changes button at the bottom if you
+change any of the settings. You’re ready to go!
 
 = Using the Plugin =
 
-On the post edit page you'll find a new console from which you can easily add,
-approve, reject or archive, your Urtak questions. Each post has an Urtak associated
-with it and each Urtak consists of a set of questions. These questions are served to
-the user in a random order. A user also has to answer the current question to get a
-new one. Answering questions does not to be signed up but to ask a question a user
-needs to sign up. You as the publisher will also receive an email report with usage
-stats. To view results, either visit the widget on your published page or your
-dashboard on Urtak.com where all of your data is stored and organized.
+On the post edit page you’ll find a new console from which you can easily add,
+approve, reject, or archive your Urtak questions. Each post has an Urtak
+associated with it and each Urtak consists of a set of questions. These
+questions are served to the user in a random order. A user has to answer the
+question in front of her before she can answer another question. Answering
+questions does not require a user to be signed up; however, in order to ask
+a question, a user must sign up. You, as the publisher, will receive an email
+report with usage stats. To view results, either visit the widget on your
+published page or your dashboard on Urtak.com where all of your data is stored
+and organized.
 
 For more information on settings and features, [visit the Frequently Asked
 Questions](http://about.urtak.com/faq).
@@ -87,9 +90,11 @@ Questions](http://about.urtak.com/faq).
 == Screenshots ==
 
 1. Screenshot The Urtak Widget.
-2. Screenshot The Post edit page with Urtak admin console. You can easily add, archive and reject questions from here.
+2. Screenshot The Post edit page with Urtak admin console. You can easily add,
+   archive and reject questions from here.
 3. Screenshot Simple settings page.
-4. Screenshot The dashboard prvides insights into Urtaks, responses, pending questions and more.
+4. Screenshot The dashboard prvides insights into Urtaks, responses, pending
+   questions and more.
 
 == Changelog ==
 
