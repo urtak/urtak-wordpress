@@ -223,7 +223,7 @@ if(!class_exists('UrtakPlugin')) {
 
 			$posts_without_urtaks = self::get_nonassociated_post_ids();
 			if(!empty($posts_without_urtaks)) {
-				add_meta_box('urtak-posts-without-urtaks', __('Posts without Urtaks', 'urtak'), array(__CLASS__, 'display_meta_box__posts_without_urtaks'), 'urtak', 'left');
+				add_meta_box('urtak-posts-without-urtaks', __('Posts without Urtak', 'urtak'), array(__CLASS__, 'display_meta_box__posts_without_urtaks'), 'urtak', 'left');
 			}
 
 

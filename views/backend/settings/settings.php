@@ -125,7 +125,7 @@
 			</label>
 			<p class="urtak-help">
 				<label for="urtak-homepage">
-					<?php _e('Urtak widgets will be displayed on articles on your front page.', 'urtak'); ?>
+					<?php _e('Urtak widgets will be displayed on posts on your front page.', 'urtak'); ?>
 				</label>
 			</p>
 		</div>
