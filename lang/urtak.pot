@@ -390,6 +390,10 @@ msgstr ""
 msgid "Sign Up"
 msgstr ""
 
+#: /var/www/vhosts/urtak.local/wp-content/plugins/urtak/views/backend/misc/form-signup.php:17
+msgid "By signing up you agree to our <a href=\"http://about.urtak.com/terms\" target=\"_blank\">Terms</a>."
+msgstr ""
+
 #: /var/www/vhosts/urtak.local/wp-content/plugins/urtak/views/backend/misc/header.php:15
 #: /var/www/vhosts/urtak.local/wp-content/plugins/urtak/views/backend/settings/settings.php:26
 #, php-format
