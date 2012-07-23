@@ -54,7 +54,7 @@ msgid "Settings"
 msgstr ""
 
 #: /var/www/vhosts/urtak.local/wp-content/plugins/urtak/urtak.php:226
-msgid "Posts without Urtaks"
+msgid "Posts without Urtak"
 msgstr ""
 
 #: /var/www/vhosts/urtak.local/wp-content/plugins/urtak/urtak.php:230
@@ -136,7 +136,7 @@ msgstr ""
 
 #: /var/www/vhosts/urtak.local/wp-content/plugins/urtak/views/backend/dashboard/widget.php:7
 #: /var/www/vhosts/urtak.local/wp-content/plugins/urtak/views/backend/insights/meta-boxes/top-questions.php:11
-msgid "Your publication's pending questions could not be retrieved."
+msgid "Your site's pending questions could not be retrieved."
 msgstr ""
 
 #: /var/www/vhosts/urtak.local/wp-content/plugins/urtak/views/backend/dashboard/widget.php:11
@@ -201,39 +201,41 @@ msgid "Most Divided"
 msgstr ""
 
 #: /var/www/vhosts/urtak.local/wp-content/plugins/urtak/views/backend/insights/meta-boxes/top-questions.php:4
-msgid "Most Cared"
+#: /var/www/vhosts/urtak.local/wp-content/plugins/urtak/views/backend/meta-boxes/meta-box.php:20
+msgid "Most Cared About"
 msgstr ""
 
 #: /var/www/vhosts/urtak.local/wp-content/plugins/urtak/views/backend/insights/meta-boxes/top-questions.php:5
-msgid "Most Agreed"
+#: /var/www/vhosts/urtak.local/wp-content/plugins/urtak/views/backend/meta-boxes/meta-box.php:23
+msgid "Most Agreed On"
 msgstr ""
 
 #: /var/www/vhosts/urtak.local/wp-content/plugins/urtak/views/backend/insights/meta-boxes/top-questions.php:27
-msgid "Your publication's most cared divided questions could not be retrieved."
+msgid "Your site's most divided questions could not be retrieved."
 msgstr ""
 
 #: /var/www/vhosts/urtak.local/wp-content/plugins/urtak/views/backend/insights/meta-boxes/top-questions.php:31
-msgid "You don't have any divided questions."
+msgid "No results for most divided questions."
 msgstr ""
 
 #: /var/www/vhosts/urtak.local/wp-content/plugins/urtak/views/backend/insights/meta-boxes/top-questions.php:43
-msgid "Your publication's most cared about questions could not be retrieved."
+msgid "Your site's most cared about questions could not be retrieved."
 msgstr ""
 
 #: /var/www/vhosts/urtak.local/wp-content/plugins/urtak/views/backend/insights/meta-boxes/top-questions.php:47
-msgid "You don't have any cared about questions."
+msgid "No results for most cared about questions."
 msgstr ""
 
 #: /var/www/vhosts/urtak.local/wp-content/plugins/urtak/views/backend/insights/meta-boxes/top-questions.php:59
-msgid "Your publication's most cared upon questions could not be retrieved."
+msgid "Your site's most agreed on questions could not be retrieved."
 msgstr ""
 
 #: /var/www/vhosts/urtak.local/wp-content/plugins/urtak/views/backend/insights/meta-boxes/top-questions.php:63
-msgid "You don't have any agreed on questions."
+msgid "No results for most agreed on questions"
 msgstr ""
 
 #: /var/www/vhosts/urtak.local/wp-content/plugins/urtak/views/backend/insights/meta-boxes/top-urtaks.php:3
-msgid "Your publication's Urtaks could not be retrieved."
+msgid "Your site's Urtaks could not be retrieved."
 msgstr ""
 
 #: /var/www/vhosts/urtak.local/wp-content/plugins/urtak/views/backend/insights/meta-boxes/top-urtaks.php:7
@@ -281,16 +283,8 @@ msgstr ""
 msgid "Oldest"
 msgstr ""
 
-#: /var/www/vhosts/urtak.local/wp-content/plugins/urtak/views/backend/meta-boxes/meta-box.php:20
-msgid "Most Cared About"
-msgstr ""
-
 #: /var/www/vhosts/urtak.local/wp-content/plugins/urtak/views/backend/meta-boxes/meta-box.php:21
 msgid "Least Cared About"
-msgstr ""
-
-#: /var/www/vhosts/urtak.local/wp-content/plugins/urtak/views/backend/meta-boxes/meta-box.php:23
-msgid "Most Agreed On"
 msgstr ""
 
 #: /var/www/vhosts/urtak.local/wp-content/plugins/urtak/views/backend/meta-boxes/meta-box.php:26
@@ -483,7 +477,7 @@ msgid "Include on Homepage"
 msgstr ""
 
 #: /var/www/vhosts/urtak.local/wp-content/plugins/urtak/views/backend/settings/settings.php:128
-msgid "Urtak widgets will be displayed on articles on your front page."
+msgid "Urtak widgets will be displayed on posts on your front page."
 msgstr ""
 
 #: /var/www/vhosts/urtak.local/wp-content/plugins/urtak/views/backend/settings/settings.php:138
