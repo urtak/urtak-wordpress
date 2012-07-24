@@ -87,6 +87,9 @@ and organized.
 For more information on settings and features, [visit the Frequently Asked
 Questions](http://about.urtak.com/faq).
 
+Please note that use of Urtak is subject to our
+[Terms and Privacy Policy](http://about.urtak.com/terms).
+
 == Screenshots ==
 
 1. Screenshot The Urtak Widget.
