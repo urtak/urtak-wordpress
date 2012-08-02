@@ -19,7 +19,7 @@
 			&nbsp;| &nbsp;
 			<a target="_blank" href="http://about.urtak.com/"><?php _e('Help', 'urtak'); ?></a>
 			&nbsp;| &nbsp;
-			<a target="_blank" href="http://about.urtak.com/privacy/"><?php _e('Privacy &amp; Terms', 'urtak'); ?></a>
+			<a target="_blank" href="http://about.urtak.com/terms"><?php _e('Privacy &amp; Terms', 'urtak'); ?></a>
 		</small>
 	</h2>
 

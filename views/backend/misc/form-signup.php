@@ -14,5 +14,6 @@
 	<p class="submit">
 		<?php wp_nonce_field('urtak-signup', 'urtak-signup-nonce'); ?>
 		<input class="button button-primary" type="submit" name="urtak-signup-submit" id="urtak-signup-submit" value="<?php _e('Sign Up', 'urtak'); ?>" />
+		<?php _e('By signing up you agree to our <a href="http://about.urtak.com/terms" target="_blank">Terms</a>.', 'urtak'); ?>
 	</p>
 </form>
