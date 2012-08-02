@@ -157,34 +157,52 @@ jQuery(document).ready(function($) {
 		$('#urtak-meta-box-per-page').val($(this).text()).change();
 	});
 
-	$('.urtak-card-plot-controls li').live('click', function(event) {
+	$('.urtak-card-plot-controls li a').live('click', function(event) {
 		event.preventDefault();
 
 		var $this = $(this)
+		, $parent = $this.parent()
 		, $card = $this.parents('.urtak-card')
 		, $clone = $card.clone()
 		, $question = $clone.find('.large-text')
 		, $answer = $clone.find('.urtak-adder-answer')
 		, $controls = $clone.find('.urtak-card-controls')
-		, answer = $this.attr('data-answer')
+		, answer = $parent.attr('data-answer')
 		, question = $.trim($question.val());
 
+		if($this.hasClass('activated')) {
+			if(!$parent.hasClass('card-question-answers-d') && '' != question) {
 
-		if(!$this.hasClass('card-question-answers-d') && '' != question) {
-			$clone.find('.urtak-card-plot-controls').hide();
-			$clone.find('.urtak-card-plot-' + answer).show();
-			$clone.find('.urtak-card-info-question').append(question);
+				$clone.find('.urtak-card-plot-controls').hide();
+				$clone.find('.urtak-card-plot-' + answer).show();
+				$clone.find('.urtak-card-info-question').append(question);
 
-			$answer.val(answer);
+				$answer.val(answer);
 
-			$controls.show();
-			$question.hide();
+				$controls.show();
+				$question.hide();
 
-			$clone.css({ opacity: 0 }).insertAfter($card).animate({ opacity: 1 }, { duration: 600 });
+				$clone.css({ opacity: 0 }).insertAfter($card).animate({ opacity: 1 }, { duration: 600 });
+			}
+
+			$parent.parent().find('a').removeClass('activated').removeClass('deactivated');
+			$card.find('.large-text').val('').focus();
+		} else {
+			$parent.parent().find('a').removeClass('activated').addClass('deactivated');
+			$this.removeClass('deactivated').addClass('activated');
 		}
 
-		$card.find('.large-text').val('');
+	}).live('mouseover', function(event) {
+		var $this = $(this)
+		, $parent = $this.parent();
 
+		$parent.parent().find('a').removeClass('activated').addClass('deactivated');
+		$this.removeClass('deactivated').addClass('activated');
+	}).live('mouseout', function(event) {
+		var $this = $(this)
+		, $parent = $this.parent();
+
+		$parent.parent().find('a').removeClass('activated').removeClass('deactivated');
 	});
 
 	$('.urtak-card-controls-icon-special').live('click', function(event) {

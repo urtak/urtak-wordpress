@@ -421,9 +421,10 @@ div.urtak-error .globe {
   	margin: 0;
 }
 
-.urtak-card-adder .urtak-card-plot-controls .card-question-answers li {
+.urtak-card-adder .urtak-card-plot-controls .card-question-answers li a {
 	  font-family: "Droid Sans";
 	  font-size: 10px;
+	  display: block;
 	  height: 18px;
 	  line-height: 18px;
 	  overflow: hidden;
@@ -443,7 +444,11 @@ div.urtak-error .globe {
 	  border-style: solid;
 }
 
-.urtak-card-adder .urtak-card-plot-controls .card-question-answers-y {
+.urtak-card-adder .urtak-card-plot-controls .card-question-answers li a:focus {
+	box-shadow: 0 0 15px #00aef0;
+}
+
+.urtak-card-adder .urtak-card-plot-controls .card-question-answers-y a {
 	background: #00aef0;
 	background: -moz-linear-gradient(top,  #00aef0 0%, #0089ba 100%);
 	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#00aef0), color-stop(100%,#0089ba));
@@ -456,7 +461,11 @@ div.urtak-error .globe {
 	border-color: #666666 !important;
 }
 
-.urtak-card-adder .urtak-card-plot-controls .card-question-answers-n {
+.urtak-card-adder .urtak-card-plot-controls .card-question-answers a.deactivated {
+	opacity: 0.5;
+}
+
+.urtak-card-adder .urtak-card-plot-controls .card-question-answers-n a {
 	background: #ff7100;
 	background: -moz-linear-gradient(top,  #ff7100 0%, #d96200 100%);
 	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#ff7100), color-stop(100%,#d96200));
@@ -469,7 +478,11 @@ div.urtak-error .globe {
 	border-color: #666666 !important;
 }
 
-.urtak-card-adder .urtak-card-plot-controls .card-question-answers-d {
+.urtak-card-adder .urtak-card-plot-controls .card-question-answers .card-question-answers-n a:focus {
+	box-shadow: 0 0 15px #ff7100;
+}
+
+.urtak-card-adder .urtak-card-plot-controls .card-question-answers-d a {
 	background: #999999;
 	background: -moz-linear-gradient(top,  #999999 0%, #737373 100%);
 	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#999999), color-stop(100%,#737373));
@@ -480,6 +493,10 @@ div.urtak-error .globe {
 	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#999999', endColorstr='#737373',GradientType=0 );
 	background-color: #737373 !important;
 	border-color: #666666 !important;
+}
+
+.urtak-card-adder .urtak-card-plot-controls .card-question-answers .card-question-answers-d a:focus {
+	box-shadow: 0 0 15px #999999;
 }
 
 .urtak-card-adder .urtak-card-plot-controls a.hover {
