@@ -175,6 +175,42 @@
 		</div>
 	</div>
 
+	<h3><?php _e('Response Counter'); ?></h3>
+
+	<div class="urtak-field">
+		<div class="urtak-checkbox-container">
+			<input type="hidden" name="urtak[counter-icon]" id="urtak-counter-icon-hidden" value="no" />
+			<label class="urtak-checkbox">
+				<div class="urtak-checkbox-input-container">
+					<input <?php checked($settings['counter-icon'], 'yes'); ?> type="checkbox" name="urtak[counter-icon]" id="urtak-counter-icon" value="yes" />
+				</div><?php _e('Show Urtak Icon', 'urtak'); ?>
+			</label>
+			<p class="urtak-help">
+				<label for="urtak-counter-icon">
+					<?php _e('Lorem ipsum dolor. Lorem ipsum dolor.', 'urtak'); ?>
+				</label>
+			</p>
+		</div>
+
+		<div class="urtak-checkbox-container">
+			<input type="hidden" name="urtak[counter-responses]" id="urtak-counter-responses-hidden" value="no" />
+			<label class="urtak-checkbox">
+				<div class="urtak-checkbox-input-container">
+					<input <?php checked($settings['counter-responses'], 'yes'); ?> type="checkbox" name="urtak[counter-responses]" id="urtak-counter-responses" value="yes" />
+				</div><?php _e('Call out "responses"', 'urtak'); ?>
+			</label>
+			<p class="urtak-help">
+				<label for="urtak-counter-responses">
+					<?php _e('Lorem ipsum dolor. Lorem ipsum dolor.', 'urtak'); ?>
+				</label>
+			</p>
+		</div>
+
+		<p class="urtak-help">
+			<input readonly="readonly" type="text" class="code text large-text" id="urtak-counter-tag" value="<?php esc_attr_e("<?php do_action('make_urtak_counter'); ?>", 'urtak'); ?>" />
+		</p>
+	</div>
+
 	<h3><?php _e('Language', 'urtak'); ?></h3>
 
 	<div class="urtak-field">

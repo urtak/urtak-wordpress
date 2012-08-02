@@ -42,9 +42,7 @@ function make_urtak_widget($args = array()) {
 add_action('make_urtak_widget', 'make_urtak_widget');
 
 function urtak_the_responses_number($post_id = null) {
-	if(empty($post_id)) {
-		$post_id = get_the_ID();
-	}
-
-	printf('<a href="%s#embedded-urtak-%d" data-post-id="%d" class="urtak-responses-number"><span class="urtak-responses-number-interior">...</span></a>', get_permalink($post_id), $post_id, $post_id);
+	echo apply_filters('urtak_the_responses_number', UrtakPlugin::get_responses_number_markup($post_id));
 }
+
+add_action('make_urtak_counter', 'urtak_the_responses_number');

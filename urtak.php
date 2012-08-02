@@ -104,6 +104,10 @@ if(!class_exists('UrtakPlugin')) {
 
 			// Remove the noise that comments generate
 			self::$default_settings['disable-comments'] = 'no';
+
+			// Counter settings
+			self::$default_settings['counter-icon'] = 'yes';
+			self::$default_settings['counter-responses'] = 'yes';
 		}
 
 		private static function register_shortcodes() {
@@ -1245,6 +1249,19 @@ if(!class_exists('UrtakPlugin')) {
 			ob_start();
 			include('views/frontend/embed/script.php');
 			return ob_get_clean();
+		}
+
+		public static function get_responses_number_markup($post_id) {
+			if(empty($post_id)) {
+				$post_id = get_the_ID();
+			}
+
+			$settings = self::get_settings();
+
+			$icon_class = 'yes' === $settings['counter-icon'] ? 'urtak-responses-number-with-icon' : '';
+			$responses_text = 'yes' === $settings['counter-responses'] ? __('responses', 'urtak') : '';
+
+			return sprintf('<a href="%s#embedded-urtak-%d" data-post-id="%d" class="urtak-responses-number %s"><span class="urtak-responses-number-interior">...</span> %s</a>', get_permalink($post_id), $post_id, $post_id, $icon_class, $responses_text);
 		}
 
 	}

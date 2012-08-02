@@ -14,7 +14,7 @@ jQuery(document).ready(function($) {
 			function(data, status) {
 				if(data.urtaks) {
 					for(var post_id in data.urtaks) {
-						$('.urtak-responses-number[data-post-id="' + post_id + '"]').show().find('span').text(data.urtaks[post_id]);
+						$('.urtak-responses-number[data-post-id="' + post_id + '"]').find('span').text(data.urtaks[post_id]).end().addClass('fetched');
 					}
 				}
 			},
