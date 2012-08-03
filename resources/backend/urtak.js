@@ -334,6 +334,9 @@ var UrtakDelegates = (function(jQuery) {
 					min: -1,
 					tickLength: 0,
 					ticks: ticks
+				},
+				yaxis: {
+					min: 0
 				}
 			}
 		);

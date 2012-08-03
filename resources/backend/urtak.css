@@ -289,6 +289,19 @@ div.urtak-error .globe {
 	cursor: default;
 }
 
+#urtak-at-a-glance .urtak-statistics-section-container {
+	margin: 10px 25px;
+}
+
+#urtak-at-a-glance .urtak-statistics-section {
+	float: left;
+	width: 25%;
+}
+
+#urtak-at-a-glance .urtak-statistics-section > div {
+
+}
+
 #urtak-dashboard-chart {
 	margin-bottom: 10px;
 }

@@ -14,7 +14,43 @@
 
 <div id="urtak-at-a-glance-months-chart" data-tabbed-depend-on="urtak-at-a-glance-tabbed-control">
 	<div class="urtak-at-a-glance-chart-placeholder" id="urtak-at-a-glance-months-chart-placeholder"></div>
-</div>	
+</div>
+
+<div class="urtak-clear"></div>
+
+<div class="urtak-statistics-section-container">
+
+	<div class="urtak-statistics-section">
+		<div>
+			<h2><?php esc_html_e(number_format_i18n($total_responses)); ?></h2>
+			<strong><?php _e('Total Responses'); ?></strong>
+		</div>
+	</div>
+
+	<div class="urtak-statistics-section">
+		<div>
+			<h2><?php esc_html_e(number_format_i18n($total_urtaks)); ?></h2>
+			<strong><?php _e('Total Urtaks'); ?></strong>
+		</div>
+	</div>
+
+	<div class="urtak-statistics-section">
+		<div>
+			<h2><?php esc_html_e(number_format_i18n($total_questions)); ?></h2>
+			<strong><?php _e('Total Questions'); ?></strong>
+		</div>
+	</div>
+
+	<div class="urtak-statistics-section">
+		<div>
+			<h2><?php esc_html_e(number_format_i18n($responses_today)); ?></h2>
+			<strong><?php _e('Responses Today'); ?></strong>
+		</div>
+	</div>
+
+</div>
+
+<div class="urtak-clear"></div>
 
 <script type="text/javascript">
 	var urtak_aag_days = jQuery.parseJSON('<?php echo json_encode($days); ?>')
@@ -27,6 +63,8 @@
 	, urtak_ticks_weeks = []
 	, urtak_ticks_months = [];
 
+	console.log(urtak_aag_days);
+
 	for(var i = 0; i < urtak_aag_days.length; i++) {
 		urtak_data_days.push([i*2, urtak_aag_days[i].responses]);
 		urtak_ticks_days.push([i*2, urtak_aag_days[i].date]);
@@ -38,8 +76,8 @@
 	}
 
 	for(var i = 0; i < urtak_aag_months.length; i++) {
-		urtak_data_months.push([i*2, urtak_aag_days[i].responses]);
-		urtak_ticks_months.push([i*2, urtak_aag_days[i].date]);
+		urtak_data_months.push([i*2, urtak_aag_months[i].responses]);
+		urtak_ticks_months.push([i*2, urtak_aag_months[i].date]);
 	}
 
 	function urtak_plot_aag_plots(keys) {
@@ -49,7 +87,7 @@
 
 		jQuery.each(keys, function(index, element) {
 			var data = window['urtak_data_' + this], ticks = window['urtak_ticks_' + this];
-		
+
 			UrtakDelegates.plot_bar_graph('#urtak-at-a-glance-' + this + '-chart-placeholder', data, ticks);
 		});
 	}

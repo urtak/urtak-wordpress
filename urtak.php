@@ -222,8 +222,7 @@ if(!class_exists('UrtakPlugin')) {
 
 			add_action("load-{$sub_level_settings}", array(__CLASS__, 'process_settings_actions'));
 
-			// This has been removed because the API functionality isn't there to support it at this point in time
-			// add_meta_box('urtak-at-a-glance', __('At a Glance'), array(__CLASS__, 'display_meta_box__insights'), 'urtak', 'top');
+			add_meta_box('urtak-at-a-glance', __('At a Glance'), array(__CLASS__, 'display_meta_box__insights'), 'urtak', 'top');
 
 			$posts_without_urtaks = self::get_nonassociated_post_ids();
 			if(!empty($posts_without_urtaks)) {
@@ -236,7 +235,6 @@ if(!class_exists('UrtakPlugin')) {
 
 		public static function add_dashboard_widget() {
 			if(self::has_credentials()) {
-				// This has been removed because the API functionality isn't there to support it at this point in time
 				wp_add_dashboard_widget('urtak', __('Urtak', 'urtak'), array(__CLASS__, 'display_meta_box__dashboard'));
 			}
 		}
@@ -400,7 +398,10 @@ if(!class_exists('UrtakPlugin')) {
 			if(!in_array($hook, self::$admin_page_hooks)) { return; }
 			wp_enqueue_style('urtak-font', 'http://fonts.googleapis.com/css?family=Droid+Sans:400,700');
 
-			wp_enqueue_script('urtak-backend', plugins_url('resources/backend/urtak.js', __FILE__), array('jquery', 'postbox'), self::VERSION);
+			wp_enqueue_script('jquery-flot', plugins_url('resources/backend/flot/jquery.flot.min.js', __FILE__), array('jquery'));
+			wp_enqueue_script('jquery-flot-barnumbers', plugins_url('resources/backend/jquery.flot.barnumbers.js', __FILE__), array('jquery-flot'));
+
+			wp_enqueue_script('urtak-backend', plugins_url('resources/backend/urtak.js', __FILE__), array('jquery', 'postbox', 'jquery-flot', 'jquery-flot-barnumbers'), self::VERSION);
 			wp_localize_script('urtak-backend', 'Urtak_Vars', array(
 				'see_all' => __('See all...', 'urtak'),
 				'help_close' => __('Close', 'urtak'),
@@ -652,23 +653,43 @@ if(!class_exists('UrtakPlugin')) {
 
 		public static function display_meta_box__insights($ajax = false) {
 			if($ajax) {
+				$publication = self::get_publication(self::get_credentials('publication-key'));
+
+				$total_responses = 0;
+				$total_questions = 0;
+				$total_urtaks = 0;
+				$today_data = $publication['statistics']['rpd_prev_14d'][13];
+				$responses_today = $today_data['responses'];
 
 				$days = array();
-				for($i = -15; $i <= 0; $i++) {
-					$responses = rand(100, 2000);
-					$yes = rand(0, $responses);
-					$no = $responses - $yes;
-
-					$days[] = array(
-						'responses' => $responses,
-						'yes' => $yes,
-						'no' => $no,
-						'date' => date('D,<b\r />M j', strtotime("Today {$i} Days"))
-					);
-				}
-
 				$weeks = array();
 				$months = array();
+				if(!is_wp_error($publication) && isset($publication['statistics'])) {
+					$total_responses = $publication['statistics']['total_responses'];
+					$total_questions = $publication['statistics']['total_urtak_questions'];
+					$total_urtaks = $publication['statistics']['total_urtaks'];
+
+					foreach($publication['statistics']['rpd_prev_14d'] as $day_response_datum) {
+						$days[] = array(
+							'responses' => $day_response_datum['responses'],
+							'date' => date('D,<b\r />M j', $day_response_datum['start_time'])
+						);
+					}
+
+					foreach($publication['statistics']['rpw_prev_12w'] as $week_response_datum) {
+						$weeks[] = array(
+							'responses' => $week_response_datum['responses'],
+							'date' => date('n/j', $week_response_datum['start_time']) . ' - ' . date('n/j', $week_response_datum['end_time'])
+						);
+					}
+
+					foreach($publication['statistics']['rpm_prev_12m'] as $month_response_datum) {
+						$months[] = array(
+							'responses' => $month_response_datum['responses'],
+							'date' => date('M Y', $month_response_datum['start_time'])
+						);
+					}
+				}
 
 				include('views/backend/insights/meta-boxes/at-a-glance.php');
 			} else {
