@@ -1,3 +1,5 @@
+<h4 style="text-align: center;"><?php _e('Response Count'); ?></h4>
+
 <div id="urtak-at-a-glance-days-chart">
     <div class="urtak-at-a-glance-chart-placeholder" id="urtak-at-a-glance-days-chart-placeholder"></div>
 </div>

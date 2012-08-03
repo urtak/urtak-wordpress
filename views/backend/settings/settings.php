@@ -1,17 +1,16 @@
 <?php if(!self::has_credentials()) { ?>
 
-<?php $action = (isset($data['action']) && 'login' === $data['action']) ? 'login' : 'signup'; ?>
+	<?php $action = (isset($data['action']) && 'login' === $data['action']) ? 'login' : 'signup'; ?>
 
-<?php self::_print_login_form('login' === $action, $data); ?>
+	<?php self::_print_login_form('login' === $action, $data); ?>
 
-<?php self::_print_signup_form('signup' === $action, $data); ?>
+	<?php self::_print_signup_form('signup' === $action, $data); ?>
 
-<?php } ?>
+<?php } else { ?>
 
 <form class="urtak-settings" method="post" action="<?php esc_url(add_query_arg(array())); ?>">
 
 	<div class="urtak-settings-section urtak-settings-section-left">
-
 
 	<?php if(self::has_credentials()) { ?>
 
@@ -278,3 +277,5 @@
 		<input type="submit" class="button button-primary" name="save-urtak-settings" value="<?php _e('Save Changes', 'urtak'); ?>" />
 	</p>
 </form>
+
+<?php } ?>
