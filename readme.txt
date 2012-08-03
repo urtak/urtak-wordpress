@@ -11,6 +11,10 @@ comments section.
 
 == Description ==
 
+(Please note that the 1.0.0 release is a complete rewrite. If you are upgrading
+from an older version, you will have to log in again on the Urtak plugin
+settings page.)
+
 [Urtak](https://urtak.com) delivers 10X more engagement than any comments
 section. Why? Because Urtak’s simple yes or no questions are the friendliest
 invitation you can make to your audience. Get everyone involved in the
@@ -96,7 +100,7 @@ Please note that use of Urtak is subject to our
 2. Screenshot The Post edit page with Urtak admin console. You can easily add,
    archive and reject questions from here.
 3. Screenshot Simple settings page.
-4. Screenshot The dashboard prvides insights into Urtaks, responses, pending
+4. Screenshot The dashboard provides insights into Urtaks, responses, pending
    questions and more.
 
 == Changelog ==
