@@ -24,63 +24,43 @@ conversation!
 = General Features =
 
 * **Community Questions**
-
   Urtak turns static polls into a structured conversations. You’ll get answers
   to questions you wouldn’t have thought to ask.
-
 * **Community or Publisher Moderation**
-
   Urtak gives you full control of question moderation. You can let our
   question-rating algorithm automatically filter questions that people don’t
   care about, or you can do the work yourself.
-
 * **Email results and reports**
-
   Whenever you create an Urtak or ask a question, a detailed report of the
   outcome will be sent straight to your inbox. Urtak gives both users and
   publishers a resource they’ve never had before.
-
 * **Cross-tabulation**
-
   Dig deeper into the results with our cross-tabulation tool. Are men more
   likely to enjoy your articles? Do first-time visitors think the same as your
   current community. The power to find out is yours.
-
 * **Log in with Facebook and Twitter**
-
   It couldn’t be easier for your audience to sign up with their social profiles
   to ask questions and share the results with their networks.
-
 * **Intelligent algorithm**
-
   We’ve developed a powerful algorithm that makes sure that the questions
   people care about get asked more often.
-
 * **Robust and reliable**
-
   Our technology is designed to handle massive traffic. Huge brands like
   Mashable, The Daily Beast, and The Huffington Post have used Urtak. We worked
   for them, we’ll work for you.
-
 * **Available in English and Spanish**
-
   Sí, no, no me importa? We develop and fully support Urtak en español. We’re
   huge in Colombia.
 
 = WordPress Plugin Features =
 
 * **Use from the WP Dashboard**
-
   One click installation. Ask questions and manage Urtak conversations right
   from your Dashboard.
-
 * **Front facing counter**
-
   People love answering questions. Show your audience how much activity is
   happening with our responses counter.
-
 * **Deactivate Comments**
-
   Had enough of the headaches and hassles that comments can bring. Turn ‘em off
   with one-click, and elevate the discourse with Urtak questions. Troll-proof!
 
