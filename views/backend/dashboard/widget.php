@@ -1,18 +1,28 @@
-<?php if(!empty($pending)) { ?>
-<br />
-<?php } ?>
-<div id="urtak-pending-questions" data-tabbed-depend-on="urtak-questions-tabbed-control">
-	<?php if(false === $pending) { ?>
-	<div id="setting-error-settings_updated" class="settings-error error">
-		<p><?php _e('Your publication\'s pending questions could not be retrieved.', 'urtak'); ?></p>
-	</div>
-	<?php } else if(empty($pending)) { ?>
-	<div id="setting-error-settings_updated" class="settings-error updated">
-		<p><?php _e('You don\'t have any pending questions.', 'urtak'); ?></p>
-	</div>
-	<?php } else { ?>
-		<?php foreach($pending as $question) { ?>
-			<?php echo self::_get_card($question, $post_id, true, true); ?>
-		<?php } ?>
-	<?php } ?>
+<div id="urtak-at-a-glance-days-chart">
+    <div style="height: 250px; width: 100%;" class="urtak-at-a-glance-chart-placeholder" id="urtak-at-a-glance-days-chart-placeholder"></div>
 </div>
+
+<div class="urtak-clear"></div>
+
+<script type="text/javascript">
+	var urtak_aag_days = jQuery.parseJSON('<?php echo json_encode($days); ?>')
+	, urtak_data_days = []
+	, urtak_ticks_days = [];
+
+	for(var i = 0; i < urtak_aag_days.length; i++) {
+		urtak_data_days.push([i*2, urtak_aag_days[i].responses]);
+		urtak_ticks_days.push([i*2, urtak_aag_days[i].date]);
+	}
+
+	function widget_urtak_plot_aag_plots() {
+		jQuery('#urtak-at-a-glance-days-chart-placeholder').empty();
+
+		UrtakDelegates.plot_bar_graph('#urtak-at-a-glance-days-chart-placeholder', urtak_data_days, urtak_ticks_days);
+	}
+
+	jQuery(window).resize(function() {
+		widget_urtak_plot_aag_plots();
+	});
+
+	widget_urtak_plot_aag_plots();
+</script>

@@ -584,14 +584,20 @@ if(!class_exists('UrtakPlugin')) {
 
 		public static function display_meta_box__dashboard($ajax = false) {
 			if($ajax) {
-				$page = 1;
-				$per_page = 5;
+				$publication = self::get_publication(self::get_credentials('publication-key'));
 
-				$pending_response = self::get_publication_questions_response($page, $per_page, $order, 'st|pe');
-				if($pending_response) {
-					$pending = $pending_response['questions']['question'];
-				} else {
-					$pending = false;
+				$days = array();
+				if(!is_wp_error($publication) && isset($publication['statistics'])) {
+					$total_responses = $publication['statistics']['total_responses'];
+					$total_questions = $publication['statistics']['total_urtak_questions'];
+					$total_urtaks = $publication['statistics']['total_urtaks'];
+
+					foreach(array_slice($publication['statistics']['rpd_prev_14d'], -7) as $day_response_datum) {
+						$days[] = array(
+							'responses' => $day_response_datum['responses'],
+							'date' => date('D,<b\r />M j', $day_response_datum['start_time'])
+						);
+					}
 				}
 
 				include('views/backend/dashboard/widget.php');

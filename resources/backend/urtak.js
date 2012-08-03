@@ -308,6 +308,8 @@ var UrtakDelegates = (function(jQuery) {
 	};
 
 	_plot_bar_graph = function(selector, data, ticks) {
+		console.log(data);
+		console.log(ticks);
 		$.plot(
 			$(selector),
 			[

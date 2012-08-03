@@ -63,8 +63,6 @@
 	, urtak_ticks_weeks = []
 	, urtak_ticks_months = [];
 
-	console.log(urtak_aag_days);
-
 	for(var i = 0; i < urtak_aag_days.length; i++) {
 		urtak_data_days.push([i*2, urtak_aag_days[i].responses]);
 		urtak_ticks_days.push([i*2, urtak_aag_days[i].date]);
