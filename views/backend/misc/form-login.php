@@ -5,10 +5,10 @@
 	<h2><?php _e('Account Login', 'urtak'); ?>
 		<small><a href="<?php esc_attr_e(self::_get_signup_url(), 'urtak'); ?>"><?php _e('or Sign Up', 'urtak'); ?></a></small></h2>
 
-	<?php $email = isset($data['urtak-login-email']) ? $data['urtak-login-email'] : get_the_author_meta('email');	?>
+	<?php $email = isset($data['urtak-login-email']) ? $data['urtak-login-email'] : get_the_author_meta('email', get_current_user_id()); ?>
 
 	<div class="urtak-field">
-		<input autocomplete="off" type="text" class="text large-text" name="urtak-login-email" value="<?php esc_attr_e(get_the_author_meta('email'), 'urtak'); ?>" placeholder="<?php _e('Email', 'urtak'); ?>" />
+		<input autocomplete="off" type="text" class="text large-text" name="urtak-login-email" value="<?php esc_attr_e($email, 'urtak'); ?>" placeholder="<?php _e('Email', 'urtak'); ?>" />
 
 		<input autocomplete="off" type="password" class="text large-text" name="urtak-login-password" value="" placeholder="<?php _e('Password', 'urtak'); ?>" />
 
