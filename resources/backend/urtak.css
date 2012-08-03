@@ -96,7 +96,8 @@ div.urtak-error .globe {
 }
 
 .urtak-settings {
-	width: 488px;
+	margin-top: 63px;
+	max-width: 976px;
 }
 
 .urtak-settings h2 {
@@ -107,6 +108,28 @@ div.urtak-error .globe {
 	line-height: 1;
 	margin: 25px 0 14px;
 	padding: 0;
+}
+
+.urtak-individual-settings-section {
+	margin-bottom: 28px;
+}
+
+.urtak-settings-section {
+	width: 478px;
+}
+
+.urtak-settings-section-left {
+	float: left;
+	margin-right: 10px;
+}
+
+.urtak-settings-section-right {
+	float: right;
+	margin-left: 10px;
+}
+
+.urtak-clear {
+	clear: both;
 }
 
 #urtak-settings-header {
@@ -128,7 +151,7 @@ div.urtak-error .globe {
 	font-size: 19px;
 	font-weight: 700;
 	line-height: 1;
-	margin: 28px 0 13px;
+	margin: 0 0 13px;
 }
 
 .urtak-field {
@@ -241,6 +264,12 @@ div.urtak-error .globe {
 
 #urtak-other-widgets .postbox-container {
 	width: 50%;
+}
+
+@media only screen and (max-width: 1180px) {
+	#urtak-other-widgets .postbox-container {
+		width: 100%;
+	}
 }
 
 #urtak-posts-without-urtaks-list {
