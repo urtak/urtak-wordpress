@@ -133,7 +133,7 @@ if(!class_exists('UrtakPlugin')) {
 
 			$post_ids = array_unique(array_filter((array)$data['post_ids']));
 
-			$non_mapped_urtaks = self::get_urtaks(array('post_ids' => $post_ids));
+			$non_mapped_urtaks = self::get_urtaks(array('post_ids' => $post_ids, 'per_page' => count($post_ids) + 1));
 			$urtaks = array();
 			foreach((array)$non_mapped_urtaks as $urtak) {
 				$urtaks[$urtak['post_id']] = number_format_i18n((float)$urtak['responses_count'], 0);
