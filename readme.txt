@@ -7,7 +7,7 @@ Tested up to: 3.4.1
 Stable tag: 1.0.0
 License: MIT
 
-Upgrade your comments – Urtak questions deliver 10X more engagement than any
+Upgrade your comments – Urtak questions deliver 10&times; more engagement than any
 comments section.
 
 == Description ==
@@ -16,7 +16,7 @@ comments section.
 from an older version, you will have to log in again on the Urtak plugin
 settings page.)
 
-[Urtak](https://urtak.com) delivers 10X more engagement than any comments
+[Urtak](https://urtak.com) delivers 10&times; more engagement than any comments
 section. Why? Because Urtak’s simple yes or no questions are the friendliest
 invitation you can make to your audience. Get everyone involved in the
 conversation!
