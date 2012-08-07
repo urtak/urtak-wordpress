@@ -47,9 +47,9 @@
 			</div>
 			<div class="urtak-card-plot urtak-card-plot-controls">
 				<ul class="card-question-answers">
-					<li class="card-question-answers-y" data-answer="y"><a tabindex="101" href="#">Yes</a></li>
-					<li class="card-question-answers-n" data-answer="n"><a tabindex="102" href="#">No</a></li>
-					<li class="card-question-answers-d" data-answer="d"><a tabindex="103" href="#">Don't Care</a></li>
+					<li class="card-question-answers-y" data-answer="y"><a tabindex="101" href="#"><?php _e('Yes', 'urtak'); ?></a></li>
+					<li class="card-question-answers-n" data-answer="n"><a tabindex="102" href="#"><?php _e('No', 'urtak'); ?></a></li>
+					<li class="card-question-answers-d" data-answer="d"><a tabindex="103" href="#"><?php _e('Cancel', 'urtak'); ?></a></li>
 				</ul>
 			</div>
 			<div class="urtak-card-info">

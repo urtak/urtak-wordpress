@@ -448,7 +448,49 @@ div.urtak-error .globe {
 .urtak-card-plot {
 	float: right;
 	height: 60px;
+	position: relative;
 	width: 60px;
+}
+
+.urtak-card-stats {
+	display: none;
+	padding-top: 3px;
+	position: absolute;
+
+	top: 0;
+	bottom: 0;
+	left: 0;
+	right: 0;
+}
+
+.urtak-card-stats-item {
+	float: left;
+	font-size: 10px;
+	line-height: 15px;
+	margin-right: 4px;
+	text-align: right;
+	width: 28px;
+}
+
+.urtak-card-stats-item-right {
+	margin: 0;
+	text-align: left;
+}
+
+.urtak-card-stats-item-yes {
+	color: #00AEF0;
+}
+
+.urtak-card-stats-item-no {
+	color: #FF7100;
+}
+
+.urtak-card-plot:hover img {
+	opacity: 0.20;
+}
+
+.urtak-card-plot:hover .urtak-card-stats {
+	display: block;
 }
 
 .urtak-card-adder .urtak-card-plot {
@@ -698,6 +740,15 @@ div.urtak-error .globe {
 
 .urtak-disabled {
 	cursor: default;
+}
+
+.urtak-card-info-question a {
+	color: #333;
+	text-decoration: none;
+}
+
+.urtak-card-info-question a:hover {
+	text-decoration: underline;
 }
 
 .urtak-card-info-question textarea {
