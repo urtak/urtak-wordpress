@@ -44,5 +44,4 @@ add_action('make_urtak_widget', 'make_urtak_widget');
 function urtak_the_responses_number($post_id = null) {
 	echo apply_filters('urtak_the_responses_number', UrtakPlugin::get_responses_number_markup($post_id));
 }
-
 add_action('make_urtak_counter', 'urtak_the_responses_number');
