@@ -3,7 +3,7 @@
  Plugin Name: Urtak
  Plugin URI: http://urtak.com/wordpress/
  Description: Urtak is collaborative polling - everyone can ask questions. It's easy to engage a great number of people in a structured conversation that produces thousands of responses.
- Version: 1.1.0-RC3
+ Version: 1.1.0-RC4
  Author: Urtak, Inc.
  Author URI: http://urtak.com
  */
@@ -13,7 +13,7 @@ if(!class_exists('UrtakPlugin')) {
 		/// CONSTANTS
 
 		//// VERSION
-		const VERSION = '1.1.0-RC3';
+		const VERSION = '1.1.0-RC4';
 
 		//// KEYS
 		const SETTINGS_KEY = '_urtak_settings';
@@ -216,8 +216,8 @@ if(!class_exists('UrtakPlugin')) {
 		}
 
 		public static function add_administrative_interface_items() {
-			self::$admin_page_hooks[] = $top_level = add_menu_page(__('Urtak Insights', 'urtak'), __('Urtak', 'urtak'), 'manage_options', self::TOP_LEVEL_PAGE_SLUG, array(__CLASS__, 'display_insights_page'), plugins_url('resources/backend/img/urtak-logo-15.png', __FILE__), 56);
-			self::$admin_page_hooks[] = $sub_level_insights = add_submenu_page(self::TOP_LEVEL_PAGE_SLUG, __('Urtak Insights', 'urtak'), __('Insights', 'urtak'), 'manage_options', self::SUB_LEVEL_INSIGHTS_SLUG, array(__CLASS__, 'display_insights_page'));
+			self::$admin_page_hooks[] = $top_level = add_menu_page(__('Urtak Insights', 'urtak'), __('Urtak', 'urtak'), 'delete_others_pages', self::TOP_LEVEL_PAGE_SLUG, array(__CLASS__, 'display_insights_page'), plugins_url('resources/backend/img/urtak-logo-15.png', __FILE__), 56);
+			self::$admin_page_hooks[] = $sub_level_insights = add_submenu_page(self::TOP_LEVEL_PAGE_SLUG, __('Urtak Insights', 'urtak'), __('Insights', 'urtak'), 'delete_others_pages', self::SUB_LEVEL_INSIGHTS_SLUG, array(__CLASS__, 'display_insights_page'));
 			self::$admin_page_hooks[] = $sub_level_settings = add_submenu_page(self::TOP_LEVEL_PAGE_SLUG, __('Urtak Settings', 'urtak'), __('Settings', 'urtak'), 'manage_options', self::SUB_LEVEL_SETTINGS_SLUG, array(__CLASS__, 'display_settings_page'));
 
 			add_action("load-{$sub_level_settings}", array(__CLASS__, 'process_settings_actions'));
