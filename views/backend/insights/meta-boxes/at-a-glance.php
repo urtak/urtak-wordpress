@@ -23,28 +23,28 @@
 	<div class="urtak-statistics-section">
 		<div>
 			<h2><?php esc_html_e(number_format_i18n($total_responses)); ?></h2>
-			<strong><?php _e('Total Responses'); ?></strong>
+			<strong><?php _e('Total Responses', 'urtak'); ?></strong>
 		</div>
 	</div>
 
 	<div class="urtak-statistics-section">
 		<div>
 			<h2><?php esc_html_e(number_format_i18n($total_urtaks)); ?></h2>
-			<strong><?php _e('Total Urtaks'); ?></strong>
+			<strong><?php _e('Total Urtaks', 'urtak'); ?></strong>
 		</div>
 	</div>
 
 	<div class="urtak-statistics-section">
 		<div>
 			<h2><?php esc_html_e(number_format_i18n($total_questions)); ?></h2>
-			<strong><?php _e('Total Questions'); ?></strong>
+			<strong><?php _e('Total Questions', 'urtak'); ?></strong>
 		</div>
 	</div>
 
 	<div class="urtak-statistics-section">
 		<div>
 			<h2><?php esc_html_e(number_format_i18n($responses_today)); ?></h2>
-			<strong><?php _e('Responses Today'); ?></strong>
+			<strong><?php _e('Responses Today', 'urtak'); ?></strong>
 		</div>
 	</div>
 

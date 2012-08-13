@@ -211,7 +211,7 @@
 
 		<div class="urtak-individual-settings-section">
 
-			<h3><?php _e('Response Counter'); ?></h3>
+			<h3><?php _e('Response Counter', 'urtak'); ?></h3>
 
 			<div class="urtak-field">
 				<div class="urtak-checkbox-container">

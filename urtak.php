@@ -223,7 +223,7 @@ if(!class_exists('UrtakPlugin')) {
 
 				add_action("load-{$sub_level_settings}", array(__CLASS__, 'process_settings_actions'));
 
-				add_meta_box('urtak-at-a-glance', __('At a Glance'), array(__CLASS__, 'display_meta_box__insights'), 'urtak', 'top');
+				add_meta_box('urtak-at-a-glance', __('At a Glance', 'urtak'), array(__CLASS__, 'display_meta_box__insights'), 'urtak', 'top');
 
 				$posts_without_urtaks = self::get_nonassociated_post_ids();
 				if(!empty($posts_without_urtaks)) {
@@ -320,12 +320,7 @@ if(!class_exists('UrtakPlugin')) {
 				&& 'append' === self::get_settings('placement')
 				&& (is_singular() || is_page() || (is_home() && 'yes' === self::get_settings('homepage')))) {
 
-				if('yes' !== get_post_meta(get_the_ID(), self::FORCE_HIDE_KEY, true)
-					&& ('yes' === self::get_settings('user-start')
-						|| 'yes' === get_post_meta(get_the_ID(), self::QUESTION_CREATED_KEY, true))) {
-
-					$content .= urtak_get_embeddable_widget();
-				}
+				$content .= urtak_get_embeddable_widget();
 			}
 
 			return $content;
@@ -783,7 +778,7 @@ if(!class_exists('UrtakPlugin')) {
 		/// SHORTCODE CALLBACKS
 
 		public static function shortcode_urtak($atts = null, $content) {
-			$atts = shortcode_atts(array('post_id' => 0), $atts);
+			$atts = shortcode_atts(array('post_id' => 0, 'force' => true), $atts);
 
 			return urtak_get_embeddable_widget($atts);
 		}
@@ -1261,7 +1256,7 @@ if(!class_exists('UrtakPlugin')) {
 		 * @param $args array An array of arguments to apply to the returned embed code.
 		 */
 		public static function get_embeddable_widget($args = array()) {
-			$args = shortcode_atts(array('post_id' => 0), $args);
+			$args = shortcode_atts(array('post_id' => 0, 'force' => false), $args);
 			extract($args);
 
 			if(empty($post_id)) {
@@ -1269,6 +1264,14 @@ if(!class_exists('UrtakPlugin')) {
 			}
 
 			if(empty($post_id)) {
+				return '';
+			}
+
+			$should_show = $force || ('yes' !== get_post_meta($post_id, self::FORCE_HIDE_KEY, true)
+										&& ('yes' === self::get_settings('user-start')
+											|| 'yes' === get_post_meta($post_id, self::QUESTION_CREATED_KEY, true)));
+
+			if(!$should_show) {
 				return '';
 			}
 
