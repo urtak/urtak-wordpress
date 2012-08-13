@@ -127,6 +127,8 @@
 			<h3><?php _e('Language', 'urtak'); ?></h3>
 
 			<div class="urtak-field">
+				<p class="urtak-help urtak-help-nomargin"><label for="urtak-language"><?php _e('Display Urtak to my users in'); ?></label></p>
+
 				<select name="urtak[language]" id="urtak-language">
 					<option <?php selected($settings['language'], 'en'); ?> value="en"><?php _e('English', 'urtak'); ?></option>
 					<option <?php selected($settings['language'], 'es'); ?> value="es"><?php _e('Spanish', 'urtak'); ?></option>
@@ -221,11 +223,6 @@
 							<input <?php checked($settings['counter-icon'], 'yes'); ?> type="checkbox" name="urtak[counter-icon]" id="urtak-counter-icon" value="yes" />
 						</div><?php _e('Show Urtak Icon', 'urtak'); ?>
 					</label>
-					<p class="urtak-help">
-						<label for="urtak-counter-icon">
-							<?php _e('Lorem ipsum dolor. Lorem ipsum dolor.', 'urtak'); ?>
-						</label>
-					</p>
 				</div>
 
 				<div class="urtak-checkbox-container">
@@ -233,13 +230,8 @@
 					<label class="urtak-checkbox">
 						<div class="urtak-checkbox-input-container">
 							<input <?php checked($settings['counter-responses'], 'yes'); ?> type="checkbox" name="urtak[counter-responses]" id="urtak-counter-responses" value="yes" />
-						</div><?php _e('Call out "responses"', 'urtak'); ?>
+						</div><?php _e('Display the word "responses" after the counter', 'urtak'); ?>
 					</label>
-					<p class="urtak-help">
-						<label for="urtak-counter-responses">
-							<?php _e('Lorem ipsum dolor. Lorem ipsum dolor.', 'urtak'); ?>
-						</label>
-					</p>
 				</div>
 
 				<p class="urtak-help">
