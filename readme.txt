@@ -1,4 +1,5 @@
 === Urtak ===
+
 Contributors: nickohrn, urtak
 Tags: urtak, questions, comments, surveys, polls, engagement, insights
 Requires at least: 3.4
@@ -6,56 +7,60 @@ Tested up to: 3.4.1
 Stable tag: 1.0.0
 License: MIT
 
-Upgrade your comments – Urtak questions deliver 10X more engagement than any
+Upgrade your comments – Urtak questions deliver 10&times; more engagement than any
 comments section.
 
 == Description ==
 
-[Urtak](https://urtak.com) delivers 10X more engagement than any comments
+(Please note that the 1.0.0 release is a complete rewrite. If you are upgrading
+from an older version, you will have to log in again on the Urtak plugin
+settings page.)
+
+[Urtak](https://urtak.com) delivers 10&times; more engagement than any comments
 section. Why? Because Urtak’s simple yes or no questions are the friendliest
 invitation you can make to your audience. Get everyone involved in the
 conversation!
 
 = General Features =
 
-* **Community Questions**<br/>
+* **Community Questions**
   Urtak turns static polls into a structured conversations. You’ll get answers
   to questions you wouldn’t have thought to ask.
-* **Community or Publisher Moderation**<br/>
+* **Community or Publisher Moderation**
   Urtak gives you full control of question moderation. You can let our
   question-rating algorithm automatically filter questions that people don’t
   care about, or you can do the work yourself.
-* **Email results and reports**<br/>
+* **Email results and reports**
   Whenever you create an Urtak or ask a question, a detailed report of the
   outcome will be sent straight to your inbox. Urtak gives both users and
   publishers a resource they’ve never had before.
-* **Cross-tabulation**<br/>
+* **Cross-tabulation**
   Dig deeper into the results with our cross-tabulation tool. Are men more
   likely to enjoy your articles? Do first-time visitors think the same as your
   current community. The power to find out is yours.
-* **Log in with Facebook and Twitter**<br/>
+* **Log in with Facebook and Twitter**
   It couldn’t be easier for your audience to sign up with their social profiles
   to ask questions and share the results with their networks.
-* **Intelligent algorithm**<br/>
+* **Intelligent algorithm**
   We’ve developed a powerful algorithm that makes sure that the questions
   people care about get asked more often.
-* **Robust and reliable**<br/>
+* **Robust and reliable**
   Our technology is designed to handle massive traffic. Huge brands like
   Mashable, The Daily Beast, and The Huffington Post have used Urtak. We worked
   for them, we’ll work for you.
-* **Available in English and Spanish**<br/>
+* **Available in English and Spanish**
   Sí, no, no me importa? We develop and fully support Urtak en español. We’re
   huge in Colombia.
 
 = WordPress Plugin Features =
 
-* **Use from the WP Dashboard**<br/>
+* **Use from the WP Dashboard**
   One click installation. Ask questions and manage Urtak conversations right
   from your Dashboard.
-* **Front facing counter**<br/>
+* **Front facing counter**
   People love answering questions. Show your audience how much activity is
   happening with our responses counter.
-* **Deactivate Comments**<br/>
+* **Deactivate Comments**
   Had enough of the headaches and hassles that comments can bring. Turn ‘em off
   with one-click, and elevate the discourse with Urtak questions. Troll-proof!
 
@@ -96,10 +101,11 @@ Please note that use of Urtak is subject to our
 2. Screenshot The Post edit page with Urtak admin console. You can easily add,
    archive and reject questions from here.
 3. Screenshot Simple settings page.
-4. Screenshot The dashboard prvides insights into Urtaks, responses, pending
+4. Screenshot The dashboard provides insights into Urtaks, responses, pending
    questions and more.
 
 == Changelog ==
 
 = 1.0.0 =
+
 * Completely rebuild from the ground up!
