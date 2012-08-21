@@ -274,22 +274,19 @@
 <div class="urtak-clear urtak-settings" style="margin-top: 0;">
 	<h3><?php _e('Newsletter', 'urtak'); ?></h3>
 
-	<form action="http://urtak.us1.list-manage.com/subscribe/post?u=be8b1f8143784f8105867393d&amp;id=62b861490f" method="post" id="mc-embedded-subscribe-form" name="mc-embedded-subscribe-form" class="validate" target="_blank">
-	    <div class="urtak-field">
-			<p class="urtak-help urtak-help-nomargin"><label for="mce-EMAIL"><?php _e('Subscribe to the Urtak Newsletter'); ?></label></p>
-			<input type="email" value="" name="EMAIL" class="required email text large-text code" id="mce-EMAIL" placeholder="<?php _e('Your Email'); ?>" />
-
-		  	<div>
-		  		<input type="submit" value="<?php _e('Subscribe', 'urtak'); ?>" name="subscribe" id="mc-embedded-subscribe" class="button button-primary" />
-		  	</div>
-	    </div>
-
-	    <!-- Hidden for WP Plugin: Add to Group Platform-WordPress -->
-	    <div class="mc-field-group input-group" style="display:none;">
-	      <input checked="checked" type="checkbox" value="4" name="group[2509][4]" id="mce-group[2509]-2509-0">
-	      <label for="mce-group[2509]-2509-0">WordPress</label>
-	    </div>
-	</form>
+<form action="http://urtak.us1.list-manage.com/subscribe/post?u=be8b1f8143784f8105867393d&amp;id=9c0f338966" method="post" id="mc-embedded-subscribe-form" name="mc-embedded-subscribe-form" class="validate" target="_blank">
+  <div class="urtak-field">
+    <p class="urtak-help urtak-help-nomargin"><label for="mce-EMAIL">Subscribe to the Urtak Newsletter</label></p>
+    <input type="email" value="" name="EMAIL" class="required email text large-text code" id="mce-EMAIL" placeholder="Your Email">
+    <div>
+      <input type="submit" value="Subscribe" name="subscribe" id="mc-embedded-subscribe" class="button button-primary">
+    </div>
+  </div>
+  <!-- Hidden for WP Plugin: Add to Group Platform-WordPress -->
+  <div class="mc-field-group input-group" style="display:none;">
+    <input checked="checked" type="checkbox" value="1" name="group[2505][1]" id="mce-group[2505]-2505-0"><label for="mce-group[2505]-2505-0">WordPress</label>
+  </div>
+</form>
 </div>
 
 <?php } ?>
