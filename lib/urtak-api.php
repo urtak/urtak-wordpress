@@ -74,16 +74,6 @@ class Urtak {
   //                                ACCOUNTS
   // --------------------------------------------------------------------
 
-  /** Lookup An Account
-   *
-   * @access  @public
-   * @params  Lookup _your_ acccount
-   * @return  UrtakResponse
-   */
-  public function get_account($id) {
-    return $this->make_request('/accounts/'.$id, 'GET', array());
-  }
-
   /** Create an Account
    *
    * @access  @public
