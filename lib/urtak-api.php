@@ -176,7 +176,7 @@ class Urtak {
     } elseif($property == 'post_id') {
       $path = '/urtaks/post/'.$value;
     } elseif($property == 'permalink') {
-      $path = '/urtaks/permalink/'.$value;
+      $path = '/urtaks/hash/'.$value;
     }
 
     return $this->make_request($path, 'GET', $options);
@@ -208,7 +208,7 @@ class Urtak {
     } elseif($property == 'post_id') {
       $path = '/urtaks/post/'.$value;
     } elseif($property == 'permalink') {
-      $path = '/urtaks/permalink/'.$value;
+      $path = '/urtaks/hash/'.$value;
     }
 
     // this is not a property we're trying to update just do a lookup by, so remove it
@@ -235,7 +235,7 @@ class Urtak {
     } elseif($property == 'post_id') {
       $path = '/urtaks/post/'.$value.'/questions';
     } elseif($property == 'permalink') {
-      $path = '/urtaks/permalink/'.$value.'/questions';
+      $path = '/urtaks/hash/'.$value.'/questions';
     }
 
     return $this->make_request($path, 'GET', $options);
@@ -253,7 +253,7 @@ class Urtak {
     } elseif($property == 'post_id') {
       $path = '/urtaks/post/'.$value.'/questions/'.$question_id;
     } elseif($property == 'permalink') {
-      $path = '/urtaks/permalink/'.$value.'/questions/'.$question_id;
+      $path = '/urtaks/hash/'.$value.'/questions/'.$question_id;
     }
 
     return $this->make_request($path, 'GET', array());
@@ -271,7 +271,7 @@ class Urtak {
     } elseif($property == 'post_id') {
       $path = '/urtaks/post/'.$value.'/questions';
     } elseif($property == 'permalink') {
-      $path = '/urtaks/permalink/'.$value.'/questions';
+      $path = '/urtaks/hash/'.$value.'/questions';
     }
 
     return $this->make_request($path, 'POST', array('questions' => $questions));
@@ -283,83 +283,10 @@ class Urtak {
     } elseif($property == 'post_id') {
       $path = '/urtaks/post/'.$value.'/questions/'.$question_id;
     } elseif($property == 'permalink') {
-      $path = '/urtaks/permalink/'.$value.'/questions/'.$question_id;
+      $path = '/urtaks/hash/'.$value.'/questions/'.$question_id;
     }
 
     return $this->make_request($path, 'PUT', $options);
-  }
-
-
-  /** Approve a Question on an Urtak by Urtak ID, post id, or post permalink
-   *
-   * @access  @public
-   * @params  property ('id', 'post_id', 'permalink') and the value ('1', '3-my-article', 'http://foo.com/my-great-content)
-   * @return  UrtakResponse
-   */
-  public function approve_urtak_question($property, $value, $question_id) {
-    if($property == 'id') {
-      $path = '/urtaks/'.$value.'/questions/'.$question_id.'/approve';
-    } elseif($property == 'post_id') {
-      $path = '/urtaks/post/'.$value.'/questions/'.$question_id.'/approve';
-    } elseif($property == 'permalink') {
-      $path = '/urtaks/permalink/'.$value.'/questions/'.$question_id.'/approve';
-    }
-
-    return $this->make_request($path, 'POST', array());
-  }
-
-  /** Reject a Question on an Urtak by Urtak ID, post id, or post permalink
-   *
-   * @access  @public
-   * @params  property ('id', 'post_id', 'permalink') and the value ('1', '3-my-article', 'http://foo.com/my-great-content)
-   * @return  UrtakResponse
-   */
-  public function reject_urtak_question($property, $value, $question_id) {
-    if($property == 'id') {
-      $path = '/urtaks/'.$value.'/questions/'.$question_id.'/reject';
-    } elseif($property == 'post_id') {
-      $path = '/urtaks/post/'.$value.'/questions/'.$question_id.'/reject';
-    } elseif($property == 'permalink') {
-      $path = '/urtaks/permalink/'.$value.'/questions/'.$question_id.'/reject';
-    }
-
-    return $this->make_request($path, 'POST', array());
-  }
-
-  /** Mark as spam a Question on an Urtak by Urtak ID, post id, or post permalink
-   *
-   * @access  @public
-   * @params  property ('id', 'post_id', 'permalink') and the value ('1', '3-my-article', 'http://foo.com/my-great-content)
-   * @return  UrtakResponse
-   */
-  public function spam_urtak_question($property, $value, $question_id) {
-    if($property == 'id') {
-      $path = '/urtaks/'.$value.'/questions/'.$question_id.'/spam';
-    } elseif($property == 'post_id') {
-      $path = '/urtaks/post/'.$value.'/questions/'.$question_id.'/spam';
-    } elseif($property == 'permalink') {
-      $path = '/urtaks/permalink/'.$value.'/questions/'.$question_id.'/spam';
-    }
-
-    return $this->make_request($path, 'POST', array());
-  }
-
-  /** Mark as ham a Question on an Urtak by Urtak ID, post id, or post permalink
-   *
-   * @access  @public
-   * @params  property ('id', 'post_id', 'permalink') and the value ('1', '3-my-article', 'http://foo.com/my-great-content)
-   * @return  UrtakResponse
-   */
-  public function ham_urtak_question($property, $value, $question_id) {
-    if($property == 'id') {
-      $path = '/urtaks/'.$value.'/questions/'.$question_id.'/ham';
-    } elseif($property == 'post_id') {
-      $path = '/urtaks/post/'.$value.'/questions/'.$question_id.'/ham';
-    } elseif($property == 'permalink') {
-      $path = '/urtaks/permalink/'.$value.'/questions/'.$question_id.'/ham';
-    }
-
-    return $this->make_request($path, 'POST', array());
   }
 
   // --------------------------------------------------------------------
@@ -407,7 +334,7 @@ class Urtak {
 
   protected function make_request($path, $method, $data = array())
   {
-  	return $this->curl_request($path, $method, $data);
+    return $this->curl_request($path, $method, $data);
   }
 
   /**
