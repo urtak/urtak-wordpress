@@ -146,17 +146,43 @@
 			<h3><?php _e('Placement', 'urtak'); ?></h3>
 
 			<div class="urtak-field" style="padding-bottom: 5px;">
-				<p class="urtak-help urtak-help-nomargin" style="margin-bottom: 20px;"><?php _e('You have full control over where the Urtak widget will load on your posts.', 'urtak'); ?></p>
+				<div class="urtak-checkbox-container">
+					<label class="urtak-checkbox">
+						<div class="urtak-checkbox-input-container">
+							<input <?php checked($settings['user-start'], 'yes'); ?> type="radio" name="urtak[user-start]" id="urtak-user-start-yes" value="yes" />
+						</div><?php _e('Create an Urtak with each new post', 'urtak'); ?>
+					</label>
+					<p class="urtak-help">
+						<label for="urtak-user-start-yes">
+							<?php _e('Urtak will be added to all your posts.', 'urtak'); ?>
+						</label>
+					</p>
+				</div>
 
 				<div class="urtak-checkbox-container">
 					<label class="urtak-checkbox">
 						<div class="urtak-checkbox-input-container">
+							<input <?php checked($settings['user-start'], 'no'); ?> type="radio" name="urtak[user-start]" id="urtak-user-start-no" value="no" />
+						</div><?php _e('Create an Urtak only when I ask questions', 'urtak'); ?>
+					</label>
+					<p class="urtak-help">
+						<label for="urtak-user-start-no">
+							<?php _e('Urtak will only appear when you have started the conversation off with questions of your own.', 'urtak'); ?>
+						</label>
+					</p>
+				</div>
+			</div>
+
+			<div class="urtak-field" style="padding-bottom: 5px;">
+				<div class="urtak-checkbox-container">
+					<label class="urtak-checkbox">
+						<div class="urtak-checkbox-input-container">
 							<input <?php checked($settings['placement'], 'append'); ?> type="radio" name="urtak[placement]" id="urtak-placement-append" value="append" />
-						</div><?php _e('I want Urtaks automatically appended to my posts', 'urtak'); ?>
+						</div><?php _e('End of post', 'urtak'); ?>
 					</label>
 					<p class="urtak-help">
 						<label for="urtak-placement-append">
-							<?php _e('The Urtak widget will load right at the end of your article.', 'urtak'); ?>
+							<?php _e('Urtak will load right at the bottom of your posts.', 'urtak'); ?>
 						</label>
 					</p>
 				</div>
@@ -165,11 +191,11 @@
 					<label class="urtak-checkbox">
 						<div class="urtak-checkbox-input-container">
 							<input <?php checked($settings['placement'], 'manual'); ?> type="radio" name="urtak[placement]" id="urtak-placement-manual" value="manual" />
-						</div><?php _e('I will insert Urtaks manually', 'urtak'); ?>
+						</div><?php _e('Custom', 'urtak'); ?>
 					</label>
 					<p class="urtak-help">
 						<label for="urtak-placement-manual">
-							<?php _e('Select the precise location you wish the widget to load in by placing the following code into your template.', 'urtak'); ?>
+							<?php _e('Place the following code in the precise location in your template in which you wish Urtak to appear.', 'urtak'); ?>
 						</label>
 					</p>
 					<p class="urtak-help">
@@ -189,21 +215,7 @@
 					</label>
 					<p class="urtak-help">
 						<label for="urtak-homepage">
-							<?php _e('Urtak widgets will be displayed on posts on your front page.', 'urtak'); ?>
-						</label>
-					</p>
-				</div>
-
-				<div class="urtak-checkbox-container">
-					<input type="hidden" name="urtak[user-start]" id="urtak-user-start-hidden" value="no" />
-					<label class="urtak-checkbox">
-						<div class="urtak-checkbox-input-container">
-							<input <?php checked($settings['user-start'], 'yes'); ?> type="checkbox" name="urtak[user-start]" id="urtak-user-start" value="yes" />
-						</div><?php _e('Let Users Start Urtaks', 'urtak'); ?>
-					</label>
-					<p class="urtak-help">
-						<label for="urtak-user-start">
-							<?php _e('No need to ask questions. Let your readers start the conversation by asking the first question.', 'urtak'); ?>
+							<?php _e('Select this option if you wish Urtak to load on your front page. Otherwise, Urtak will only appear on your posts.', 'urtak'); ?>
 						</label>
 					</p>
 				</div>
