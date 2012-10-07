@@ -93,11 +93,18 @@ if(!class_exists('UrtakPlugin')) {
 			// We want the Urtaks to appear by default, so let's append them
 			self::$default_settings['placement'] = 'append';
 
+			// We want to default post types to 'post' and 'page'
+			self::$default_settings['post-types'] = array('page', 'post');
+
 			// We want users to be able to start Urtaks by default
 			self::$default_settings['user-start'] = 'yes';
 
 			// We want Urtaks to support community moderation by default so that we get more questions and responses
 			self::$default_settings['moderation'] = 'community';
+
+			// Auto height and width
+			self::$default_settings['height'] = '';
+			self::$default_settings['width'] = '';
 
 			// Remove the noise that comments generate
 			self::$default_settings['disable-comments'] = 'no';
@@ -313,7 +320,7 @@ if(!class_exists('UrtakPlugin')) {
 		}
 
 		public static function automatically_append_urtak($content) {
-			if(in_array(get_post_type(), array('page', 'post'))
+			if(in_array(get_post_type(), self::get_settings('post-types'))
 				&& 'append' === self::get_settings('placement')
 				&& (is_singular() || is_page() || (is_home() && 'yes' === self::get_settings('homepage')))) {
 
@@ -328,7 +335,7 @@ if(!class_exists('UrtakPlugin')) {
 		 */
 		public static function disable_comments() {
 			if(self::comments_are_disabled()) {
-				foreach(array('page', 'post') as $post_type_key) {
+				foreach(self::get_settings('post-types') as $post_type_key) {
 					if( post_type_supports($post_type_key, 'comments') ) {
 						remove_post_type_support($post_type_key, 'comments');
 						remove_post_type_support($post_type_key, 'trackbacks');
@@ -354,7 +361,7 @@ if(!class_exists('UrtakPlugin')) {
 
 		public static function disable_comments__edit_form_inputs() {
 			global $post;
-			if(in_array($post->post_type, array('page', 'post'))) {
+			if(in_array($post->post_type, self::get_settings('post-types'))) {
 				echo '<input type="hidden" name="comment_status" value="' . $post->comment_status . '" /><input type="hidden" name="ping_status" value="' . $post->ping_status . '" />';
 			}
 		}
@@ -450,6 +457,8 @@ if(!class_exists('UrtakPlugin')) {
 
 			$settings['user-start'] = pd_yes_no($settings['user-start']);
 
+			$settings['post-types'] = array_filter(is_array($settings['post-types']) ? $settings['post-types'] : array());
+
 			$settings['moderation'] = 'publisher' === $settings['moderation'] ? 'publisher' : 'community';
 
 			$settings['height'] = is_numeric($settings['height']) ? intval($settings['height']) : '';
@@ -526,7 +535,7 @@ if(!class_exists('UrtakPlugin')) {
 				return;
 			}
 
-			if(!self::has_credentials() || !in_array($post->post_type, array('page', 'post'))) {
+			if(!self::has_credentials() || !in_array($post->post_type, self::get_settings('post-types'))) {
 				return;
 			}
 
@@ -700,7 +709,7 @@ if(!class_exists('UrtakPlugin')) {
 		public static function display_meta_box__posts_without_urtaks($ajax = false) {
 			if($ajax) {
 				$post_ids = self::get_nonassociated_post_ids();
-				$posts = new WP_Query(array('nopaging' => true, 'post__in' => $post_ids, 'post_type' => array('page', 'post'), 'order' => 'ASC', 'orderby' => 'title'));
+				$posts = new WP_Query(array('nopaging' => true, 'post__in' => $post_ids, 'post_type' => self::get_settings('post-types'), 'order' => 'ASC', 'orderby' => 'title'));
 
 				include('views/backend/insights/meta-boxes/posts-without-urtaks.php');
 			} else {

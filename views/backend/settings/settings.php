@@ -229,6 +229,27 @@
 
 		<div class="urtak-individual-settings-section">
 
+			<h3><?php _e('Post Types', 'urtak'); ?></h3>
+
+			<?php $post_types = apply_filters('daylife-supported-post-types', get_post_types(array('show_ui' => true), 'objects')); ?>
+
+			<div class="urtak-field">
+				<input type="hidden" name="urtak[post-types][]" value="" />
+				<?php foreach($post_types as $post_type) { ?>
+				<div class="urtak-checkbox-container">
+					<label class="urtak-checkbox">
+						<div class="urtak-checkbox-input-container">
+							<input <?php checked(true, in_array($post_type->name, $settings['post-types'])); ?> type="checkbox" name="urtak[post-types][]" id="urtak-post-types-<?php esc_attr_e($post_type->name); ?>" value="<?php esc_attr_e($post_type->name); ?>" />
+						</div><?php esc_html_e($post_type->labels->name); ?>
+					</label>
+				</div>
+				<?php } ?>
+			</div>
+
+		</div>
+
+		<div class="urtak-individual-settings-section">
+
 			<h3><?php _e('Response Counter', 'urtak'); ?></h3>
 
 			<div class="urtak-field">
