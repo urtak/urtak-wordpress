@@ -173,6 +173,16 @@ div.urtak-error .globe {
 	border: 1px solid #e6db55;
 }
 
+.urtak-field-half {
+	float: left;
+	margin-right: 20px;
+	width: 207px;
+}
+
+.urtak-field-half-right {
+	margin: 0;
+}
+
 #urtak-create-site-button-container {
 	display: none;
 }
@@ -193,6 +203,11 @@ div.urtak-error .globe {
 	display: block;
 	margin-bottom: 16px;
 	width: 99%;
+}
+
+.urtak-field input.urtak-hw-text {
+	display: inline;
+	width: 50px;
 }
 
 .urtak-credentals-field a {
@@ -224,6 +239,7 @@ div.urtak-error .globe {
 }
 
 .urtak-help {
+	clear: both;
 	color: #999999;
 	margin: 0 0 5px 20px;
 }

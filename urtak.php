@@ -99,9 +99,6 @@ if(!class_exists('UrtakPlugin')) {
 			// We want Urtaks to support community moderation by default so that we get more questions and responses
 			self::$default_settings['moderation'] = 'community';
 
-			// Most users will use English
-			self::$default_settings['language'] = 'en';
-
 			// Remove the noise that comments generate
 			self::$default_settings['disable-comments'] = 'no';
 
@@ -455,7 +452,11 @@ if(!class_exists('UrtakPlugin')) {
 
 			$settings['moderation'] = 'publisher' === $settings['moderation'] ? 'publisher' : 'community';
 
-			$settings['language'] = 'es' === $settings['language'] ? 'es' : 'en';
+			$settings['height'] = is_numeric($settings['height']) ? intval($settings['height']) : '';
+			$settings['height'] = is_int($settings['height']) && $settings['height'] < 180 ? 180 : $settings['height'];
+
+			$settings['width'] = is_numeric($settings['width']) ? intval($settings['width']) : '';
+			$settings['width'] = is_int($settings['width']) && $settings['width'] < 280 ? 280 : $settings['width'];
 
 			$settings['disable-comments'] = pd_yes_no($settings['disable-comments']);
 
@@ -473,7 +474,6 @@ if(!class_exists('UrtakPlugin')) {
 					$publication = self::create_or_get_publication_for_host(
 											$name,
 											$host,
-											$settings['language'],
 											$settings['moderation'],
 											$settings['credentials']['email'],
 											$urtak_api);
@@ -489,7 +489,6 @@ if(!class_exists('UrtakPlugin')) {
 					$publication = self::create_publication(
 											$name,
 											$host,
-											$settings['language'],
 											$settings['moderation'],
 											$settings['credentials']['email'],
 											$urtak_api);
@@ -512,7 +511,6 @@ if(!class_exists('UrtakPlugin')) {
 					$publication = self::update_publication(
 											$name,
 											$host,
-											$settings['language'],
 											$settings['moderation'],
 											$settings['credentials']['publication-key'],
 											$urtak_api);
@@ -637,7 +635,6 @@ if(!class_exists('UrtakPlugin')) {
 			if(!empty($publications) && isset($settings['credentials']['publication-key'])) {
 				foreach($publications as $publication) {
 					if($publication['key'] == $settings['credentials']['publication-key']) {
-						$settings['language'] = $publication['language'];
 						$settings['moderation'] = $publication['moderation'];
 						break;
 					}
@@ -867,7 +864,7 @@ if(!class_exists('UrtakPlugin')) {
 
 		//// Publications
 
-		private static function create_or_get_publication_for_host($name, $host, $language, $moderation, $email, $urtak_api = null) {
+		private static function create_or_get_publication_for_host($name, $host, $moderation, $email, $urtak_api = null) {
 			$publications = self::get_publications($urtak_api);
 
 			foreach($publications as $publication) {
@@ -879,10 +876,10 @@ if(!class_exists('UrtakPlugin')) {
 			}
 
 			// There wasn't an existing item, so we need to create one
-			return self::create_publication($name, $host, $language, $moderation, $email, $urtak_api);
+			return self::create_publication($name, $host, $moderation, $email, $urtak_api);
 		}
 
-		private static function create_publication($name, $host, $language, $moderation, $email, $urtak_api = null) {
+		private static function create_publication($name, $host, $moderation, $email, $urtak_api = null) {
 			$urtak_api = self::get_urtak_api($urtak_api);
 
 			$publication_args = array(
@@ -890,7 +887,6 @@ if(!class_exists('UrtakPlugin')) {
 			    'name'       => $name,
 			    'platform'   => 'wordpress',
 			    'moderation' => $moderation,
-			    'language'   => $language,
 			    'theme'      => 15
 			);
 			$create_response = $urtak_api->create_publication('email', $email, $publication_args);
@@ -936,7 +932,7 @@ if(!class_exists('UrtakPlugin')) {
 			return $publications;
 		}
 
-		private static function update_publication($name, $host, $language, $moderation, $key, $urtak_api = null) {
+		private static function update_publication($name, $host, $moderation, $key, $urtak_api = null) {
 			$urtak_api = self::get_urtak_api($urtak_api);
 
 			$publication_args = array(
@@ -944,7 +940,6 @@ if(!class_exists('UrtakPlugin')) {
 				// 'name' => $name,
 				'platform' => 'wordpress',
 				'moderation' => $moderation,
-				'language' => $language,
 				'theme' => 15
 			);
 			$update_response = $urtak_api->update_publication($key, $publication_args);
@@ -1275,9 +1270,13 @@ if(!class_exists('UrtakPlugin')) {
 				return '';
 			}
 
+
+			$height = self::get_settings('height');
 			$permalink = get_permalink($post_id);
 			$title = get_the_title($post_id);
 			$publication_key = self::get_credentials('publication-key');
+			$width = self::get_settings('width');
+
 			ob_start();
 			include('views/frontend/embed/script.php');
 			return ob_get_clean();

@@ -124,15 +124,19 @@
 
 		<div class="urtak-individual-settings-section">
 
-			<h3><?php _e('Language', 'urtak'); ?></h3>
+			<h3><?php _e('Size', 'urtak'); ?></h3>
 
 			<div class="urtak-field">
-				<p class="urtak-help urtak-help-nomargin"><label for="urtak-language"><?php _e('Display Urtak to my users in'); ?></label></p>
+				<div class="urtak-field-half urtak-field-half-left">
+					<label for="urtak-height"><?php _e('Height'); ?>&nbsp;&nbsp;</label>
+					<input type="text" class="text large-text urtak-hw-text" name="urtak[height]" id="urtak-height" value="<?php esc_attr_e($settings['height']); ?>" /> px
+				</div>
+				<div class="urtak-field-half urtak-field-half-right">
+					<label for="urtak-width"><?php _e('Width'); ?>&nbsp;&nbsp;</label>
+					<input type="text" class="text large-text urtak-hw-text" name="urtak[width]" id="urtak-width" value="<?php esc_attr_e($settings['width']); ?>" /> px
+				</div>
 
-				<select name="urtak[language]" id="urtak-language">
-					<option <?php selected($settings['language'], 'en'); ?> value="en"><?php _e('English', 'urtak'); ?></option>
-					<option <?php selected($settings['language'], 'es'); ?> value="es"><?php _e('Spanish', 'urtak'); ?></option>
-				</select>
+				<p class="urtak-help urtak-help-nomargin"><label for="urtak-height"><?php _e('Minimum height 180px. Minimum width 280px. Leave fields blank for auto height and width.'); ?></label></p>
 			</div>
 
 		</div>
