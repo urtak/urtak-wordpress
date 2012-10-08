@@ -549,7 +549,7 @@ if(!class_exists('UrtakPlugin')) {
 
 			$new_questions = array();
 			foreach($questions as $key => $question) {
-				$new_questions[] = array('text' => $question, 'response' => $data['urtak']['question']['answer'][$key]);
+				$new_questions[] = array('text' => $question);
 			}
 
 			$urtak = self::get_urtak($post_id);
