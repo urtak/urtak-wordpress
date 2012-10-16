@@ -4,7 +4,7 @@ Contributors: nickohrn, urtak
 Tags: urtak, questions, conversation, discussion, comments, surveys, polls, engagement, insights, audience, community
 Requires at least: 3.4
 Tested up to: 3.4.1
-Stable tag: 1.1.0
+Stable tag: 1.2.0
 License: MIT
 
 Conversation powered by questions. Bring simplicity and structure to any online
