@@ -418,6 +418,7 @@ if(!class_exists('UrtakPlugin')) {
 					$publication = self::create_or_get_publication_for_host(
 											$name,
 											$host,
+											$settings['default_first_question'],
 											$settings['moderation'],
 											$settings['credentials']['email'],
 											$urtak_api);
@@ -433,6 +434,7 @@ if(!class_exists('UrtakPlugin')) {
 					$publication = self::create_publication(
 											$name,
 											$host,
+											$settings['default_first_question'],
 											$settings['moderation'],
 											$settings['credentials']['email'],
 											$urtak_api);
@@ -455,6 +457,7 @@ if(!class_exists('UrtakPlugin')) {
 					$publication = self::update_publication(
 											$name,
 											$host,
+											$settings['default_first_question'],
 											$settings['moderation'],
 											$settings['credentials']['publication-key'],
 											$urtak_api);
@@ -580,6 +583,8 @@ if(!class_exists('UrtakPlugin')) {
 				foreach($publications as $publication) {
 					if($publication['key'] == $settings['credentials']['publication-key']) {
 						$settings['moderation'] = $publication['moderation'];
+						$settings['default_first_question'] = $publication['default_first_question_text'];
+						$settings['has_first_question'] = empty($settings['default_first_question']) ? 'no' : 'yes';
 						break;
 					}
 				}
@@ -802,7 +807,7 @@ if(!class_exists('UrtakPlugin')) {
 
 		//// Publications
 
-		private static function create_or_get_publication_for_host($name, $host, $moderation, $email, $urtak_api = null) {
+		private static function create_or_get_publication_for_host($name, $host, $default_first_question, $moderation, $email, $urtak_api = null) {
 			$publications = self::get_publications($urtak_api);
 
 			foreach($publications as $publication) {
@@ -814,10 +819,10 @@ if(!class_exists('UrtakPlugin')) {
 			}
 
 			// There wasn't an existing item, so we need to create one
-			return self::create_publication($name, $host, $moderation, $email, $urtak_api);
+			return self::create_publication($name, $host, $default_first_question, $moderation, $email, $urtak_api);
 		}
 
-		private static function create_publication($name, $host, $moderation, $email, $urtak_api = null) {
+		private static function create_publication($name, $host, $default_first_question, $moderation, $email, $urtak_api = null) {
 			$urtak_api = self::get_urtak_api($urtak_api);
 
 			$publication_args = array(
@@ -825,6 +830,7 @@ if(!class_exists('UrtakPlugin')) {
 			    'name'       => $name,
 			    'platform'   => 'wordpress',
 			    'moderation' => $moderation,
+			    'default_first_question' => $default_first_question,
 			    'theme'      => 15
 			);
 			$create_response = $urtak_api->create_publication('email', $email, $publication_args);
@@ -870,7 +876,7 @@ if(!class_exists('UrtakPlugin')) {
 			return $publications;
 		}
 
-		private static function update_publication($name, $host, $moderation, $key, $urtak_api = null) {
+		private static function update_publication($name, $host, $default_first_question, $moderation, $key, $urtak_api = null) {
 			$urtak_api = self::get_urtak_api($urtak_api);
 
 			$publication_args = array(
@@ -878,6 +884,7 @@ if(!class_exists('UrtakPlugin')) {
 				// 'name' => $name,
 				'platform' => 'wordpress',
 				'moderation' => $moderation,
+				'default_first_question' => $default_first_question,
 				'theme' => 15
 			);
 			$update_response = $urtak_api->update_publication($key, $publication_args);
