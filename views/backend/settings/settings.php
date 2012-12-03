@@ -89,6 +89,42 @@
 
 		<div class="urtak-individual-settings-section">
 
+			<h3><?php _e('First Question', 'urtak'); ?></h3>
+
+			<div class="urtak-field">
+				<div class="urtak-checkbox-container">
+					<label class="urtak-checkbox">
+						<div class="urtak-checkbox-input-container">
+							<input <?php checked($settings['has_first_question'], 'no'); ?> type="radio" name="urtak[has_first_question]" id="urtak-has_first_question-no" value="no" />
+						</div><?php _e('No default first question', 'urtak'); ?>
+					</label>
+				</div>
+
+				<div class="urtak-checkbox-container">
+					<label class="urtak-checkbox">
+						<div class="urtak-checkbox-input-container">
+							<input <?php checked($settings['has_first_question'], 'yes'); ?> type="radio" name="urtak[has_first_question]" id="urtak-has_first_question-yes" value="yes" />
+						</div><?php _e('Use a default first question', 'urtak'); ?>
+					</label>
+				</div>
+
+				<div id="urtak-help-has_first_question-yes">
+					<p class="urtak-help">
+						<label for="urtak-default_first_question">
+							<?php _e('Please enter the default question you would like to use:'); ?>
+						</label>
+					</p>
+					<p class="urtak-help">
+						<input type="text" class="text large-text" id="urtak-default_first_question" value="<?php esc_attr_e($settings['default_first_question']); ?>" />
+					</p>
+				</div>
+
+			</div>
+
+		</div>
+
+		<div class="urtak-individual-settings-section">
+
 			<h3><?php _e('Moderation', 'urtak'); ?></h3>
 
 			<div class="urtak-field">

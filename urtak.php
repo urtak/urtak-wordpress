@@ -86,6 +86,8 @@ if(!class_exists('UrtakPlugin')) {
 			// Empty credentials to stat
 			self::$default_settings['credentials'] = array();
 
+			self::$default_settings['has_first_question'] = 'no';
+
 			// We want the Urtaks to appear by default, so let's append them
 			self::$default_settings['placement'] = 'append';
 

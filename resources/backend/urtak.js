@@ -54,6 +54,23 @@ jQuery(document).ready(function($) {
 		}
 	}).change();
 
+	$('input[name="urtak[has_first_question]"]').change(function(event) {
+		var $this = $(this),
+			$container = $('#urtak-help-has_first_question-yes'),
+			value = $this.val();
+
+		if($this.is(':checked')) {
+			switch($this.val()) {
+				case 'yes':
+					$container.show().find('input').focus();
+					break;
+				case 'no':
+					$container.hide();
+					break;
+			}
+		}
+	}).change();
+
 	$('.urtak-tabbed-control a').live('click', function(event) {
 		event.preventDefault();
 
