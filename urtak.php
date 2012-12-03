@@ -62,10 +62,6 @@ if(!class_exists('UrtakPlugin')) {
 			add_action('init', array(__CLASS__, 'initialize_api_object'));
 			add_action('wp_head', array(__CLASS__, 'enqueue_frontend_resources'), 1);
 
-			/// DISABLE COMMENTS CALLBACKS
-			add_action('widgets_init', array(__CLASS__, 'disable_comments__remove_widget'));
-			add_action('wp_loaded', array(__CLASS__, 'disable_comments'));
-
 			/// AJAX
 			add_action('wp_ajax_urtak_display_meta_box__dashboard', array(__CLASS__, 'ajax_display_meta_box'));
 			add_action('wp_ajax_urtak_display_meta_box__insights', array(__CLASS__, 'ajax_display_meta_box'));
@@ -105,9 +101,6 @@ if(!class_exists('UrtakPlugin')) {
 			// Auto height and width
 			self::$default_settings['height'] = '';
 			self::$default_settings['width'] = '';
-
-			// Remove the noise that comments generate
-			self::$default_settings['disable-comments'] = 'no';
 
 			// Counter settings
 			self::$default_settings['counter-icon'] = 'yes';
@@ -330,68 +323,6 @@ if(!class_exists('UrtakPlugin')) {
 			return $content;
 		}
 
-		/**
-		 * Big thank you to the Disable Comments plugin for these.
-		 */
-		public static function disable_comments() {
-			if(self::comments_are_disabled()) {
-				foreach(self::get_settings('post-types') as $post_type_key) {
-					if( post_type_supports($post_type_key, 'comments') ) {
-						remove_post_type_support($post_type_key, 'comments');
-						remove_post_type_support($post_type_key, 'trackbacks');
-					}
-				}
-
-				add_filter('comments_open', array(__CLASS__, 'disable_comments__filter_comment_status'), 20, 2 );
-				add_filter('pings_open', array(__CLASS__, 'disable_comments__filter_comment_status'), 20, 2 );
-
-				add_action('admin_head', array(__CLASS__, 'disable_comments__hide_discussion_rightnow'));
-				add_action('admin_menu', array(__CLASS__, 'disable_comments__filter_admin_menu'), 9999);
-				add_action('edit_form_advanced', array(__CLASS__, 'disable_comments__edit_form_inputs'));
-				add_action('edit_page_form', array(__CLASS__, 'disable_comments__edit_form_inputs'));
-				add_action('wp_dashboard_setup', array(__CLASS__, 'disable_comments__filter_dashboard'));
-
-				remove_action('admin_bar_menu', 'wp_admin_bar_comments_menu', 60);
-			}
-		}
-
-		public static function disable_comments__discussion_js() {
-			echo '<script> jQuery(document).ready(function($){ $("#dashboard_right_now .table_discussion").has(\'a[href="edit-comments.php"]\').first().hide(); }); </script>';
-		}
-
-		public static function disable_comments__edit_form_inputs() {
-			global $post;
-			if(in_array($post->post_type, self::get_settings('post-types'))) {
-				echo '<input type="hidden" name="comment_status" value="' . $post->comment_status . '" /><input type="hidden" name="ping_status" value="' . $post->ping_status . '" />';
-			}
-		}
-
-		public static function disable_comments__hide_discussion_rightnow(){
-			if('dashboard' == get_current_screen()->id) {
-				add_action('admin_print_footer_scripts', array(__CLASS__, 'disable_comments__discussion_js'));
-			}
-		}
-
-		public static function disable_comments__filter_admin_menu(){
-			global $menu;
-			if(isset($menu[25]) && $menu[25][2] == 'edit-comments.php') {
-				unset($menu[25]);
-			}
-		}
-
-		public static function disable_comments__filter_comment_status($open, $post_id) {
-			return false;
-		}
-
-		public static function disable_comments__filter_dashboard() {
-			remove_meta_box('dashboard_recent_comments', 'dashboard', 'normal');
-		}
-
-		public static function disable_comments__remove_widget() {
-			if(self::comments_are_disabled()) {
-				unregister_widget('WP_Widget_Recent_Comments');
-			}
-		}
 
 		public static function enqueue_administrative_resources($hook) {
 			wp_enqueue_style('urtak-backend', plugins_url('resources/backend/urtak.css', __FILE__), array(), self::VERSION);
@@ -466,8 +397,6 @@ if(!class_exists('UrtakPlugin')) {
 
 			$settings['width'] = is_numeric($settings['width']) ? intval($settings['width']) : '';
 			$settings['width'] = is_int($settings['width']) && $settings['width'] < 280 ? 280 : $settings['width'];
-
-			$settings['disable-comments'] = pd_yes_no($settings['disable-comments']);
 
 			$publication_fields = $settings['publication'];
 			unset($settings['publication']);
@@ -853,12 +782,6 @@ if(!class_exists('UrtakPlugin')) {
 					&& !empty($credentials['api-key'])
 					&& !empty($credentials['email'])
 					&& !empty($credentials['id']);
-		}
-
-		/// COMMENTS
-
-		private static function comments_are_disabled() {
-			return 'yes' === self::get_settings('disable-comments');
 		}
 
 		/// API DELEGATES
