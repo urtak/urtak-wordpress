@@ -115,7 +115,7 @@
 						</label>
 					</p>
 					<p class="urtak-help">
-						<input type="text" class="text large-text" id="urtak-default_first_question" value="<?php esc_attr_e($settings['default_first_question']); ?>" />
+						<input type="text" class="text large-text" id="urtak-default_first_question" name="urtak[default_first_question]" value="<?php esc_attr_e($settings['default_first_question']); ?>" />
 					</p>
 				</div>
 

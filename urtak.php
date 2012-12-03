@@ -386,6 +386,10 @@ if(!class_exists('UrtakPlugin')) {
 		public static function sanitize_and_validate_settings($settings) {
 			$settings['placement'] = 'manual' === $settings['placement'] ? 'manual' : 'append';
 
+			$settings['default_first_question'] = trim($settings['default_first_question']);
+			$settings['has_first_question'] = 'yes' === pd_yes_no($settings['has_first_question']) && !empty($settings['default_first_question']) ? 'yes' : 'no';
+			$settings['default_first_question'] = 'no' === $settings['has_first_question'] ? '' : $settings['default_first_question'];
+
 			$settings['homepage'] = pd_yes_no($settings['homepage']);
 
 			$settings['user-start'] = pd_yes_no($settings['user-start']);
