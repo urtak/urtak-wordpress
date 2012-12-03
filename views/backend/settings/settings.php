@@ -278,26 +278,6 @@
 
 		</div>
 
-		<div class="urtak-individual-settings-section">
-
-			<h3><?php _e('Disable Comments', 'urtak'); ?></h3>
-
-			<div class="urtak-field">
-				<input type="hidden" name="urtak[disable-comments]" id="urtak-disable-comments-hidden" value="no" />
-				<label class="urtak-checkbox">
-					<div class="urtak-checkbox-input-container">
-						<input <?php checked($settings['disable-comments'], 'yes'); ?> type="checkbox" name="urtak[disable-comments]" id="urtak-disable-comments" value="yes" />
-					</div><?php _e('Disable all commenting features', 'urtak'); ?>
-				</label>
-				<p class="urtak-help">
-					<label for="urtak-disable-comments">
-						<?php _e('Do away with comments on your site. Conversations are better when people ask questions.', 'urtak'); ?>
-					</label>
-				</p>
-			</div>
-
-		</div>
-
 	</div>
 
 	<div class="urtak-clear"></div>
