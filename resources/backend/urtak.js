@@ -205,7 +205,7 @@ jQuery(document).ready(function($) {
 
 	$('[data-urtak-attribute]').live('change', function(event) {
 		UrtakDelegates.get_questions(UrtakDelegates.get_search_vars());
-	}).filter(':first').change();
+	}).filter('#urtak-default-question-hidden-input').change().val(0);
 
 	$('#urtak-meta-box-controls-pager a').live('click', function(event) {
 		event.preventDefault();
@@ -373,6 +373,20 @@ var UrtakDelegates = (function(jQuery) {
 					} else {
 						$('#urtak-meta-box-controls-pager').empty().append(data.pager);
 						$cards.removeClass('loading').find('.urtak-card:last').after(data.cards);
+
+						if(data.default_first_question_text) {
+							var $card = $('.urtak-card.urtak-card-adder.urtak-card-with-controls:first'),
+								$button = $card.find('.card-question-answers-s:first'),
+								$field = $card.find('.large-text').val(data.default_first_question_text),
+								$first = $card.find('.urtak-first-question-input').val(1);
+
+
+							$button.mouseover().click();
+							$first.val(0);
+
+							var $clone = $card.next();
+							$clone.find('.urtak-update-message > span').addClass('is-first-question');
+						}
 					}
 
 					if('function' === typeof(callback)) {

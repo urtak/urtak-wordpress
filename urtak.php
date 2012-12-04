@@ -145,7 +145,7 @@ if(!class_exists('UrtakPlugin')) {
 
 		public static function ajax_get_questions() {
 			$data = stripslashes_deep($_REQUEST);
-			$atts = shortcode_atts(array('page' => 1, 'per_page' => 10, 'order' => 'time|DESC', 'show' => 'all', 'search' => '', 'post_id' => 0), $data);
+			$atts = shortcode_atts(array('page' => 1, 'per_page' => 10, 'order' => 'time|DESC', 'show' => 'all', 'search' => '', 'post_id' => 0, 'default_question' => 0), $data);
 
 			extract($atts);
 			if(empty($post_id)) {
@@ -162,8 +162,6 @@ if(!class_exists('UrtakPlugin')) {
 						update_post_meta($post_id, self::QUESTION_CREATED_KEY, 'yes');
 					}
 
-					error_log(print_r($questions_response['questions']['question'], true));
-
 					$cards = '';
 					foreach($questions_response['questions']['question'] as $question) {
 						$cards .= self::_get_card($question, $post_id, true);
@@ -171,7 +169,14 @@ if(!class_exists('UrtakPlugin')) {
 
 					$pager = self::_get_pager($page, $questions_response['questions']['pages']);
 
-					$data = compact('pager', 'cards');
+					$default_first_question_text = '';
+					if($default_question && empty($cards)) {
+						$publication = self::get_publication(self::get_credentials('publication-key'));
+
+						$default_first_question_text = $publication['default_first_question_text'];
+					}
+
+					$data = compact('pager', 'cards', 'default_first_question_text');
 				}
 			}
 

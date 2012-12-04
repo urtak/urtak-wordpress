@@ -1,4 +1,5 @@
 <div class="urtak-meta-box-actions" id="urtak-meta-box-search-params">
+	<input type="hidden" data-urtak-attribute="default_question" id="urtak-default-question-hidden-input" value="1" />
 	<input type="hidden" data-urtak-attribute="action" value="urtak_get_questions" />
 	<input type="hidden" data-urtak-attribute="post_id" value="<?php the_ID(); ?>" />
 	<input type="hidden" id="urtak-meta-box-per-page" data-urtak-attribute="per_page" value="10" />
@@ -65,11 +66,11 @@
 						<input class="urtak-first-question-input" type="hidden" name="urtak[question][first_question][]" value="0" />
 
 						<span class="urtak-update-message-first-question">
-							<?php _e('First Question'); ?> - <a class="urtak-unset-first-question" href="#"><?php _e('Unset'); ?></a>
+							<?php _e('First Question', 'urtak'); ?> | <a class="urtak-unset-first-question" href="#"><?php _e('Unset', 'urtak'); ?></a>
 						</span>
 
 						<span class="urtak-update-message-not-first-question">
-							<a class="urtak-set-first-question" href="#"><?php _e('Set as First Question'); ?></a>
+							<a class="urtak-set-first-question" href="#"><?php _e('Set as First Question', 'urtak'); ?></a>
 						</span>
 					</span>
 					<a data-action="reject" class="urtak-card-controls-icon-special urtak-card-controls-icon <?php if($question['status'] === 'rejected') { echo 'active'; } ?> urtak-card-controls-icon-rejected" href="#"></a>

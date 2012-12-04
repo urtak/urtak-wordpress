@@ -40,11 +40,11 @@
 				<?php $class = 1 == $question['first_question'] ? 'is-first-question' : ''; ?>
 
 				<span class="urtak-update-message-first-question <?php echo $class; ?>">
-					<?php _e('First Question'); ?> - <a class="urtak-unset-first-question" href="#"><?php _e('Unset'); ?></a>
+					<?php _e('First Question', 'urtak'); ?> | <a class="urtak-unset-first-question" href="#"><?php _e('Unset', 'urtak'); ?></a>
 				</span>
 
 				<span class="urtak-update-message-not-first-question <?php echo $class; ?>">
-					<a class="urtak-set-first-question" href="#"><?php _e('Set as First Question'); ?></a>
+					<a class="urtak-set-first-question" href="#"><?php _e('Set as First Question', 'urtak'); ?></a>
 				</span>
 			</span>
 
