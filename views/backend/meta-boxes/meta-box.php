@@ -61,7 +61,17 @@
 			<div class="urtak-card-controls-container">
 				<div class="urtak-card-info-asker"><?php _e('Asked by the site', 'urtak'); ?></div>
 				<div class="urtak-card-controls">
-					<span class="urtak-update-message"><?php _e('Update or Publish this post to submit this question.', 'urtak'); ?></span>
+					<span class="urtak-update-message">
+						<input class="urtak-first-question-input" type="hidden" name="urtak[question][first_question][]" value="0" />
+
+						<span class="urtak-update-message-first-question">
+							<?php _e('First Question'); ?> - <a class="urtak-unset-first-question" href="#"><?php _e('Unset'); ?></a>
+						</span>
+
+						<span class="urtak-update-message-not-first-question">
+							<a class="urtak-set-first-question" href="#"><?php _e('Set as First Question'); ?></a>
+						</span>
+					</span>
 					<a data-action="reject" class="urtak-card-controls-icon-special urtak-card-controls-icon <?php if($question['status'] === 'rejected') { echo 'active'; } ?> urtak-card-controls-icon-rejected" href="#"></a>
 					<div class="clear"></div>
 				</div>

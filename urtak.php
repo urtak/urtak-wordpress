@@ -483,12 +483,17 @@ if(!class_exists('UrtakPlugin')) {
 		      'title'       => $post->post_title,
 		    );
 
-			$questions = array_unique(array_filter((array)$data['urtak']['question']['text']));
-
-			$new_questions = array();
-			foreach($questions as $key => $question) {
-				$new_questions[] = array('text' => $question);
-			}
+		    $question_texts = array();
+		    $new_questions = array();
+		    foreach((array)$data['urtak']['question']['text'] as $key => $question_text) {
+		    	if(!empty($question_text) && !in_array($question_text, $question_texts)) {
+			    	$new_questions[] = array(
+			    		'text' => $question_text,
+			    		'first_question' => 1 == $data['urtak']['question']['first_question'][$key] ? '1' : '0',
+			    	);
+			    	$question_texts[] = $question_text;
+		    	}
+		    }
 
 			$urtak = self::get_urtak($post_id);
 			if(empty($urtak)) {

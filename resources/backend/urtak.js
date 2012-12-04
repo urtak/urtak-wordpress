@@ -118,6 +118,33 @@ jQuery(document).ready(function($) {
 		UrtakDelegates.modify_question_status(vars);
 	});
 
+	$('.urtak-set-first-question').live('click', function(event) {
+		event.preventDefault();
+
+		var $this = $(this),
+			$container = $this.parents('.urtak-update-message'),
+			$first = $container.find('.urtak-update-message-first-question'),
+			$first_all = $('.urtak-update-message-first-question').hide(),
+			$not_first = $container.find('.urtak-update-message-not-first-question'),
+			$not_first_all = $('.urtak-update-message-not-first-question').show(),
+			$input = $container.find('.urtak-first-question-input'),
+			$inputs_all = $('.urtak-first-question-input').val('0');
+
+		$not_first.hide();
+		$first.show();
+		$input.val('1');
+	});
+
+	$('.urtak-unset-first-question').live('click', function(event) {
+		event.preventDefault();
+
+		var $this = $(this),
+			$container = $this.parents('.urtak-update-message'),
+			$first = $container.find('.urtak-update-message-first-question').hide(),
+			$not_first = $container.find('.urtak-update-message-not-first-question').show(),
+			$input = $container.find('.urtak-first-question-input').val('0');
+	});
+
 	$('.urtak-help-content-inner-icon a').click(function(event) { event.preventDefault(); });
 
 	$('.urtak-card-info-question textarea').keypress(function(event) {

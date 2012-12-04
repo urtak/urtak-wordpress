@@ -671,6 +671,14 @@ div.urtak-error .globe {
 	line-height: 22px;
 }
 
+.urtak-update-message-first-question {
+	display: none;
+}
+
+.urtak-update-message-not-first-question {
+	display: inline;
+}
+
 .urtak-card-controls-container {
 	position: absolute;
 	bottom: 0;
