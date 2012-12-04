@@ -578,22 +578,22 @@ if(!class_exists('UrtakPlugin')) {
 			$data = stripslashes_deep($_REQUEST);
 			$is_settings = true;
 
+			$settings = self::get_settings();
+
 			if(self::has_credentials()) {
 				$publications = self::get_publications();
 			}
 
-			$settings = self::get_settings();
+			if(self::has_credentials() && isset($settings['credentials']['publication-key'])) {
+				$publication = self::get_publication($settings['credentials']['publication-key']);
 
-			if(!empty($publications) && isset($settings['credentials']['publication-key'])) {
-				foreach($publications as $publication) {
-					if($publication['key'] == $settings['credentials']['publication-key']) {
-						$settings['moderation'] = $publication['moderation'];
-						$settings['default_first_question'] = $publication['default_first_question_text'];
-						$settings['has_first_question'] = empty($settings['default_first_question']) ? 'no' : 'yes';
-						break;
-					}
+				if($publication) {
+					$settings['moderation'] = $publication['moderation'];
+					$settings['default_first_question'] = $publication['default_first_question_text'];
+					$settings['has_first_question'] = empty($settings['default_first_question']) ? 'no' : 'yes';
 				}
 			}
+
 
 			include('views/backend/misc/header.php');
 
@@ -835,7 +835,7 @@ if(!class_exists('UrtakPlugin')) {
 			    'name'       => $name,
 			    'platform'   => 'wordpress',
 			    'moderation' => $moderation,
-			    'default_first_question' => $default_first_question,
+			    'default_first_question_text' => $default_first_question,
 			    'theme'      => 15
 			);
 			$create_response = $urtak_api->create_publication('email', $email, $publication_args);
@@ -889,7 +889,7 @@ if(!class_exists('UrtakPlugin')) {
 				// 'name' => $name,
 				'platform' => 'wordpress',
 				'moderation' => $moderation,
-				'default_first_question' => $default_first_question,
+				'default_first_question_text' => $default_first_question,
 				'theme' => 15
 			);
 			$update_response = $urtak_api->update_publication($key, $publication_args);
