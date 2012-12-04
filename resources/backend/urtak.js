@@ -123,16 +123,28 @@ jQuery(document).ready(function($) {
 
 		var $this = $(this),
 			$container = $this.parents('.urtak-update-message'),
+			$card = $container.parents('.urtak-card'),
 			$first = $container.find('.urtak-update-message-first-question'),
 			$first_all = $('.urtak-update-message-first-question').hide(),
 			$not_first = $container.find('.urtak-update-message-not-first-question'),
 			$not_first_all = $('.urtak-update-message-not-first-question').show(),
 			$input = $container.find('.urtak-first-question-input'),
-			$inputs_all = $('.urtak-first-question-input').val('0');
+			$inputs_all = $('.urtak-first-question-input').val('0'),
+			post_id = $card.attr('data-post-id'),
+			question_id = $card.attr('data-question-id');
 
 		$not_first.hide();
 		$first.show();
 		$input.val('1');
+
+		if('' != post_id && '' != question_id) {
+			UrtakDelegates.modify_question_status({
+				action: 'urtak_modify_question_first',
+				post_id: post_id,
+				question_id: question_id,
+				first_question: 1
+			});
+		}
 	});
 
 	$('.urtak-unset-first-question').live('click', function(event) {
@@ -140,9 +152,21 @@ jQuery(document).ready(function($) {
 
 		var $this = $(this),
 			$container = $this.parents('.urtak-update-message'),
+			$card = $container.parents('.urtak-card'),
 			$first = $container.find('.urtak-update-message-first-question').hide(),
 			$not_first = $container.find('.urtak-update-message-not-first-question').show(),
-			$input = $container.find('.urtak-first-question-input').val('0');
+			$input = $container.find('.urtak-first-question-input').val('0'),
+			post_id = $card.attr('data-post-id'),
+			question_id = $card.attr('data-question-id');
+
+		if('' != post_id && '' != question_id) {
+			UrtakDelegates.modify_question_status({
+				action: 'urtak_modify_question_first',
+				post_id: post_id,
+				question_id: question_id,
+				first_question: 0
+			});
+		}
 	});
 
 	$('.urtak-help-content-inner-icon a').click(function(event) { event.preventDefault(); });
@@ -377,7 +401,7 @@ var UrtakDelegates = (function(jQuery) {
 			ajaxurl,
 			vars,
 			function(data, status) {
-				console.log(data);
+
 			},
 			'json'
 		);

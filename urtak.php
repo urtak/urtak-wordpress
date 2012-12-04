@@ -72,6 +72,7 @@ if(!class_exists('UrtakPlugin')) {
 			add_action('wp_ajax_urtak_get_questions', array(__CLASS__, 'ajax_get_questions'));
 			add_action('wp_ajax_urtak_fetch_responses_counts', array(__CLASS__, 'ajax_fetch_responses_count'));
 			add_action('wp_ajax_nopriv_urtak_fetch_responses_counts', array(__CLASS__, 'ajax_fetch_responses_count'));
+			add_action('wp_ajax_urtak_modify_question_first', array(__CLASS__, 'ajax_modify_question_first'));
 			add_action('wp_ajax_urtak_modify_question_status', array(__CLASS__, 'ajax_modify_question_status'));
 		}
 
@@ -161,6 +162,8 @@ if(!class_exists('UrtakPlugin')) {
 						update_post_meta($post_id, self::QUESTION_CREATED_KEY, 'yes');
 					}
 
+					error_log(print_r($questions_response['questions']['question'], true));
+
 					$cards = '';
 					foreach($questions_response['questions']['question'] as $question) {
 						$cards .= self::_get_card($question, $post_id, true);
@@ -174,6 +177,15 @@ if(!class_exists('UrtakPlugin')) {
 
 			echo json_encode($data);
 			exit;
+		}
+
+
+		public static function ajax_modify_question_first() {
+			$data = stripslashes_deep($_REQUEST);
+
+			$first_question = 1 == $data['first_question'];
+
+			self::update_urtak_question($data['post_id'], $data['question_id'], array('question' => array('first_question' => $first_question)));
 		}
 
 		public static function ajax_modify_question_status() {
@@ -593,7 +605,6 @@ if(!class_exists('UrtakPlugin')) {
 					$settings['has_first_question'] = empty($settings['default_first_question']) ? 'no' : 'yes';
 				}
 			}
-
 
 			include('views/backend/misc/header.php');
 

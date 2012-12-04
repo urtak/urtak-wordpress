@@ -36,6 +36,18 @@
 		<div class="urtak-card-info-asker"><?php printf(__('Asked by %1$s', 'urtak'), empty($question['ugc']) ? __('the site', 'urtak') : __('a user', 'urtak')); ?></div>
 		<?php if($controls) { ?>
 		<div class="urtak-card-controls">
+			<span class="urtak-update-message">
+				<?php $class = 1 == $question['first_question'] ? 'is-first-question' : ''; ?>
+
+				<span class="urtak-update-message-first-question <?php echo $class; ?>">
+					<?php _e('First Question'); ?> - <a class="urtak-unset-first-question" href="#"><?php _e('Unset'); ?></a>
+				</span>
+
+				<span class="urtak-update-message-not-first-question <?php echo $class; ?>">
+					<a class="urtak-set-first-question" href="#"><?php _e('Set as First Question'); ?></a>
+				</span>
+			</span>
+
 			<a data-action="reject" class="urtak-card-controls-icon <?php if($question['status'] === 'rejected') { echo 'active'; } ?> urtak-card-controls-icon-rejected" href="#"></a>
 			<a data-action="archive" class="urtak-card-controls-icon <?php if($question['status'] === 'archived') { echo 'active'; } ?> urtak-card-controls-icon-archived" href="#"></a>
 			<a data-action="approve" class="urtak-card-controls-icon <?php if($question['status'] === 'approved') { echo 'active'; } ?> urtak-card-controls-icon-approved" href="#"></a>

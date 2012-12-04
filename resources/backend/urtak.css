@@ -675,8 +675,16 @@ div.urtak-error .globe {
 	display: none;
 }
 
+.urtak-update-message-first-question.is-first-question {
+	display: inline;
+}
+
 .urtak-update-message-not-first-question {
 	display: inline;
+}
+
+.urtak-update-message-not-first-question.is-first-question {
+	display: none;
 }
 
 .urtak-card-controls-container {
