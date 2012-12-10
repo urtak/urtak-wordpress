@@ -4,7 +4,7 @@ Contributors: nickohrn, urtak
 Tags: urtak, questions, conversation, discussion, comments, surveys, polls, engagement, insights, audience, community
 Requires at least: 3.4
 Tested up to: 3.4.1
-Stable tag: 1.2.0
+Stable tag: 1.2.1
 License: MIT
 
 Conversation powered by questions. Bring simplicity and structure to any online
@@ -53,9 +53,6 @@ fun, simple questions.
 * **Use from the WP Dashboard**
   One click installation. Ask questions and manage Urtak conversations right
   from your Dashboard.
-* **Deactivate Comments**
-  Had enough of the headaches and hassles that comments can bring. Turn ‘em off
-  with one-click, and elevate the discourse with Urtak questions. Troll-proof!
 
 == Installation ==
 
@@ -97,6 +94,18 @@ Please note that use of Urtak is subject to our
    questions and more.
 
 == Changelog ==
+
+= 1.2.1 =
+
+* Added ability to set a fixed first question on a site-wide basis and override
+  it on a Urtak-by-Urtak basis.
+
+= 1.2.0 =
+
+* Removed requirement that one must answer a question at the time of asking.
+* Updated setting section wording and arrangement.
+* Added ability to specify in settings which Post Types the Urtak meta box will
+  appear on.
 
 = 1.1.0 =
 
