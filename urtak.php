@@ -3,7 +3,7 @@
  Plugin Name: Urtak
  Plugin URI: http://urtak.com/wordpress/
  Description: Conversation powered by questions. Bring simplicity and structure to any online conversation by allowing your users to ask each other questions.
- Version: 1.2.1
+ Version: 1.3.0
  Author: Urtak, Inc.
  Author URI: http://urtak.com
  */
@@ -13,7 +13,7 @@ if(!class_exists('UrtakPlugin')) {
 		/// CONSTANTS
 
 		//// VERSION
-		const VERSION = '1.2.1';
+		const VERSION = '1.3.0';
 
 		//// KEYS
 		const SETTINGS_KEY = '_urtak_settings';

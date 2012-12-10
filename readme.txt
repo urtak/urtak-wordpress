@@ -3,8 +3,8 @@
 Contributors: nickohrn, urtak
 Tags: urtak, questions, conversation, discussion, comments, surveys, polls, engagement, insights, audience, community
 Requires at least: 3.4
-Tested up to: 3.4.1
-Stable tag: 1.2.1
+Tested up to: 3.4.2
+Stable tag: 1.3.0
 License: MIT
 
 Conversation powered by questions. Bring simplicity and structure to any online
@@ -95,7 +95,7 @@ Please note that use of Urtak is subject to our
 
 == Changelog ==
 
-= 1.2.1 =
+= 1.3.0 =
 
 * Added ability to set a fixed first question on a site-wide basis and override
   it on a Urtak-by-Urtak basis.
