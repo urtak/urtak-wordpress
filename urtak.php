@@ -51,8 +51,7 @@ if(!class_exists('UrtakPlugin')) {
 				add_action('admin_enqueue_scripts', array(__CLASS__, 'enqueue_administrative_resources'));
 				add_action('admin_menu', array(__CLASS__, 'add_administrative_interface_items'));
 				add_action('admin_notices', array(__CLASS__, 'show_credentials_notice'));
-				add_action('add_meta_boxes_page', array(__CLASS__, 'add_meta_boxes'));
-				add_action('add_meta_boxes_post', array(__CLASS__, 'add_meta_boxes'));
+				add_action('add_meta_boxes', array(__CLASS__, 'add_meta_boxes'));
 				add_action('manage_posts_custom_column', array(__CLASS__, 'add_posts_columns_output'), 10, 2);
 				add_action('save_post', array(__CLASS__, 'save_post_meta'), 10, 2);
 				add_action('wp_dashboard_setup', array(__CLASS__, 'add_dashboard_widget'));
@@ -315,8 +314,12 @@ if(!class_exists('UrtakPlugin')) {
 			}
 		}
 
-		public static function add_meta_boxes($post) {
-			add_meta_box('urtak-meta-box', __('Urtak', 'urtak'), array(__CLASS__, 'display_meta_box'), $post->post_type, 'normal');
+		public static function add_meta_boxes($post_type) {
+			$settings = self::get_settings();
+
+			if(is_array($settings['post-types']) && in_array($post_type, $settings['post-types'])) {
+				add_meta_box('urtak-meta-box', __('Urtak', 'urtak'), array(__CLASS__, 'display_meta_box'), $post->post_type, 'normal');
+			}
 		}
 
 		public static function add_plugin_links($links) {
