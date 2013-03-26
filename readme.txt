@@ -4,7 +4,7 @@ Contributors: nickohrn, urtak
 Tags: urtak, questions, conversation, discussion, comments, surveys, polls, engagement, insights, audience, community
 Requires at least: 3.4
 Tested up to: 3.4.2
-Stable tag: 1.3.0
+Stable tag: 1.3.1
 License: MIT
 
 Conversation powered by questions. Bring simplicity and structure to any online
@@ -94,6 +94,10 @@ Please note that use of Urtak is subject to our
    questions and more.
 
 == Changelog ==
+
+= 1.3.1 =
+
+* Fixed a bug preventing Urtak's meta box from displaying on custom post types.
 
 = 1.3.0 =
 
