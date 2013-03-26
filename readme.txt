@@ -3,7 +3,7 @@
 Contributors: nickohrn, urtak
 Tags: urtak, questions, conversation, discussion, comments, surveys, polls, engagement, insights, audience, community
 Requires at least: 3.4
-Tested up to: 3.4.2
+Tested up to: 3.5.1
 Stable tag: 1.3.1
 License: MIT
 
