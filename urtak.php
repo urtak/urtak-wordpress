@@ -168,6 +168,11 @@ if(!class_exists('UrtakPlugin')) {
 			// Counter settings
 			self::$default_settings['counter-icon'] = 'yes';
 			self::$default_settings['counter-responses'] = 'yes';
+
+			// Profanity
+			self::$default_settings['blacklisting'] = 'no';
+			self::$default_settings['blacklist_override'] = 'no';
+			self::$default_settings['blacklist_words'] = '';
 		}
 
 		private static function register_shortcodes() {
@@ -306,8 +311,6 @@ if(!class_exists('UrtakPlugin')) {
 				self::$admin_page_hooks[] = $sub_level_settings = add_submenu_page(self::TOP_LEVEL_PAGE_SLUG, __('Urtak Settings', 'urtak'), __('Settings', 'urtak'), 'manage_options', self::SUB_LEVEL_SETTINGS_SLUG, array(__CLASS__, 'display_settings_page'));
 
 				add_action("load-{$sub_level_settings}", array(__CLASS__, 'process_settings_actions'));
-
-				// add_meta_box('urtak-top-questions', __('Questions', 'urtak'), array(__CLASS__, 'display_meta_box__questions'), 'urtak', 'right');
 			}
 		}
 
@@ -484,6 +487,9 @@ if(!class_exists('UrtakPlugin')) {
 
 			$settings['width'] = is_numeric($settings['width']) ? intval($settings['width']) : '';
 			$settings['width'] = is_int($settings['width']) && $settings['width'] < 280 ? 280 : $settings['width'];
+
+			$settings['blacklisting'] = pd_yes_no($settings['blacklisting']);
+			$settings['blacklist_override'] = pd_yes_no($settings['blacklisting']);
 
 			$publication_fields = $settings['publication'];
 			unset($settings['publication']);
