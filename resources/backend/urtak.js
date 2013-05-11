@@ -71,6 +71,31 @@ jQuery(document).ready(function($) {
 		}
 	}).change();
 
+	$('#urtak-blacklisting').change(function(event) {
+		var $this = $(this),
+			$container = $('.urtak-blacklisting-dependent'),
+			value = $this.val();
+
+		if($this.is(':checked')) {
+			$container.show();
+		} else {
+			$container.find('input[type="checkbox"]').removeAttr('checked').change();
+			$container.hide();
+		}
+	}).change();
+
+	$('#urtak-blacklist_override').change(function(event) {
+		var $this = $(this),
+			$container = $('.urtak-blacklist_override-dependent'),
+			value = $this.val();
+
+		if($this.is(':checked')) {
+			$container.show().find('textarea').focus();
+		} else {
+			$container.hide();
+		}
+	}).change();
+
 	$('.urtak-tabbed-control a').live('click', function(event) {
 		event.preventDefault();
 

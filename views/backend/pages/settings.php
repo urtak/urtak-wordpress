@@ -314,6 +314,36 @@
 
 		</div>
 
+		<div class="urtak-individual-settings-section">
+
+			<h3><?php _e('Profanity Filter', 'urtak'); ?></h3>
+
+			<div class="urtak-field">
+				<div class="urtak-checkbox-container">
+					<input type="hidden" name="urtak[blacklisting]" id="urtak-blacklisting-hidden" value="no" />
+					<label class="urtak-checkbox">
+						<div class="urtak-checkbox-input-container">
+							<input <?php checked($settings['blacklisting'], 'yes'); ?> type="checkbox" name="urtak[blacklisting]" id="urtak-blacklisting" value="yes" />
+						</div><?php _e('Enable', 'urtak'); ?>
+					</label>
+				</div>
+
+				<div class="urtak-checkbox-container urtak-blacklisting-dependent">
+					<input type="hidden" name="urtak[blacklist_override]" id="urtak-blacklist_override-hidden" value="no" />
+					<label class="urtak-checkbox">
+						<div class="urtak-checkbox-input-container">
+							<input <?php checked($settings['blacklist_override'], 'yes'); ?> type="checkbox" name="urtak[blacklist_override]" id="urtak-blacklist_override" value="yes" />
+						</div><?php _e('Customize Profanity Filter', 'urtak'); ?>
+					</label>
+				</div>
+
+				<div class="urtak-checkbox-container urtak-blacklist_override-dependent">
+					<textarea rows="5" class="code large-text" name="urtak[blacklist_words]" id="urtak-blacklist_words"><?php esc_html_e($settings['blacklist_words']); ?></textarea>
+				</div>
+			</div>
+
+		</div>
+
 	</div>
 
 	<div class="urtak-clear"></div>
