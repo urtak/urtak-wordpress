@@ -300,7 +300,7 @@ div.urtak-error .globe {
 	column-gap: 20px;
 }
 
-#urtak-at-a-glance .hndle, #urtak-top-questions .hndle {
+#urtak .hndle, #urtak-top-questions .hndle {
 	border-bottom: 0;
 	-moz-box-shadow: none;
 	-webkit-box-shadow: none;
@@ -308,17 +308,13 @@ div.urtak-error .globe {
 	cursor: default;
 }
 
-#urtak-at-a-glance .urtak-statistics-section-container {
+#urtak .urtak-statistics-section-container {
 	margin: 10px 25px;
 }
 
-#urtak-at-a-glance .urtak-statistics-section {
+#urtak .urtak-statistics-section {
 	float: left;
 	width: 25%;
-}
-
-#urtak-at-a-glance .urtak-statistics-section > div {
-
 }
 
 #urtak-dashboard-chart {
@@ -334,10 +330,10 @@ div.urtak-error .globe {
 	background: #ececec;
 	border-bottom: 1px solid #dfdfdf;
 	height: 29px;
-	margin-left: -20px;
+	margin-left: -22px;
 	padding: 5px 0 0;
 	position: relative;
-	right: -10px;
+	right: -12px;
 	top: -12px;
 }
 

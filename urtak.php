@@ -307,14 +307,13 @@ if(!class_exists('UrtakPlugin')) {
 
 				add_action("load-{$sub_level_settings}", array(__CLASS__, 'process_settings_actions'));
 
-				// add_meta_box('urtak-at-a-glance', __('At a Glance', 'urtak'), array(__CLASS__, 'display_meta_box__insights'), 'urtak', 'top');
 				// add_meta_box('urtak-top-questions', __('Questions', 'urtak'), array(__CLASS__, 'display_meta_box__questions'), 'urtak', 'right');
 			}
 		}
 
 		public static function add_dashboard_widget() {
 			if(current_user_can('delete_others_pages') && self::has_credentials()) {
-				wp_add_dashboard_widget('urtak', __('Urtak', 'urtak'), array(__CLASS__, 'display_meta_box__dashboard'));
+				wp_add_dashboard_widget('urtak', __('At a Glance', 'urtak'), array(__CLASS__, 'display_meta_box__insights'));
 			}
 		}
 
