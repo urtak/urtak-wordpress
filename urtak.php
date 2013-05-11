@@ -82,7 +82,8 @@ if(!class_exists('UrtakPlugin')) {
 
 		//// SLUGS
 		const TOP_LEVEL_PAGE_SLUG = 'urtak';
-		const SUB_LEVEL_INSIGHTS_SLUG = 'urtak';
+		const SUB_LEVEL_MODERATION_SLUG = 'urtak';
+		const SUB_LEVEL_RESULTS_SLUG = 'urtak-results';
 		const SUB_LEVEL_SETTINGS_SLUG = 'urtak-settings';
 
 		//// CACHE
@@ -293,21 +294,21 @@ if(!class_exists('UrtakPlugin')) {
 		public static function add_administrative_interface_items() {
 			if(current_user_can('manage_options') || self::has_credentials()) {
 				// Top Level
+				self::$admin_page_hooks[] = $top_level = add_menu_page(__('Urtak Insights', 'urtak'), __('Urtak', 'urtak'), 'delete_others_pages', self::TOP_LEVEL_PAGE_SLUG, array(__CLASS__, 'display_moderation_page'), plugins_url('resources/backend/img/urtak-logo-15.png', __FILE__), 56);
 
-				self::$admin_page_hooks[] = $top_level = add_menu_page(__('Urtak Insights', 'urtak'), __('Urtak', 'urtak'), 'delete_others_pages', self::TOP_LEVEL_PAGE_SLUG, array(__CLASS__, 'display_insights_page'), plugins_url('resources/backend/img/urtak-logo-15.png', __FILE__), 56);
+				// Moderation
+				self::$admin_page_hooks[] = $sub_level_moderation = add_submenu_page(self::TOP_LEVEL_PAGE_SLUG, __('Urtak Moderation', 'urtak'), __('Moderation', 'urtak'), 'manage_options', self::SUB_LEVEL_MODERATION_SLUG, array(__CLASS__, 'display_moderation_page'));
+
+				// Results
+				self::$admin_page_hooks[] = $sub_level_results = add_submenu_page(self::TOP_LEVEL_PAGE_SLUG, __('Urtak Results', 'urtak'), __('Results', 'urtak'), 'manage_options', self::SUB_LEVEL_RESULTS_SLUG, array(__CLASS__, 'display_results_page'));
+
+				// Settings
 				self::$admin_page_hooks[] = $sub_level_settings = add_submenu_page(self::TOP_LEVEL_PAGE_SLUG, __('Urtak Settings', 'urtak'), __('Settings', 'urtak'), 'manage_options', self::SUB_LEVEL_SETTINGS_SLUG, array(__CLASS__, 'display_settings_page'));
 
 				add_action("load-{$sub_level_settings}", array(__CLASS__, 'process_settings_actions'));
 
-				add_meta_box('urtak-at-a-glance', __('At a Glance', 'urtak'), array(__CLASS__, 'display_meta_box__insights'), 'urtak', 'top');
-
-				$posts_without_urtaks = self::get_nonassociated_post_ids();
-				if(!empty($posts_without_urtaks)) {
-					add_meta_box('urtak-posts-without-urtaks', __('Posts without Urtak', 'urtak'), array(__CLASS__, 'display_meta_box__posts_without_urtaks'), 'urtak', 'left');
-				}
-
-
-				add_meta_box('urtak-top-questions', __('Questions', 'urtak'), array(__CLASS__, 'display_meta_box__questions'), 'urtak', 'right');
+				// add_meta_box('urtak-at-a-glance', __('At a Glance', 'urtak'), array(__CLASS__, 'display_meta_box__insights'), 'urtak', 'top');
+				// add_meta_box('urtak-top-questions', __('Questions', 'urtak'), array(__CLASS__, 'display_meta_box__questions'), 'urtak', 'right');
 			}
 		}
 
@@ -603,12 +604,94 @@ if(!class_exists('UrtakPlugin')) {
 		public static function show_credentials_notice() {
 			$data = stripslashes_deep($_REQUEST);
 
-			if(current_user_can('manage_options') && !self::has_credentials() && (!isset($data['page']) || !in_array($data['page'], array(self::SUB_LEVEL_INSIGHTS_SLUG, self::SUB_LEVEL_SETTINGS_SLUG)))) {
+			if(current_user_can('manage_options')
+				&& !self::has_credentials()
+				&& (!isset($data['page']) || !in_array($data['page'], array(self::SUB_LEVEL_MODERATION_SLUG, self::SUB_LEVEL_RESULTS_SLUG, self::SUB_LEVEL_SETTINGS_SLUG)))) {
+
 				include('views/backend/misc/admin-notice.php');
 			}
 		}
 
 		/// DISPLAY CALLBACKS
+
+		//// PAGES
+
+		private static function _display_page_header($current_tab) {
+			$has_credentials = self::has_credentials();
+			$manage_options = current_user_can('manage_options');
+
+			$logged_in_text = '';
+			if($has_credentials) {
+				$logged_in_text .= sprintf(__('Logged in as <a href="https://urtak.com/account/edit" target="_blank">%1$s</a>', 'urtak'), self::get_credentials('email'));
+				$logged_in_text .= "&nbsp;| &nbsp;";
+			}
+
+			$active_moderation = self::SUB_LEVEL_MODERATION_SLUG === $current_tab;
+			$active_results = self::SUB_LEVEL_RESULTS_SLUG === $current_tab;
+			$active_settings = self::SUB_LEVEL_SETTINGS_SLUG === $current_tab;
+
+			$url_moderation = self::_get_moderation_url();
+			$url_results = self::_get_results_url();
+			$url_settings = self::_get_settings_url();
+
+			include('views/backend/pages/_inc/header.php');
+		}
+
+		private static function _display_page_footer() {
+			include('views/backend/pages/_inc/footer.php');
+		}
+
+		public static function display_moderation_page() {
+			self::_display_page_header(self::SUB_LEVEL_MODERATION_SLUG);
+
+			include('views/backend/pages/moderation.php');
+
+			self::_display_page_footer();
+		}
+
+		public static function display_results_page() {
+			self::_display_page_header(self::SUB_LEVEL_RESULTS_SLUG);
+
+			include('views/backend/pages/results.php');
+
+			self::_display_page_footer();
+		}
+
+		public static function display_settings_page() {
+			$data = stripslashes_deep($_REQUEST);
+			$is_settings = true;
+
+			$settings = self::get_settings();
+
+			if(self::has_credentials()) {
+				$publications = self::get_publications();
+			}
+
+			if(self::has_credentials() && isset($settings['credentials']['publication-key'])) {
+				$publication = self::get_publication($settings['credentials']['publication-key']);
+
+				if($publication) {
+					$settings['moderation'] = $publication['moderation'];
+					$settings['default_first_question'] = $publication['default_first_question_text'];
+					$settings['has_first_question'] = empty($settings['default_first_question']) ? 'no' : 'yes';
+				}
+			}
+
+			self::_display_page_header(self::SUB_LEVEL_SETTINGS_SLUG);
+
+			include('views/backend/pages/settings.php');
+
+			self::_display_page_footer();
+		}
+
+
+		//// META BOX DISPLAY CALLBACKS
+
+		public static function display_meta_box($post) {
+			$force_hide = get_post_meta($post->ID, self::FORCE_HIDE_KEY, true);
+
+			include('views/backend/meta-boxes/meta-box.php');
+		}
 
 		public static function display_meta_box__dashboard($ajax = false) {
 			if($ajax) {
@@ -633,57 +716,6 @@ if(!class_exists('UrtakPlugin')) {
 				self::echo_ajax_loading_action(__FUNCTION__);
 			}
 		}
-
-		public static function display_insights_page() {
-			$is_insights = true;
-			$settings = self::get_settings();
-
-			include('views/backend/misc/header.php');
-
-			if(self::has_credentials()) {
-				include('views/backend/insights/insights.php');
-			} else {
-				include('views/backend/misc/admin-notice.php');
-			}
-
-			include('views/backend/misc/footer.php');
-		}
-
-		public static function display_meta_box($post) {
-			$force_hide = get_post_meta($post->ID, self::FORCE_HIDE_KEY, true);
-
-			include('views/backend/meta-boxes/meta-box.php');
-		}
-
-		public static function display_settings_page() {
-			$data = stripslashes_deep($_REQUEST);
-			$is_settings = true;
-
-			$settings = self::get_settings();
-
-			if(self::has_credentials()) {
-				$publications = self::get_publications();
-			}
-
-			if(self::has_credentials() && isset($settings['credentials']['publication-key'])) {
-				$publication = self::get_publication($settings['credentials']['publication-key']);
-
-				if($publication) {
-					$settings['moderation'] = $publication['moderation'];
-					$settings['default_first_question'] = $publication['default_first_question_text'];
-					$settings['has_first_question'] = empty($settings['default_first_question']) ? 'no' : 'yes';
-				}
-			}
-
-			include('views/backend/misc/header.php');
-
-			include('views/backend/settings/settings.php');
-
-			include('views/backend/misc/footer.php');
-		}
-
-
-		//// META BOX DISPLAY CALLBACKS
 
 		public static function display_meta_box__insights($ajax = false) {
 			if($ajax) {
@@ -1127,9 +1159,32 @@ if(!class_exists('UrtakPlugin')) {
 
 		//// LINKS
 
-		private static function _get_insights_url() {
-			return add_query_arg(array('page' => self::SUB_LEVEL_INSIGHTS_SLUG), admin_url('admin.php'));
+		///// PAGES
+
+		private static function _build_hash($urtak_id, $question_id) {
+			$urtak_id = is_null($urtak_id) || !is_null($urtak_id) ? 0 : intval($urtak_id);
+			$question_id = is_null($question_id) || !is_numeric($question_id) ? 0 : intval($question_id);
+
+			return empty($urtak_id) ? '' : sprintf('#%d-%d', $urtak_id, $question_id);
 		}
+
+		private static function _get_moderation_url($urtak_id = null, $question_id = null) {
+			$url = add_query_arg(array('page' => self::SUB_LEVEL_MODERATION_SLUG), admin_url('admin.php'));
+
+			return ($url . self::_build_hash($urtak_id, $question_id));
+		}
+
+		private static function _get_results_url($urtak_id = null, $question_id = null) {
+			$url = add_query_arg(array('page' => self::SUB_LEVEL_RESULTS_SLUG), admin_url('admin.php'));
+
+			return ($url . self::_build_hash($urtak_id, $question_id));
+		}
+
+		private static function _get_settings_url() {
+			return add_query_arg(array('page' => self::SUB_LEVEL_SETTINGS_SLUG), admin_url('admin.php'));
+		}
+
+		///// USER CREDENTIALS
 
 		private static function _get_login_url() {
 			return add_query_arg(array('action' => 'login'), self::_get_settings_url());
@@ -1138,14 +1193,12 @@ if(!class_exists('UrtakPlugin')) {
 		private static function _get_logout_url() {
 			return add_query_arg(array('action' => 'logout', 'urtak-logout-nonce' => wp_create_nonce('urtak-logout')), self::_get_settings_url());
 		}
-
-		private static function _get_settings_url() {
-			return add_query_arg(array('page' => self::SUB_LEVEL_SETTINGS_SLUG), admin_url('admin.php'));
-		}
-
 		private static function _get_signup_url() {
 			return add_query_arg(array('action' => 'signup'), self::_get_settings_url());
 		}
+
+
+		//// URTAK DATA
 
 		private static function _get_card($question, $post_id, $controls = false, $use_nested_urtak = false) {
 			ob_start();
