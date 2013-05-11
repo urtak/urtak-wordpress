@@ -123,12 +123,10 @@ if(!class_exists('UrtakPlugin')) {
 			add_action('wp_head', array(__CLASS__, 'enqueue_frontend_resources'), 1);
 
 			/// AJAX
-			add_action('wp_ajax_urtak_display_meta_box__dashboard', array(__CLASS__, 'ajax_display_meta_box'));
 			add_action('wp_ajax_urtak_display_meta_box__insights', array(__CLASS__, 'ajax_display_meta_box'));
 			add_action('wp_ajax_urtak_display_meta_box__questions', array(__CLASS__, 'ajax_display_meta_box'));
 			add_action('wp_ajax_urtak_display_meta_box__top_urtaks', array(__CLASS__, 'ajax_display_meta_box'));
 			add_action('wp_ajax_urtak_display_meta_box__stats', array(__CLASS__, 'ajax_display_meta_box'));
-			add_action('wp_ajax_urtak_display_meta_box__posts_without_urtaks', array(__CLASS__, 'ajax_display_meta_box'));
 			add_action('wp_ajax_urtak_get_questions', array(__CLASS__, 'ajax_get_questions'));
 			add_action('wp_ajax_urtak_fetch_responses_counts', array(__CLASS__, 'ajax_fetch_responses_count'));
 			add_action('wp_ajax_nopriv_urtak_fetch_responses_counts', array(__CLASS__, 'ajax_fetch_responses_count'));
@@ -390,7 +388,8 @@ if(!class_exists('UrtakPlugin')) {
 			$new_links = array();
 
 			if(self::has_credentials()) {
-				$new_links[] = $insights_link = sprintf('<a href="%s">%s</a>', self::_get_insights_url(), __('Insights', 'urtak'));
+				$new_links[] = sprintf('<a href="%s">%s</a>', self::_get_moderation_url(), __('Moderation', 'urtak'));
+				$new_links[] = sprintf('<a href="%s">%s</a>', self::_get_results_url(), __('Results', 'urtak'));
 			}
 
 			$new_links[] = $settings_link = sprintf('<a href="%s">%s</a>', self::_get_settings_url(), __('Settings', 'urtak'));
@@ -698,30 +697,6 @@ if(!class_exists('UrtakPlugin')) {
 			include('views/backend/meta-boxes/meta-box.php');
 		}
 
-		public static function display_meta_box__dashboard($ajax = false) {
-			if($ajax) {
-				$publication = self::get_publication(self::get_credentials('publication-key'));
-
-				$days = array();
-				if(!is_wp_error($publication) && isset($publication['statistics'])) {
-					$total_responses = $publication['statistics']['total_responses'];
-					$total_questions = $publication['statistics']['total_urtak_questions'];
-					$total_urtaks = $publication['statistics']['total_urtaks'];
-
-					foreach(array_slice($publication['statistics']['rpd_prev_14d'], -7) as $day_response_datum) {
-						$days[] = array(
-							'responses' => $day_response_datum['responses'],
-							'date' => date('D,<b\r />M j', $day_response_datum['start_time'])
-						);
-					}
-				}
-
-				include('views/backend/dashboard/widget.php');
-			} else {
-				self::echo_ajax_loading_action(__FUNCTION__);
-			}
-		}
-
 		public static function display_meta_box__insights($ajax = false) {
 			if($ajax) {
 				$publication = self::get_publication(self::get_credentials('publication-key'));
@@ -763,17 +738,6 @@ if(!class_exists('UrtakPlugin')) {
 				}
 
 				include('views/backend/insights/meta-boxes/at-a-glance.php');
-			} else {
-				self::echo_ajax_loading_action(__FUNCTION__);
-			}
-		}
-
-		public static function display_meta_box__posts_without_urtaks($ajax = false) {
-			if($ajax) {
-				$post_ids = self::get_nonassociated_post_ids();
-				$posts = new WP_Query(array('nopaging' => true, 'post__in' => $post_ids, 'post_type' => self::get_settings('post-types'), 'order' => 'ASC', 'orderby' => 'title'));
-
-				include('views/backend/insights/meta-boxes/posts-without-urtaks.php');
 			} else {
 				self::echo_ajax_loading_action(__FUNCTION__);
 			}
@@ -851,13 +815,6 @@ if(!class_exists('UrtakPlugin')) {
 			return urtak_get_embeddable_widget($atts);
 		}
 
-		/// POST META
-
-		private static function get_nonassociated_post_ids() {
-			global $wpdb;
-
-			return $wpdb->get_col($wpdb->prepare("SELECT ID FROM {$wpdb->posts} WHERE post_type IN ('page', 'post') AND ID NOT IN(SELECT DISTINCT post_id FROM {$wpdb->postmeta} WHERE meta_key = %s AND meta_value = %s)", self::QUESTION_CREATED_KEY, 'yes'));
-		}
 		/// SETTINGS
 
 		private static function get_settings($settings_key = null) {
@@ -868,8 +825,7 @@ if(!class_exists('UrtakPlugin')) {
 				wp_cache_set(self::SETTINGS_KEY, $settings, null, time() + self::CACHE_PERIOD);
 			}
 
-			return is_null($settings_key) ? $settings :
-					(isset($settings[$settings_key]) ? $settings[$settings_key] : false);
+			return is_null($settings_key) ? $settings : (isset($settings[$settings_key]) ? $settings[$settings_key] : false);
 		}
 
 		private static function set_settings($settings) {
