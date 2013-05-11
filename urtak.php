@@ -3,9 +3,69 @@
  Plugin Name: Urtak
  Plugin URI: http://urtak.com/wordpress/
  Description: Conversation powered by questions. Bring simplicity and structure to any online conversation by allowing your users to ask each other questions.
- Version: 1.3.1
+ Version: 2.0.0-BETA1
  Author: Urtak, Inc.
  Author URI: http://urtak.com
+ */
+
+/**
+ * Summarized to-dos for Version 2.0.X
+ * - Remove Urtak > Insights page
+ * - Add Urtak > Moderation page
+ * - Add Urtak > Results page
+ * - Ensure Urtak subpages are in the following order: Moderation, Results, Settings
+ * - Move "At a Glance" chart from the current "Insights" page to the administrative dashboard
+ * -- User should be able to choose from Days, Weeks or Months
+ * - Add "Profanity Filter" setting to the Urtak > Settings page
+ * -- On enabling the "Profanity Filter" setting, a box should show that allows the user to customized the profanity filter
+ * - Create Urtak > Moderation page UI
+ * -- This page will be widely used on larger publications
+ * -- Left 2/3 of page devoted to questions
+ * --- First of two meta boxes contains questions that are pending across all Urtaks in reverse chronological order
+ * ---- Pending Urtaks can be filtered by Urtak
+ * --- Second of two meta boxes contains questions that are flagged for review
+ * ---- Moderator can opt to remove or keep the question - it is removed from the UI and an API call is made to update the question
+ * -- Right 1/3 of page devoted to Urtak listing (which filters the questions on the left)
+ * - Create Urtak > Results page UI
+ * -- Left 1/3 of page devoted to Urtaks
+ * --- Columns in table for Urtaks:
+ * ---- Post title
+ * ---- Number of active questions
+ * ---- Number of responses
+ * ---- Date Urtak created
+ * ---- Link to edit post
+ * ---- Link to view post
+ * ---- Link to moderation page with this Urtak selected (reach)
+ * -- Right 2/3 of page devoted to questions
+ * --- Columns in table for questions:
+ * ---- Question text
+ * ---- Number of responses
+ * ---- Percent yes
+ * ---- Percent no
+ * ---- 100px horizontal bar chart of yes/no percentage
+ * ---- Date asked
+ * ---- Question status
+ * ---- Link to moderation page with question visible (reach)
+ * - Overhaul the edit post Urtak question creation
+ * -- User should see a list/table of questions that have already been asked
+ * -- User should be able to set any question in the list as the first question or unset the first question entirly
+ * -- User should be able to remove questions she does not wanted asked (i.e. reject questions) with a confirmation
+ * -- The meta box should display the number of pending questions with a link to the Urtak > Moderation
+ * --- Ideally, the user should be linked directly to the Urtak/question
+ * -- The meta box should display the number of questions/responses with a link to the "Results" section
+ * --- Ideally, the user should be linked directly to the Urtak/question
+ */
+
+/**
+ * Summarized to-dos for Version 2.1.X
+ * - Add shortcode for insertion into a post
+ * -- If shortcode is used, make sure that Urtak is not auto-inserted or inserted via the template tag
+ * - There should be a publication setting that allows for writers to be notified of new questions asked
+ *   in their Urtaks. If "Publisher Moderation" is selected on the Settings page, this setting would appear
+ *   as a checkbox: "Send writers emails when questions are asked in their Urtaks." This could be a publicaiton
+ *   parameter, `send_pqns_to_authors`.
+ * -- During Urtak creation via the API, an additional parameter could be passed `author_email` and the rest would
+ *    be handled on the Urtak backend.
  */
 
 if(!class_exists('UrtakPlugin')) {
@@ -13,7 +73,7 @@ if(!class_exists('UrtakPlugin')) {
 		/// CONSTANTS
 
 		//// VERSION
-		const VERSION = '1.3.1';
+		const VERSION = '2.0.0-BETA1';
 
 		//// KEYS
 		const SETTINGS_KEY = '_urtak_settings';
