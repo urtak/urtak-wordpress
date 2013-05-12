@@ -37,7 +37,7 @@
 			<!-- ko foreach: questions -->
 			<tr valign="top">
 				<td class="urtak-question-title">
-					<input type="text" class="large-text" data-bind="value: text, visible: !existing()" />
+					<input type="text" class="large-text" data-bind="value: text, visible: !existing()" placeholder="<?php _e('Ask a question', 'urtak'); ?>" />
 
 					<strong data-bind="text: text, visible: existing"></strong>
 

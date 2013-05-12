@@ -253,7 +253,12 @@ if(!class_exists('UrtakPlugin')) {
 
 			extract($attributes);
 
-			self::update_urtak_question($post_id, $question_id, array('question' => array('first_question' => $first_question)));
+			$updated = self::update_urtak_question($post_id, $question_id, array('question' => array('first_question' => $first_question)));
+
+			error_log(print_r($updated, true));
+
+			echo json_encode($updated);
+			exit;
 		}
 
 		public static function ajax_modify_question_status() {

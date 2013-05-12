@@ -281,6 +281,20 @@ var UrtakQuestionVM = function(question) {
 	self.toggle_first = function(is_first) {
 		if(is_first != self.first_question()) {
 			// Send request to backend and then update local status
+			jQuery.get(
+				ajaxurl,
+				{
+					action: 'urtak_modify_question_first',
+					first_question: is_first,
+					post_id: self.post_id,
+					question_id: self.id
+				},
+				function(data, status) {
+					console.log(data);
+				},
+				'json'
+			);
+
 
 			self.first_question(is_first);
 		}
@@ -294,7 +308,7 @@ var UrtakQuestionVM = function(question) {
 	self.post_id = question.post_id;
 	self.responses = question.responses || { counts: { total: 0 } };
 	self.status = ko.observable(question.status || 'pending');
-	self.text = ko.observable(question.text || 'Enter your question');
+	self.text = ko.observable(question.text || '');
 	self.user_generated = question.user_generated || false;
 
 	self.existing = ko.computed(function() {
