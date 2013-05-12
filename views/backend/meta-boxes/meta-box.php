@@ -1,3 +1,5 @@
+<h4><?php _e('Content Controls'); ?></h4>
+
 <table class="form-table">
 	<tbody>
 		<tr valign="top">
@@ -15,6 +17,31 @@
 </table>
 
 <div class="urtak-questions-editor">
+	<div data-bind="visible: has_urtak">
+		<h4><?php _e('Quick Stats'); ?></h4>
+
+		<table class="form-table">
+			<tbody>
+				<tr valign="top">
+					<th scope="row"><?php _e('Pending Questions', 'urtak'); ?></th>
+					<td>
+						<a href="<?php esc_attr_e(esc_url($moderation_url)); ?>" target="_blank" data-bind="text: pending_questions_count"></a>
+					</td>
+				</tr>
+
+				<tr valign="top">
+					<th scope="row"><?php _e('Responses', 'urtak'); ?></th>
+					<td>
+						<a href="<?php esc_attr_e(esc_url($results_url)); ?>" target="_blank" data-bind="text: responses_count"></a>
+					</td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+
+
+	<h4><?php _e('Questions'); ?></h4>
+
 	<table class="fixed widefat">
 		<thead>
 			<tr valign="top">
@@ -43,12 +70,12 @@
 
 					<div class="row-actions">
 						<span data-bind="visible: first_question">
-							<a href="#" data-bind="click: $parent.unset_first"><?php _e('Unset as First'); ?></a>
+							<a href="#" data-bind="click: $parent.unset_first"><?php _e('Unset as First Question'); ?></a>
 							|
 						</span>
 
 						<span data-bind="visible: not_first_question">
-							<a href="#" data-bind="click: $parent.set_first"><?php _e('Set as First'); ?></a>
+							<a href="#" data-bind="click: $parent.set_first"><?php _e('Set as First Question'); ?></a>
 							|
 						</span>
 

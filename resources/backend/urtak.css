@@ -79,7 +79,7 @@ div.urtak-error .globe {
 }
 
 .urtak-inner-wrap {
-	margin: 0 38px;
+
 }
 
 .urtak-inner-wrap-settings {
@@ -437,4 +437,42 @@ div.urtak-error .globe {
 
 .urtak-question-responses {
 	width: 25%;
+}
+
+/** Moderation Page **/
+.urtak-moderation-left {
+	float: left;
+	width: 60%;
+}
+
+.urtak-moderation-left-inner {
+	padding-right: 20px;
+}
+
+.urtak-moderation-right {
+	float: left;
+	width: 40%;
+}
+
+.urtak-moderation-right-inner {
+
+}
+
+/** Results Page **/
+.urtak-results-left {
+	float: left;
+	width: 40%;
+}
+
+.urtak-results-left-inner {
+
+}
+
+.urtak-results-right {
+	float: left;
+	width: 60%;
+}
+
+.urtak-results-right-inner {
+	padding-left: 20px;
 }

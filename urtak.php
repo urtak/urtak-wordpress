@@ -68,6 +68,12 @@
  *    be handled on the Urtak backend.
  */
 
+/*
+ * To do later:
+ * - Paginate the Urtaks per page
+ * - Unset first question? Does the API call not work?
+ */
+
 if(!class_exists('UrtakPlugin')) {
 	class UrtakPlugin {
 		/// CONSTANTS
@@ -128,6 +134,7 @@ if(!class_exists('UrtakPlugin')) {
 			add_action('wp_ajax_urtak_display_meta_box__top_urtaks', array(__CLASS__, 'ajax_display_meta_box'));
 			add_action('wp_ajax_urtak_display_meta_box__stats', array(__CLASS__, 'ajax_display_meta_box'));
 			add_action('wp_ajax_urtak_get_questions', array(__CLASS__, 'ajax_get_questions'));
+			add_action('wp_ajax_urtak_get_urtak', array(__CLASS__, 'ajax_get_urtak'));
 			add_action('wp_ajax_urtak_fetch_responses_counts', array(__CLASS__, 'ajax_fetch_responses_count'));
 			add_action('wp_ajax_nopriv_urtak_fetch_responses_counts', array(__CLASS__, 'ajax_fetch_responses_count'));
 			add_action('wp_ajax_urtak_modify_question_first', array(__CLASS__, 'ajax_modify_question_first'));
@@ -241,6 +248,25 @@ if(!class_exists('UrtakPlugin')) {
 			exit;
 		}
 
+		public static function ajax_get_urtak() {
+			$data = stripslashes_deep($_REQUEST);
+			$atts = shortcode_atts(array(
+				'post_id' => 0,
+			), $data);
+
+			extract($atts);
+
+			$urtak = self::get_urtak($post_id);
+
+			if($urtak) {
+				$data = $urtak;
+			} else {
+				$data = array('error' => true, 'error_message' => __('There is no Urtak for this post.'));
+			}
+
+			echo json_encode($data);
+			exit;
+		}
 
 		public static function ajax_modify_question_first() {
 			$data = stripslashes_deep($_REQUEST);
@@ -253,9 +279,9 @@ if(!class_exists('UrtakPlugin')) {
 
 			extract($attributes);
 
-			$updated = self::update_urtak_question($post_id, $question_id, array('question' => array('first_question' => $first_question)));
+			$first_question = 'false' !== $first_question;
 
-			error_log(print_r($updated, true));
+			$updated = self::update_urtak_question($post_id, $question_id, array('question' => array('first_question' => $first_question)));
 
 			echo json_encode($updated);
 			exit;
@@ -693,6 +719,7 @@ if(!class_exists('UrtakPlugin')) {
 		public static function display_meta_box($post) {
 			$force_hide = get_post_meta($post->ID, self::FORCE_HIDE_KEY, true);
 			$moderation_url = self::_get_moderation_url($post->ID);
+			$results_url = self::_get_results_url($post->ID);
 
 			include('views/backend/meta-boxes/meta-box.php');
 		}
@@ -1112,7 +1139,7 @@ if(!class_exists('UrtakPlugin')) {
 		///// PAGES
 
 		private static function _build_hash($urtak_id, $question_id) {
-			$urtak_id = is_null($urtak_id) || !is_null($urtak_id) ? 0 : intval($urtak_id);
+			$urtak_id = is_null($urtak_id) || !is_numeric($urtak_id) ? 0 : intval($urtak_id);
 			$question_id = is_null($question_id) || !is_numeric($question_id) ? 0 : intval($question_id);
 
 			return empty($urtak_id) ? '' : sprintf('#%d-%d', $urtak_id, $question_id);
