@@ -488,7 +488,7 @@ if(!class_exists('UrtakPlugin')) {
 			$settings['width'] = is_int($settings['width']) && $settings['width'] < 280 ? 280 : $settings['width'];
 
 			$settings['blacklisting'] = pd_yes_no($settings['blacklisting']);
-			$settings['blacklist_override'] = pd_yes_no($settings['blacklisting']);
+			$settings['blacklist_override'] = pd_yes_no($settings['blacklist_override']);
 
 			$publication_fields = $settings['publication'];
 			unset($settings['publication']);
