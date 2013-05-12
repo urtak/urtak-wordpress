@@ -1,3 +1,19 @@
+<table class="form-table">
+	<tbody>
+		<tr valign="top">
+			<th scope="row"><label for="urtak-force-hide-urtak"><?php _e('Hide Urtak'); ?></label></th>
+			<td>
+				<input type="hidden" name="urtak-force-hide-urtak" value="no" />
+
+				<label>
+					<input <?php checked($force_hide, 'yes'); ?> type="checkbox" name="urtak-force-hide-urtak" id="urtak-force-hide-urtak" value="yes" />
+					<?php _e('The Urtak for this content should not show', 'urtak'); ?>
+				</label>
+			</td>
+		</tr>
+	</tbody>
+</table>
+
 <div class="urtak-questions-editor">
 	<table class="fixed widefat">
 		<thead>
@@ -10,11 +26,11 @@
 			</tr>
 		</thead>
 		<tbody>
-			<tr class="urtak-centered" data-bind="visible: loading" valign="top">
+			<tr data-bind="visible: loading" valign="top">
 				<td colspan="2">Loading</td>
 			</tr>
 
-			<tr class="urtak-centered" data-bind="visible: no_questions" valign="top">
+			<tr data-bind="visible: no_questions" valign="top">
 				<td colspan="2"><?php _e('No questions found. <a href="#" data-bind="click: add_question">Add one now!</a>'); ?></td>
 			</tr>
 
@@ -23,7 +39,7 @@
 				<td class="urtak-question-title">
 					<input type="text" class="large-text" data-bind="value: text, visible: !existing()" />
 
-					<strong data-bind="text: text, visible: existing">Do you like to play video games?</strong>
+					<strong data-bind="text: text, visible: existing"></strong>
 
 					<div class="row-actions">
 						<span data-bind="visible: first_question">

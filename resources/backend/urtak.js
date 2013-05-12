@@ -146,6 +146,8 @@ jQuery(document).ready(function($) {
 
 		ko.applyBindings(window.questions_vm, $editor.get(0));
 
+		window.questions_vm.fetch_questions();
+
 		$editor.parents('form').submit(function(event) {
 			$editor.find('#urtak-serialized').val(ko.toJSON(window.questions_vm));
 		});
@@ -170,6 +172,9 @@ jQuery(document).ready(function($) {
 var UrtakQuestionsVM = function(post_id) {
 	var self = this;
 
+	self.page = ko.observable(1);
+	self.pages = ko.observable(1);
+	self.per_page = ko.observable(100);
 	self.post_id = ko.observable(post_id);
 	self.loading = ko.observable(false);
 	self.questions = ko.observableArray();
@@ -182,7 +187,9 @@ var UrtakQuestionsVM = function(post_id) {
 	})
 
 	self.add_question = function(question) {
-		self.questions.push(new UrtakQuestionVM(question));
+		question.post_id = self.post_id;
+
+		self.questions.unshift(new UrtakQuestionVM(question));
 	};
 
 	self.add_new_question = function() {
@@ -208,6 +215,30 @@ var UrtakQuestionsVM = function(post_id) {
 			question.toggle_first(false);
 		});
 	};
+
+	self.fetch_questions = function() {
+		self.loading(true);
+
+		jQuery.get(
+			ajaxurl,
+			{
+				action: 'urtak_get_questions',
+				page: self.page(),
+				per_page: self.per_page(),
+				post_id: self.post_id
+			},
+			function(data, status) {
+				self.pages(data.questions.pages);
+
+				ko.utils.arrayForEach(data.questions.question, function(question) {
+					self.add_question(question);
+				});
+
+				self.loading(false);
+			},
+			'json'
+		);
+	};
 };
 
 var UrtakUrtakVM = function(urtak) {
@@ -219,8 +250,19 @@ var UrtakQuestionVM = function(question) {
 
 	self.change_status = function(status) {
 		if(self.existing()) {
-			// Send request to backend if not new
-
+			jQuery.get(
+				ajaxurl,
+				{
+					action: 'urtak_modify_question_status',
+					post_id: self.post_id,
+					question_id: self.id,
+					status: status
+				},
+				function(data, status) {
+					console.log(data);
+				},
+				'json'
+			);
 		}
 	};
 
@@ -244,11 +286,12 @@ var UrtakQuestionVM = function(question) {
 		}
 	};
 
-	self.first_question = ko.observable(false);
+	self.first_question = ko.observable(question.first_question || false);
 	self.not_first_question = ko.computed(function() { return !self.first_question(); });
 
 	self.created_at = question.created_at || Math.round(new Date().getTime() / 1000);
 	self.id = question.id || 0;
+	self.post_id = question.post_id;
 	self.responses = question.responses || { counts: { total: 0 } };
 	self.status = ko.observable(question.status || 'pending');
 	self.text = ko.observable(question.text || 'Enter your question');

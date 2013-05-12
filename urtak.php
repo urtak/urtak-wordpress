@@ -208,7 +208,15 @@ if(!class_exists('UrtakPlugin')) {
 
 		public static function ajax_get_questions() {
 			$data = stripslashes_deep($_REQUEST);
-			$atts = shortcode_atts(array('page' => 1, 'per_page' => 10, 'order' => 'time|DESC', 'show' => 'all', 'search' => '', 'post_id' => 0, 'default_question' => 0), $data);
+			$atts = shortcode_atts(array(
+				'page' => 1,
+				'per_page' => 100,
+				'order' => 'time|DESC',
+				'show' => 'st|aa',
+				'search' => '',
+				'post_id' => 0,
+				'default_question' => 0
+			), $data);
 
 			extract($atts);
 			if(empty($post_id)) {
@@ -225,21 +233,7 @@ if(!class_exists('UrtakPlugin')) {
 						update_post_meta($post_id, self::QUESTION_CREATED_KEY, 'yes');
 					}
 
-					$cards = '';
-					foreach($questions_response['questions']['question'] as $question) {
-						$cards .= self::_get_card($question, $post_id, true);
-					}
-
-					$pager = self::_get_pager($page, $questions_response['questions']['pages']);
-
-					$default_first_question_text = '';
-					if($default_question && empty($cards)) {
-						$publication = self::get_publication(self::get_credentials('publication-key'));
-
-						$default_first_question_text = $publication['default_first_question_text'];
-					}
-
-					$data = compact('pager', 'cards', 'default_first_question_text');
+					$data = $questions_response;
 				}
 			}
 
@@ -251,28 +245,32 @@ if(!class_exists('UrtakPlugin')) {
 		public static function ajax_modify_question_first() {
 			$data = stripslashes_deep($_REQUEST);
 
-			$first_question = 1 == $data['first_question'];
+			$attributes = shortcode_atts(array(
+				'first_question' => false,
+				'post_id' => 0,
+				'question_id' => 0,
+			), $data);
 
-			self::update_urtak_question($data['post_id'], $data['question_id'], array('question' => array('first_question' => $first_question)));
+			extract($attributes);
+
+			self::update_urtak_question($post_id, $question_id, array('question' => array('first_question' => $first_question)));
 		}
 
 		public static function ajax_modify_question_status() {
 			$data = stripslashes_deep($_REQUEST);
 
-			$approved_questions = array();
-			$questions = (array)$data['questions'];
+			$attributes = shortcode_atts(array(
+				'post_id' => 0,
+				'question_id' => 0,
+				'status' => 'approve',
+			), $data);
 
-			$updated = array();
-			foreach($questions as $question) {
-				if('approve' === $question['action']) {
-					$approved_questions[] = $question['post_id'];
-				}
+			extract($attributes);
 
-				$updated[$question['question_id']] = self::update_urtak_question($question['post_id'], $question['question_id'], array('question' => array('state_status_admin_event' => $question['action'])));
-			}
+			$updated = self::update_urtak_question($post_id, $question_id, array('question' => array('state_status_admin_event' => $status)));
 
-			foreach(array_unique($approved_questions) as $approved_question_post_id) {
-				update_post_meta($approved_question_post_id, self::QUESTION_CREATED_KEY, 'yes');
+			if('approve' === $status) {
+				update_post_meta($post_id, self::QUESTION_CREATED_KEY, 'yes');
 			}
 
 			echo json_encode($updated);
@@ -562,7 +560,7 @@ if(!class_exists('UrtakPlugin')) {
 		    );
 
 		    $urtak_data = json_decode($data['urtak-serialized'], true);
-		    $questions = isset($urtak_data['questions']) && is_array($urtak_data['question']) ? $urtak_data['questions'] : array();
+		    $questions = isset($urtak_data['questions']) && is_array($urtak_data['questions']) ? $urtak_data['questions'] : array();
 
 		    $new = array();
 		    foreach($questions as $question) {
@@ -574,38 +572,21 @@ if(!class_exists('UrtakPlugin')) {
 		    	}
 		    }
 
-		    error_log(print_r($new, true));
-
-		    return;
-
-
-		    $question_texts = array();
-		    $new_questions = array();
-		    foreach((array)$data['urtak']['question']['text'] as $key => $question_text) {
-		    	if(!empty($question_text) && !in_array($question_text, $question_texts)) {
-			    	$new_questions[] = array(
-			    		'text' => $question_text,
-			    		'first_question' => 1 == $data['urtak']['question']['first_question'][$key] ? '1' : '0',
-			    	);
-			    	$question_texts[] = $question_text;
-		    	}
-		    }
-
 			$urtak = self::get_urtak($post_id);
 			if(empty($urtak)) {
-				$urtak = self::create_urtak($args, $new_questions);
-				if($urtak && isset($urtak['id']) && !empty($urtak['id']) && !empty($new_questions)) {
+				$urtak = self::create_urtak($args, $new);
+				if($urtak && isset($urtak['id']) && !empty($urtak['id']) && !empty($new)) {
 					update_post_meta($post_id, self::QUESTION_CREATED_KEY, 'yes');
 				}
 			} else {
-				$urtak = self::update_urtak($args, $new_questions);
-				if($urtak && !empty($new_questions)) {
+				$urtak = self::update_urtak($args, $new);
+				if($urtak && !empty($new)) {
 					update_post_meta($post_id, self::QUESTION_CREATED_KEY, 'yes');
 				}
 			}
 
 			if(false === $urtak) {
-				set_transient('urtak_failed_update_' . $post_id, array($new_questions), 30);
+				set_transient('urtak_failed_update_' . $post_id, array($new), 30);
 			}
 
 			if(isset($data['urtak-force-hide-urtak']) && 'yes' === $data['urtak-force-hide-urtak']) {
@@ -1047,13 +1028,9 @@ if(!class_exists('UrtakPlugin')) {
 		private static function update_urtak_question($post_id, $question_id, $options = array(), $urtak = null) {
 			$urtak_api = self::get_urtak_api($urtak_api);
 
-			$updated = false;
 			$update_response = $urtak_api->update_urtak_question('post_id', $post_id, $question_id, $options);
-			if($update_response->success()) {
-				$updated = true;
-			}
 
-			return $updated;
+			return $update_response->success() ? $update_response->body['question'] : false;
 		}
 
 
