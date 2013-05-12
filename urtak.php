@@ -494,59 +494,47 @@ if(!class_exists('UrtakPlugin')) {
 			unset($settings['publication']);
 			$publication_data = json_decode($publication_fields['publication-data'], true);
 
+			$publication_attributes = array(
+				'blacklisting' => 'yes' === $settings['blacklisting'],
+				'blacklist_override' => 'yes' === $settings['blacklist_override'],
+				'blacklist_words' => 'yes' === $settings['blacklist_override'] ? $settings['blacklist_words'] : '',
+				'default_first_question_text' => $settings['default_first_question'],
+				'email' => $settings['credentials']['email'],
+				'moderation' => $settings['moderation'],
+			);
+
 			if(!empty($settings['credentials']['api-key']) && !empty($settings['credentials']['email'])) {
 				$urtak_api = new WordPressUrtak(array('api_key' => $settings['credentials']['api-key'], 'email' => $settings['credentials']['email']));
 
 				if(empty($settings['credentials']['publication-key'])) {
-					$host = parse_url(home_url('/'), PHP_URL_HOST);
-					$name = get_bloginfo('name');
+					$publication_attributes['domains'] = parse_url(home_url('/'), PHP_URL_HOST);
+					$publication_attributes['name'] = get_bloginfo('name');
 
-					$publication = self::create_or_get_publication_for_host(
-											$name,
-											$host,
-											$settings['default_first_question'],
-											$settings['moderation'],
-											$settings['credentials']['email'],
-											$urtak_api);
+					$publication = self::create_or_get_publication_for_host($publication_attributes, $urtak_api);
 
-					if($publication && isset($publication['key']) && !empty($publication['key'])) {
-						$settings['credentials']['publication-key'] = $publication['key'];
-					}
+					$settings['credentials']['publication-key'] = ($publication && isset($publication['key']) && !empty($publication['key'])) ? $publication['key'] : '';
 				} else if(-1 == $settings['credentials']['publication-key']) {
 					// Let's create a new site
-					$name = $publication_fields['name'];
-					$host = empty($publication_fields['domains']) ? parse_url(home_url('/'), PHP_URL_HOST) : $publication_fields['domains'];
+					$publication_attributes['domains'] = empty($publication_fields['domains']) ? parse_url(home_url('/'), PHP_URL_HOST) : $publication_fields['domains'];
+					$publication_attributes['name'] = $publication_fields['name'];
 
-					$publication = self::create_publication(
-											$name,
-											$host,
-											$settings['default_first_question'],
-											$settings['moderation'],
-											$settings['credentials']['email'],
-											$urtak_api);
+					$publication = self::create_publication($publication_attributes, $urtak_api);
 
-					if($publication && isset($publication['key']) && !empty($publication['key'])) {
-						$settings['credentials']['publication-key'] = $publication['key'];
-					} else {
-						$settings['credentials']['publication-key'] = '';
-					}
+					$settings['credentials']['publication-key'] = ($publication && isset($publication['key']) && !empty($publication['key'])) ? $publication['key'] : '';
 				} else {
 					$name = '';
+
 					foreach($publication_data as $existing_publication) {
 						if($settings['credentials']['publication-key'] == $existing_publication['key']) {
 							$name = $existing_publication['name'];
 						}
 					}
 
-					$host = empty($publication_fields['domains']) ? parse_url(home_url('/'), PHP_URL_HOST) : $publication_fields['domains'];
+					$publication_attributes['key'] = $settings['credentials']['publication-key'];
+					$publication_attributes['domains'] = empty($publication_fields['domains']) ? parse_url(home_url('/'), PHP_URL_HOST) : $publication_fields['domains'];
+					$publication_attributes['name'] = $name;
 
-					$publication = self::update_publication(
-											$name,
-											$host,
-											$settings['default_first_question'],
-											$settings['moderation'],
-											$settings['credentials']['publication-key'],
-											$urtak_api);
+					$publication = self::update_publication($publication_attributes, $urtak_api);
 				}
 			}
 
@@ -678,6 +666,9 @@ if(!class_exists('UrtakPlugin')) {
 					$settings['moderation'] = $publication['moderation'];
 					$settings['default_first_question'] = $publication['default_first_question_text'];
 					$settings['has_first_question'] = empty($settings['default_first_question']) ? 'no' : 'yes';
+					$settings['blacklisting'] = isset($publication['blacklisting']) ? ($publication['blacklisting'] ? 'yes' : 'no') : 'no';
+					$settings['blacklist_override'] = isset($publication['blacklist_override']) ? ($publication['blacklist_override'] ? 'yes' : 'no') : 'no';
+					$settings['blacklist_words'] = isset($publication['blacklist_words']) ? $publication['blacklist_words'] : '';
 				}
 			}
 
@@ -885,52 +876,54 @@ if(!class_exists('UrtakPlugin')) {
 
 		//// Publications
 
-		private static function create_or_get_publication_for_host($name, $host, $default_first_question, $moderation, $email, $urtak_api = null) {
+		private static function _normalize_publication_attributes($publication_attributes) {
+			return shortcode_atts(array(
+				'blacklisting' => false,
+				'blacklist_override' => false,
+				'blacklist_words' => '',
+				'default_first_question_text' => '',
+				'domains' => '',
+				'moderation' => 'community',
+				'name' => '',
+				'platform' => 'wordpress',
+				'theme' => 15,
+			), $publication_attributes);
+		}
+
+		private static function create_or_get_publication_for_host($publication_attributes, $urtak_api = null) {
 			$publications = self::get_publications($urtak_api);
+
+			$publication_attributes = self::_normalize_publication_attributes($publication_attributes);
 
 			foreach($publications as $publication) {
 				foreach($publication['hosts'] as $phost) {
-					if($host === $phost['host']) {
+					if($publication_attributes['domains'] === $phost['domains']) {
 						return $publication;
 					}
 				}
 			}
 
-			// There wasn't an existing item, so we need to create one
-			return self::create_publication($name, $host, $default_first_question, $moderation, $email, $urtak_api);
+			return self::create_publication($publication_attributes, $urtak_api);
 		}
 
-		private static function create_publication($name, $host, $default_first_question, $moderation, $email, $urtak_api = null) {
+		private static function create_publication($publication_attributes, $urtak_api = null) {
 			$urtak_api = self::get_urtak_api($urtak_api);
 
-			$publication_args = array(
-			    'domains'    => $host,
-			    'name'       => $name,
-			    'platform'   => 'wordpress',
-			    'moderation' => $moderation,
-			    'default_first_question_text' => $default_first_question,
-			    'theme'      => 15
-			);
-			$create_response = $urtak_api->create_publication('email', $email, $publication_args);
+			$email = isset($publication_attributes['email']) ? $publication_attributes['email'] : '';
 
-			$publication = false;
-			if($create_response->success()) {
-				$publication = $create_response->body['publication'];
-			}
+			$publication_attributes = self::_normalize_publication_attributes($publication_attributes);
 
-			return $publication;
+			$create_response = $urtak_api->create_publication('email', $email, $publication_attributes);
+
+			return $create_response->success() ? $create_response->body['publication'] : false;
 		}
 
 		private static function get_publication($key, $urtak_api = null) {
 			$urtak_api = self::get_urtak_api($urtak_api);
 
-			$publication = false;
 			$publication_response = $urtak_api->get_publication($key);
-			if($publication_response->success()) {
-				$publication = $publication_response->body['publication'];
-			}
 
-			return $publication;
+			return $publication_response->success() ? $publication_response->body['publication'] : false;
 		}
 
 		private static function get_publications($urtak_api = null) {
@@ -954,25 +947,16 @@ if(!class_exists('UrtakPlugin')) {
 			return $publications;
 		}
 
-		private static function update_publication($name, $host, $default_first_question, $moderation, $key, $urtak_api = null) {
+		private static function update_publication($publication_attributes, $urtak_api = null) {
 			$urtak_api = self::get_urtak_api($urtak_api);
 
-			$publication_args = array(
-				'domains' => $host,
-				// 'name' => $name,
-				'platform' => 'wordpress',
-				'moderation' => $moderation,
-				'default_first_question_text' => $default_first_question,
-				'theme' => 15
-			);
-			$update_response = $urtak_api->update_publication($key, $publication_args);
+			$key = isset($publication_attributes['key']) ? $publication_attributes['key'] : '';
 
-			$publication = false;
-			if($update_response->success()) {
-				$publication = true;
-			}
+			$publication_attributes = self::_normalize_publication_attributes($publication_attributes);
 
-			return $publication;
+			$update_response = $urtak_api->update_publication($key, $publication_attributes);
+
+			return $update_response->success();
 		}
 
 		//// Questions

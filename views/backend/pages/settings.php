@@ -328,6 +328,8 @@
 					</label>
 				</div>
 
+				<?php if('yes' === $settings['blacklisting']) { ?>
+
 				<div class="urtak-checkbox-container urtak-blacklisting-dependent">
 					<input type="hidden" name="urtak[blacklist_override]" id="urtak-blacklist_override-hidden" value="no" />
 					<label class="urtak-checkbox">
@@ -340,6 +342,8 @@
 				<div class="urtak-checkbox-container urtak-blacklist_override-dependent">
 					<textarea rows="5" class="code large-text" name="urtak[blacklist_words]" id="urtak-blacklist_words"><?php esc_html_e($settings['blacklist_words']); ?></textarea>
 				</div>
+
+				<?php } ?>
 			</div>
 
 		</div>
