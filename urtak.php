@@ -418,11 +418,14 @@ if(!class_exists('UrtakPlugin')) {
 			wp_enqueue_script('jquery-flot', plugins_url('resources/backend/flot/jquery.flot.min.js', __FILE__), array('jquery'));
 			wp_enqueue_script('jquery-flot-barnumbers', plugins_url('resources/backend/jquery.flot.barnumbers.js', __FILE__), array('jquery-flot'));
 
-			wp_enqueue_script('urtak-backend', plugins_url('resources/backend/urtak.js', __FILE__), array('jquery', 'postbox', 'jquery-flot', 'jquery-flot-barnumbers'), self::VERSION);
+			wp_enqueue_script('knockout', plugins_url('resources/backend/knockout/knockout.js', __FILE__), array(), '2.2.1');
+
+			wp_enqueue_script('urtak-backend', plugins_url('resources/backend/urtak.js', __FILE__), array('jquery', 'postbox', 'jquery-flot', 'jquery-flot-barnumbers', 'knockout'), self::VERSION);
 			wp_localize_script('urtak-backend', 'Urtak_Vars', array(
 				'see_all' => __('See all...', 'urtak'),
 				'help_close' => __('Close', 'urtak'),
-				'help_text' => __('Help', 'urtak')
+				'help_text' => __('Help', 'urtak'),
+				'remove_question' => __('Are you sure you want to remove this question?', 'urtak'),
 			));
 
 			add_action('admin_print_footer_scripts', array(__CLASS__, 'print_excanvas_script'));
@@ -543,6 +546,7 @@ if(!class_exists('UrtakPlugin')) {
 
 		public static function save_post_meta($post_id, $post) {
 			$data = stripslashes_deep($_POST);
+
 			if(wp_is_post_autosave($post_id) || wp_is_post_revision($post_id) || !wp_verify_nonce($data['save-urtak-meta-nonce'], 'save-urtak-meta')) {
 				return;
 			}
@@ -552,10 +556,28 @@ if(!class_exists('UrtakPlugin')) {
 			}
 
 		    $args = array(
-		      'post_id'     => $post_id,
-		      'permalink'   => get_permalink($post_id),
-		      'title'       => $post->post_title,
+		      'post_id' => $post_id,
+		      'permalink' => get_permalink($post_id),
+		      'title' => $post->post_title,
 		    );
+
+		    $urtak_data = json_decode($data['urtak-serialized'], true);
+		    $questions = isset($urtak_data['questions']) && is_array($urtak_data['question']) ? $urtak_data['questions'] : array();
+
+		    $new = array();
+		    foreach($questions as $question) {
+		    	if(!$question['existing']) {
+		    		$new[] = array(
+		    			'first_question' => $question['first_question'] ? 1 : 0,
+		    			'text' => $question['text'],
+		    		);
+		    	}
+		    }
+
+		    error_log(print_r($new, true));
+
+		    return;
+
 
 		    $question_texts = array();
 		    $new_questions = array();
@@ -684,6 +706,7 @@ if(!class_exists('UrtakPlugin')) {
 
 		public static function display_meta_box($post) {
 			$force_hide = get_post_meta($post->ID, self::FORCE_HIDE_KEY, true);
+			$moderation_url = self::_get_moderation_url($post->ID);
 
 			include('views/backend/meta-boxes/meta-box.php');
 		}
