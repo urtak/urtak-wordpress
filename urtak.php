@@ -135,6 +135,7 @@ if(!class_exists('UrtakPlugin')) {
 			add_action('wp_ajax_urtak_display_meta_box__stats', array(__CLASS__, 'ajax_display_meta_box'));
 			add_action('wp_ajax_urtak_get_questions', array(__CLASS__, 'ajax_get_questions'));
 			add_action('wp_ajax_urtak_get_urtak', array(__CLASS__, 'ajax_get_urtak'));
+			add_action('wp_ajax_urtak_get_urtaks', array(__CLASS__, 'ajax_get_urtaks'));
 			add_action('wp_ajax_urtak_fetch_responses_counts', array(__CLASS__, 'ajax_fetch_responses_count'));
 			add_action('wp_ajax_nopriv_urtak_fetch_responses_counts', array(__CLASS__, 'ajax_fetch_responses_count'));
 			add_action('wp_ajax_urtak_modify_question_first', array(__CLASS__, 'ajax_modify_question_first'));
@@ -226,21 +227,30 @@ if(!class_exists('UrtakPlugin')) {
 			), $data);
 
 			extract($atts);
+
+			$questions_response = false;
 			if(empty($post_id)) {
-				$data = array('error' => true, 'error_message' => __('No post id was provided so the appropriate questions could not be retrieved.', 'urtak'));
+				$questions_response = self::get_publication_questions_response($page, $per_page, $order, $show, $search);
+				error_log(print_r($questions_response, true));
 			} else {
 				$questions_response = self::get_questions_response($page, $per_page, $order, $show, $search, $post_id);
+			}
 
-				if(false === $questions_response) {
-					$data = array('error' => true, 'error_message' => __('The questions for the Urtak related to this post could not be retrieved. Please try again later.', 'urtak'));
-				} else {
+			if(false === $questions_response) {
+				$data = array('error' => true, 'error_message' => __('Questions could not be retrieved.', 'urtak'));
+			} else {
+				if($post_id) {
 					if('st|ap' === $show && empty($search) && empty($questions_response['questions']['question'])) {
 						delete_post_meta($post_id, self::QUESTION_CREATED_KEY);
 					} else if('st|ap' === $show && !empty($questions_response['questions']['question'])) {
 						update_post_meta($post_id, self::QUESTION_CREATED_KEY, 'yes');
 					}
+				}
 
-					$data = $questions_response;
+				$data = $questions_response;
+
+				foreach($data['questions']['question'] as $key => $question) {
+					$data['questions']['question'][$key]['nicedate'] =date(get_option('date_format') . ' \a\t ' . get_option('time_format'), $question['created_at']);
 				}
 			}
 
@@ -262,6 +272,32 @@ if(!class_exists('UrtakPlugin')) {
 				$data = $urtak;
 			} else {
 				$data = array('error' => true, 'error_message' => __('There is no Urtak for this post.'));
+			}
+
+			echo json_encode($data);
+			exit;
+		}
+
+		public static function ajax_get_urtaks() {
+			$data = stripslashes_deep($_REQUEST);
+			$atts = shortcode_atts(array(), $data);
+
+			extract($atts);
+
+			$urtaks = self::get_urtaks($atts);
+
+			if($urtaks) {
+				$data = $urtaks;
+
+				foreach($data as $key => $urtak) {
+					$data[$key]['editlink'] = get_edit_post_link($urtak['post_id'], 'raw');
+					$data[$key]['edittitle'] = get_the_title($urtak['post_id']);
+					$data[$key]['moderatelink'] = self::_get_moderation_url($urtak['post_id']);
+					$data[$key]['viewlink'] = get_permalink($urtak['post_id']);
+					$data[$key]['nicedate'] = date(get_option('date_format') . ' \a\t ' . get_option('time_format'), $urtak['post_created_at']);
+				}
+			} else {
+				$data = array('error' => true, 'error_message' => __('Could not retrieve Urtaks.'));
 			}
 
 			echo json_encode($data);
@@ -1034,14 +1070,14 @@ if(!class_exists('UrtakPlugin')) {
 			return $questions;
 		}
 
-		private static function get_publication_questions_response($page, $per_page, $order, $show, $urtak_api = null) {
+		private static function get_publication_questions_response($page, $per_page, $order, $show, $search = '', $urtak_api = null) {
 			if(empty($per_page)) {
 				$per_page = 10;
 			}
 
 			$urtak_api = self::get_urtak_api($urtak_api);
 
-			$args = array('f' => $show, 'o' => $order, 'page' => $page, 'per_page' => $per_page);
+			$args = array('s' => $search, 'f' => $show, 'o' => $order, 'page' => $page, 'per_page' => $per_page);
 
 			$questions_response = $urtak_api->get_publication_questions($args);
 			if($questions_response->success()) {

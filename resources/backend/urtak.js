@@ -290,10 +290,6 @@ var UrtakQuestionsVM = function(post_id) {
 	};
 };
 
-var UrtakUrtakVM = function(urtak) {
-
-};
-
 var UrtakQuestionVM = function(question) {
 	var self = this;
 
@@ -379,9 +375,13 @@ var UrtakModerationVM = function() {
 var UrtakResultsVM = function(post_id, question_id) {
 	var self = this;
 
-	self.page = ko.observable(1);
-	self.pages = ko.observable(1);
-	self.per_page = ko.observable(15);
+	self.urtaks_page = ko.observable(1);
+	self.urtaks_pages = ko.observable(1);
+	self.urtaks_per_page = ko.observable(20);
+
+	self.questions_page = ko.observable(1);
+	self.questions_pages = ko.observable(1);
+	self.questions_per_page = ko.observable(20);
 
 	self.urtak_search_query = ko.observable('');
 	self.question_search_query
@@ -392,12 +392,11 @@ var UrtakResultsVM = function(post_id, question_id) {
 	self.questions = ko.observableArray();
 	self.add_question = function(question) {
 		self.questions.push(new UrtakQuestionVM(question));
-	}
-
+	};
 
 	self.urtaks = ko.observableArray();
 	self.add_urtak = function(urtak) {
-		self.urtaks.pusH(new UrtakUrtakVM(urtak));
+		self.urtaks.push(urtak);
 	};
 
 	/// AJAX
@@ -407,8 +406,29 @@ var UrtakResultsVM = function(post_id, question_id) {
 	});
 
 	self.fetch_questions = function() {
+		self.questions_loading(true);
 
-	}
+		jQuery.get(
+			ajaxurl,
+			{
+				action: 'urtak_get_questions',
+				post_id: self.post_id()
+			},
+			function(data, status) {
+				self.questions_loading(false);
+
+				if(data.error) {
+
+				} else {
+					console.log(data);
+					for(var i = 0; i < data.questions.length; i++) {
+						self.add_question(data.questions[i]);
+					}
+				}
+			},
+			'json'
+		);
+	};
 
 	/// AJAX
 	self.urtaks_loading = ko.observable(false);
@@ -417,7 +437,27 @@ var UrtakResultsVM = function(post_id, question_id) {
 	});
 
 	self.fetch_urtaks = function() {
+		self.urtaks_loading(true);
 
+		jQuery.get(
+			ajaxurl,
+			{
+				action: 'urtak_get_urtaks',
+				post_id: self.post_id
+			},
+			function(data, status) {
+				self.urtaks_loading(false);
+
+				if(data.error) {
+
+				} else {
+					for(var i = 0; i < data.length; i++) {
+						self.add_urtak(data[i]);
+					}
+				}
+			},
+			'json'
+		);
 	};
 };
 

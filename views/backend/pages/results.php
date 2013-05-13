@@ -33,8 +33,31 @@
 						<td colspan="5"><?php _e('Loading', 'urtak'); ?></td>
 					</tr>
 
-					<!-- ko: foreach urtaks -->
+					<!-- ko foreach: urtaks -->
+					<tr valign="top">
+						<td>
+							<strong><a data-bind="attr: { href: editlink }, text: edittitle" target="_blank"></a></strong>
+							<div class="row-actions">
+								<span class="edit">
+									<a data-bind="attr: { href: editlink }" target="_blank"><?php _e('Edit'); ?></a>
+									|
+								</span>
 
+								<span class="view">
+									<a data-bind="attr: { href: viewlink }" target="_blank"><?php _e('View', 'urtak'); ?></a>
+									|
+								</span>
+
+								<span class="moderate">
+									<a data-bind="attr: { href: moderatelink }" target="_blank"><?php _e('Moderate', 'urtak'); ?></a>
+								</span>
+							</div>
+						</td>
+						<td data-bind="text: approved_questions_count"></td>
+						<td data-bind="text: responses_count"></td>
+						<td data-bind="">###</td>
+						<td data-bind="text: nicedate"></td>
+					</tr>
 					<!-- /ko -->
 				</tbody>
 			</table>
@@ -67,16 +90,22 @@
 				</tfoot>
 
 				<tbody>
-					<tr valign="top">
-						<td colspan="5"><?php _e('No urtaks found', 'urtak'); ?></td>
+					<tr valign="top" data-bind="visible: no_questions_found">
+						<td colspan="5"><?php _e('No questions found', 'urtak'); ?></td>
 					</tr>
 
-					<tr valign="top">
+					<tr valign="top" data-bind="visible: questions_loading">
 						<td colspan="5"><?php _e('Loading', 'urtak'); ?></td>
 					</tr>
 
-					<!-- ko: foreach questions -->
-
+					<!-- ko foreach: questions -->
+					<tr valign="top">
+						<td data-bind="text: text"></td>
+						<td data-bind="text: response_count"></td>
+						<td>BAR CHART</td>
+						<td data-bind="text: nicedate"></td>
+						<td data-bind="text: status"></td>
+					</tr>
 					<!-- /ko -->
 				</tbody>
 			</table>
