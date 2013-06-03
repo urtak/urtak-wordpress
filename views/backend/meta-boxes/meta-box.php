@@ -53,7 +53,7 @@
 				<td colspan="2">Loading</td>
 			</tr>
 
-			<tr data-bind="visible: no_questions && !loading" valign="top">
+			<tr data-bind="visible: no_questions() && !loading()" valign="top">
 				<td colspan="2"><?php _e('No questions found. <a href="#" data-bind="click: add_question">Add one now!</a>'); ?></td>
 			</tr>
 

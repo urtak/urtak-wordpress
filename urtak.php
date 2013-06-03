@@ -183,9 +183,7 @@ if(!class_exists('UrtakPlugin')) {
 
 				// Transform the urtak
 				$urtak = self::get_urtak($post_id);
-				if($urtak) {
-					$data['questions']['urtak'] = $urtak;
-				}
+				$data['questions']['urtak'] = $urtak ? $urtak : false;
 			}
 
 			echo json_encode($data);
