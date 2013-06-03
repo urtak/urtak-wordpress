@@ -3,75 +3,9 @@
  Plugin Name: Urtak
  Plugin URI: http://urtak.com/wordpress/
  Description: Conversation powered by questions. Bring simplicity and structure to any online conversation by allowing your users to ask each other questions.
- Version: 2.0.0-BETA1
+ Version: 2.0.0-RC1
  Author: Urtak, Inc.
  Author URI: http://urtak.com
- */
-
-/**
- * Summarized to-dos for Version 2.0.X
- * - Remove Urtak > Insights page
- * - Add Urtak > Moderation page
- * - Add Urtak > Results page
- * - Ensure Urtak subpages are in the following order: Moderation, Results, Settings
- * - Move "At a Glance" chart from the current "Insights" page to the administrative dashboard
- * -- User should be able to choose from Days, Weeks or Months
- * - Add "Profanity Filter" setting to the Urtak > Settings page
- * -- On enabling the "Profanity Filter" setting, a box should show that allows the user to customized the profanity filter
- * - Create Urtak > Moderation page UI
- * -- This page will be widely used on larger publications
- * -- Left 2/3 of page devoted to questions
- * --- First of two meta boxes contains questions that are pending across all Urtaks in reverse chronological order
- * ---- Pending Urtaks can be filtered by Urtak
- * --- Second of two meta boxes contains questions that are flagged for review
- * ---- Moderator can opt to remove or keep the question - it is removed from the UI and an API call is made to update the question
- * -- Right 1/3 of page devoted to Urtak listing (which filters the questions on the left)
- * - Create Urtak > Results page UI
- * -- Left 1/3 of page devoted to Urtaks
- * --- Columns in table for Urtaks:
- * ---- Post title
- * ---- Number of active questions
- * ---- Number of responses
- * ---- Date Urtak created
- * ---- Link to edit post
- * ---- Link to view post
- * ---- Link to moderation page with this Urtak selected (reach)
- * -- Right 2/3 of page devoted to questions
- * --- Columns in table for questions:
- * ---- Question text
- * ---- Number of responses
- * ---- Percent yes
- * ---- Percent no
- * ---- 100px horizontal bar chart of yes/no percentage
- * ---- Date asked
- * ---- Question status
- * ---- Link to moderation page with question visible (reach)
- * - Overhaul the edit post Urtak question creation
- * -- User should see a list/table of questions that have already been asked
- * -- User should be able to set any question in the list as the first question or unset the first question entirly
- * -- User should be able to remove questions she does not wanted asked (i.e. reject questions) with a confirmation
- * -- The meta box should display the number of pending questions with a link to the Urtak > Moderation
- * --- Ideally, the user should be linked directly to the Urtak/question
- * -- The meta box should display the number of questions/responses with a link to the "Results" section
- * --- Ideally, the user should be linked directly to the Urtak/question
- */
-
-/**
- * Summarized to-dos for Version 2.1.X
- * - Add shortcode for insertion into a post
- * -- If shortcode is used, make sure that Urtak is not auto-inserted or inserted via the template tag
- * - There should be a publication setting that allows for writers to be notified of new questions asked
- *   in their Urtaks. If "Publisher Moderation" is selected on the Settings page, this setting would appear
- *   as a checkbox: "Send writers emails when questions are asked in their Urtaks." This could be a publicaiton
- *   parameter, `send_pqns_to_authors`.
- * -- During Urtak creation via the API, an additional parameter could be passed `author_email` and the rest would
- *    be handled on the Urtak backend.
- */
-
-/*
- * To do later:
- * - Paginate the Urtaks per page
- * - Unset first question? Does the API call not work?
  */
 
 if(!class_exists('UrtakPlugin')) {
@@ -79,7 +13,7 @@ if(!class_exists('UrtakPlugin')) {
 		/// CONSTANTS
 
 		//// VERSION
-		const VERSION = '2.0.0-BETA1';
+		const VERSION = '2.0.0-RC1';
 
 		//// KEYS
 		const SETTINGS_KEY = '_urtak_settings';
@@ -124,7 +58,6 @@ if(!class_exists('UrtakPlugin')) {
 				add_action('wp_dashboard_setup', array(__CLASS__, 'add_dashboard_widget'));
 			}
 
-			add_action('admin_bar_menu', array(__CLASS__, 'add_admin_bar_items'), 35);
 			add_action('init', array(__CLASS__, 'initialize_api_object'));
 			add_action('wp_head', array(__CLASS__, 'enqueue_frontend_resources'), 1);
 
@@ -133,13 +66,20 @@ if(!class_exists('UrtakPlugin')) {
 			add_action('wp_ajax_urtak_display_meta_box__questions', array(__CLASS__, 'ajax_display_meta_box'));
 			add_action('wp_ajax_urtak_display_meta_box__top_urtaks', array(__CLASS__, 'ajax_display_meta_box'));
 			add_action('wp_ajax_urtak_display_meta_box__stats', array(__CLASS__, 'ajax_display_meta_box'));
-			add_action('wp_ajax_urtak_get_questions', array(__CLASS__, 'ajax_get_questions'));
-			add_action('wp_ajax_urtak_get_urtak', array(__CLASS__, 'ajax_get_urtak'));
+
+			//// Post editing meta box support
+			add_action('wp_ajax_urtak_get_post_data', array(__CLASS__, 'ajax_get_post_data'));
+
 			add_action('wp_ajax_urtak_get_urtaks', array(__CLASS__, 'ajax_get_urtaks'));
+
+			// These are needed for the frontend when we are dynamically loading response counts
 			add_action('wp_ajax_urtak_fetch_responses_counts', array(__CLASS__, 'ajax_fetch_responses_count'));
 			add_action('wp_ajax_nopriv_urtak_fetch_responses_counts', array(__CLASS__, 'ajax_fetch_responses_count'));
+
+			// For post edit and moderation page
 			add_action('wp_ajax_urtak_modify_question_first', array(__CLASS__, 'ajax_modify_question_first'));
 			add_action('wp_ajax_urtak_modify_question_status', array(__CLASS__, 'ajax_modify_question_status'));
+			add_action('wp_ajax_urtak_modify_question_flag', array(__CLASS__, 'ajax_modify_question_flag'));
 		}
 
 		private static function add_filters() {
@@ -214,13 +154,14 @@ if(!class_exists('UrtakPlugin')) {
 			exit;
 		}
 
-		public static function ajax_get_questions() {
+		public static function ajax_get_post_data() {
 			$data = stripslashes_deep($_REQUEST);
+
 			$atts = shortcode_atts(array(
 				'page' => 1,
-				'per_page' => 100,
+				'per_page' => 10,
 				'order' => 'time|DESC',
-				'show' => 'st|aa',
+				'show' => 'pub',
 				'search' => '',
 				'post_id' => 0,
 				'default_question' => 0
@@ -228,50 +169,23 @@ if(!class_exists('UrtakPlugin')) {
 
 			extract($atts);
 
-			$questions_response = false;
-			if(empty($post_id)) {
-				$questions_response = self::get_publication_questions_response($page, $per_page, $order, $show, $search);
-				error_log(print_r($questions_response, true));
-			} else {
-				$questions_response = self::get_questions_response($page, $per_page, $order, $show, $search, $post_id);
-			}
+			$post_data = false;
+			$response = self::get_questions_response($page, $per_page, $order, $show, $search, $post_id);
 
-			if(false === $questions_response) {
+			if(false === $response) {
 				$data = array('error' => true, 'error_message' => __('Questions could not be retrieved.', 'urtak'));
 			} else {
-				if($post_id) {
-					if('st|ap' === $show && empty($search) && empty($questions_response['questions']['question'])) {
-						delete_post_meta($post_id, self::QUESTION_CREATED_KEY);
-					} else if('st|ap' === $show && !empty($questions_response['questions']['question'])) {
-						update_post_meta($post_id, self::QUESTION_CREATED_KEY, 'yes');
-					}
-				}
-
-				$data = $questions_response;
+				$data = $response;
 
 				foreach($data['questions']['question'] as $key => $question) {
 					$data['questions']['question'][$key]['nicedate'] =date(get_option('date_format') . ' \a\t ' . get_option('time_format'), $question['created_at']);
 				}
-			}
 
-			echo json_encode($data);
-			exit;
-		}
-
-		public static function ajax_get_urtak() {
-			$data = stripslashes_deep($_REQUEST);
-			$atts = shortcode_atts(array(
-				'post_id' => 0,
-			), $data);
-
-			extract($atts);
-
-			$urtak = self::get_urtak($post_id);
-
-			if($urtak) {
-				$data = $urtak;
-			} else {
-				$data = array('error' => true, 'error_message' => __('There is no Urtak for this post.'));
+				// Transform the urtak
+				$urtak = self::get_urtak($post_id);
+				if($urtak) {
+					$data['questions']['urtak'] = $urtak;
+				}
 			}
 
 			echo json_encode($data);
@@ -344,20 +258,28 @@ if(!class_exists('UrtakPlugin')) {
 			exit;
 		}
 
-		/// CALLBACKS
+		public static function ajax_modify_question_flag() {
+			$data = stripslashes_deep($_REQUEST);
 
-		public static function add_admin_bar_items($wp_admin_bar) {
-			if(is_admin() && self::has_credentials() && '' != self::get_credentials('publication-key')) {
-				$pending_questions_count = self::get_publication_count('pending_questions');
-				if($pending_questions_count) {
-					$wp_admin_bar->add_menu( array(
-						'id' => 'urtak',
-						'title' => sprintf(__('+%s', 'urtak'), number_format_i18n($pending_questions_count)),
-						'href' => self::_get_insights_url()
-					));
-				}
+			$attributes = shortcode_atts(array(
+				'post_id' => 0,
+				'question_id' => 0,
+				'status' => 'approve',
+			), $data);
+
+			extract($attributes);
+
+			$updated = self::update_urtak_question($post_id, $question_id, array('question' => array('state_status_admin_event' => $status)));
+
+			if('approve' === $status) {
+				update_post_meta($post_id, self::QUESTION_CREATED_KEY, 'yes');
 			}
+
+			echo json_encode($updated);
+			exit;
 		}
+
+		/// CALLBACKS
 
 		public static function add_administrative_interface_items() {
 			if(current_user_can('manage_options') || self::has_credentials()) {

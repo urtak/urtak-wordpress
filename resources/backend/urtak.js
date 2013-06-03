@@ -1,27 +1,3 @@
-// Textarea and select clone() bug workaround | Spencer Tipping
-// Licensed under the terms of the MIT source code license
-
-// Motivation.
-// jQuery's clone() method works in most cases, but it fails to copy the value of textareas and select elements. This patch replaces jQuery's clone() method with a wrapper that fills in the
-// values after the fact.
-
-// An interesting error case submitted by Piotr Przybył: If two <select> options had the same value, the clone() method would select the wrong one in the cloned box. The fix, suggested by Piotr
-// and implemented here, is to use the selectedIndex property on the <select> box itself rather than relying on jQuery's value-based val().
-(function(original) {
-  jQuery.fn.clone = function() {
-    var result = original.apply(this, arguments),
-      my_textareas = this.find('textarea').add(this.filter('textarea')),
-      result_textareas = result.find('textarea').add(result.filter('textarea')),
-      my_selects = this.find('select').add(this.filter('select')),
-      result_selects = result.find('select').add(result.filter('select'));
-
-    for (var i = 0, l = my_textareas.length; i < l; ++i) jQuery(result_textareas[i]).val(jQuery(my_textareas[i]).val());
-    for (var i = 0, l = my_selects.length; i < l; ++i) result_selects[i].selectedIndex = my_selects[i].selectedIndex;
-
-    return result;
-  };
-})(jQuery.fn.clone); // via https://github.com/spencertipping/jquery.fix.clone/blob/master/jquery.fix.clone.js
-
 jQuery(document).ready(function($) {
 	/* Settings Page */
 
@@ -146,8 +122,7 @@ jQuery(document).ready(function($) {
 
 		ko.applyBindings(window.questions_vm, $editor.get(0));
 
-		window.questions_vm.fetch_questions();
-		window.questions_vm.fetch_urtak();
+		window.questions_vm.get_post_data();
 
 		$editor.parents('form').submit(function(event) {
 			$editor.find('#urtak-serialized').val(ko.toJSON(window.questions_vm));
@@ -196,11 +171,33 @@ var UrtakQuestionsVM = function(post_id) {
 
 	self.page = ko.observable(1);
 	self.pages = ko.observable(1);
-	self.per_page = ko.observable(100);
+	self.per_page = ko.observable(10);
 	self.post_id = ko.observable(post_id);
 	self.loading = ko.observable(false);
 	self.questions = ko.observableArray();
 	self.urtak = ko.observable(false);
+
+	self.has_pages = ko.computed(function() {
+		return self.pages() > 1;
+	});
+
+	self.has_previous_page = ko.computed(function() {
+		return self.page() - 1 >= 1;
+	});
+
+	self.previous_page = function() {
+		self.page(self.page() - 1);
+		self.get_post_data();
+	};
+
+	self.has_next_page = ko.computed(function() {
+		return self.page() + 1 <= self.pages();
+	});
+
+	self.next_page = function() {
+		self.page(self.page() + 1);
+		self.get_post_data();
+	};
 
 	self.has_question = ko.computed(function() {
 		return self.questions().length > 0;
@@ -249,41 +246,31 @@ var UrtakQuestionsVM = function(post_id) {
 		});
 	};
 
-	self.fetch_questions = function() {
+	self.get_post_data = function() {
 		self.loading(true);
+
+		self.questions.removeAll();
 
 		jQuery.get(
 			ajaxurl,
 			{
-				action: 'urtak_get_questions',
+				action: 'urtak_get_post_data',
 				page: self.page(),
 				per_page: self.per_page(),
 				post_id: self.post_id
 			},
 			function(data, status) {
+				console.log(data);
+
 				self.pages(data.questions.pages);
 
 				ko.utils.arrayForEach(data.questions.question, function(question) {
 					self.add_question(question);
 				});
 
-				self.loading(false);
-			},
-			'json'
-		);
-	};
+				self.urtak(data.questions.urtak);
 
-	self.fetch_urtak = function() {
-		jQuery.get(
-			ajaxurl,
-			{
-				action: 'urtak_get_urtak',
-				post_id: self.post_id
-			},
-			function(data, status) {
-				if(!data.error) {
-					self.urtak(data);
-				}
+				self.loading(false);
 			},
 			'json'
 		);

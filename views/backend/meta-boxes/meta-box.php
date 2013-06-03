@@ -17,39 +17,35 @@
 </table>
 
 <div class="urtak-questions-editor">
-	<div data-bind="visible: has_urtak">
-		<h4><?php _e('Quick Stats'); ?></h4>
-
-		<table class="form-table">
-			<tbody>
-				<tr valign="top">
-					<th scope="row"><?php _e('Pending Questions', 'urtak'); ?></th>
-					<td>
-						<a href="<?php esc_attr_e(esc_url($moderation_url)); ?>" target="_blank" data-bind="text: pending_questions_count"></a>
-					</td>
-				</tr>
-
-				<tr valign="top">
-					<th scope="row"><?php _e('Responses', 'urtak'); ?></th>
-					<td>
-						<a href="<?php esc_attr_e(esc_url($results_url)); ?>" target="_blank" data-bind="text: responses_count"></a>
-					</td>
-				</tr>
-			</tbody>
-		</table>
-	</div>
-
-
 	<h4><?php _e('Questions'); ?></h4>
+
+	<div class="tablenav top" data-bind="visible: !loading() && has_pages()">
+		<div class="tablenav-pages">
+			<span class="pagination-links">
+				<a class="prev-page" data-bind="click: previous_page, visible: has_previous_page" title="Go to the previous page" href="#">‹</a>
+				<span class="paging-input">
+					<span class="current-page" data-bind="text: page"></span>
+					<?php _e('of'); ?>
+					<span class="total-pages" data-bind="text: pages"></span>
+				</span>
+				<a class="next-page" data-bind="click: next_page, visible: has_next_page" title="Go to the next page" href="#">›</a>
+			</span>
+		</div>
+	</div>
 
 	<table class="fixed widefat">
 		<thead>
 			<tr valign="top">
 				<th scope="col" class="urtak-question-title">
-					<?php _e('Question'); ?> -
+					<?php _e('Question'); ?>
+					<small>(<a href="<?php esc_attr_e(esc_url($moderation_url)); ?>" target="_blank" data-bind="text: pending_questions_count"></a> <?php _e('Pending'); ?>)</small>
+					-
 					<small><a href="#" data-bind="click: add_new_question"><?php _e('Add New', 'urtak'); ?></a></small>
 				</th>
-				<th scope="col" class="urtak-question-responses"><?php _e('Responses'); ?></th>
+				<th scope="col" class="urtak-question-responses">
+					<?php _e('Responses'); ?>
+					<small>(<a href="<?php esc_attr_e(esc_url($results_url)); ?>" target="_blank" data-bind="text: responses_count"></a> <?php _e('Total'); ?>)</small>
+				</th>
 			</tr>
 		</thead>
 		<tbody>
@@ -57,7 +53,7 @@
 				<td colspan="2">Loading</td>
 			</tr>
 
-			<tr data-bind="visible: no_questions" valign="top">
+			<tr data-bind="visible: no_questions && !loading" valign="top">
 				<td colspan="2"><?php _e('No questions found. <a href="#" data-bind="click: add_question">Add one now!</a>'); ?></td>
 			</tr>
 
