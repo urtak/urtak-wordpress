@@ -19,7 +19,7 @@
 <div class="urtak-questions-editor">
 	<h4><?php _e('Questions'); ?></h4>
 
-	<div class="tablenav top" data-bind="visible: !loading() && has_pages()">
+	<div class="tablenav top" data-bind="visible: has_pages">
 		<div class="tablenav-pages">
 			<span class="pagination-links">
 				<a class="prev-page" data-bind="click: previous_page, visible: has_previous_page" title="Go to the previous page" href="#">‹</a>
@@ -48,12 +48,28 @@
 				</th>
 			</tr>
 		</thead>
+
+		<tfoot>
+			<tr valign="top">
+				<th scope="col" class="urtak-question-title">
+					<?php _e('Question'); ?>
+					<small>(<a href="<?php esc_attr_e(esc_url($moderation_url)); ?>" target="_blank" data-bind="text: pending_questions_count"></a> <?php _e('Pending'); ?>)</small>
+					-
+					<small><a href="#" data-bind="click: add_new_question"><?php _e('Add New', 'urtak'); ?></a></small>
+				</th>
+				<th scope="col" class="urtak-question-responses">
+					<?php _e('Responses'); ?>
+					<small>(<a href="<?php esc_attr_e(esc_url($results_url)); ?>" target="_blank" data-bind="text: responses_count"></a> <?php _e('Total'); ?>)</small>
+				</th>
+			</tr>
+		</tfoot>
+
 		<tbody>
 			<tr data-bind="visible: loading" valign="top">
-				<td colspan="2">Loading</td>
+				<td colspan="2"><?php _e('Loading...'); ?></td>
 			</tr>
 
-			<tr data-bind="visible: no_questions() && !loading()" valign="top">
+			<tr data-bind="visible: no_questions" valign="top">
 				<td colspan="2"><?php _e('No questions found. <a href="#" data-bind="click: add_question">Add one now!</a>'); ?></td>
 			</tr>
 

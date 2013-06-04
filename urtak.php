@@ -70,6 +70,14 @@ if(!class_exists('UrtakPlugin')) {
 			//// Post editing meta box support
 			add_action('wp_ajax_urtak_get_post_data', array(__CLASS__, 'ajax_get_post_data'));
 
+			//// For retrieving site wide and non-sitewide questions
+			add_action('wp_ajax_urtak_get_questions', array(__CLASS__, 'ajax_get_questions'));
+
+			//// For retrieving and modifying flags
+			add_action('wp_ajax_urtak_get_flags', array(__CLASS__, 'ajax_get_flags'));
+			add_action('wp_ajax_urtak_modify_flag', array(__CLASS__, 'ajax_modify_flag'));
+
+			//// For retrieving urtaks
 			add_action('wp_ajax_urtak_get_urtaks', array(__CLASS__, 'ajax_get_urtaks'));
 
 			// These are needed for the frontend when we are dynamically loading response counts
@@ -79,7 +87,6 @@ if(!class_exists('UrtakPlugin')) {
 			// For post edit and moderation page
 			add_action('wp_ajax_urtak_modify_question_first', array(__CLASS__, 'ajax_modify_question_first'));
 			add_action('wp_ajax_urtak_modify_question_status', array(__CLASS__, 'ajax_modify_question_status'));
-			add_action('wp_ajax_urtak_modify_question_flag', array(__CLASS__, 'ajax_modify_question_flag'));
 		}
 
 		private static function add_filters() {
@@ -190,6 +197,85 @@ if(!class_exists('UrtakPlugin')) {
 			exit;
 		}
 
+		public static function ajax_get_questions() {
+			$data = stripslashes_deep($_REQUEST);
+
+			$atts = shortcode_atts(array(
+				'page' => 1,
+				'per_page' => 10,
+				'order' => 'time|DESC',
+				'show' => 'st|aa',
+				'search' => '',
+				'post_id' => 0,
+				'default_question' => 0
+			), $data);
+
+			extract($atts);
+
+			$post_data = false;
+
+			if($post_id) {
+				$response = self::get_questions_response($page, $per_page, $order, $show, $search, $post_id);
+			} else {
+				$response = self::get_publication_questions_response($page, $per_page, $order, $show, $search);
+			}
+
+			if(false === $response) {
+				$data = array('error' => true, 'error_message' => __('Questions could not be retrieved.', 'urtak'));
+			} else {
+				$data = $response;
+
+				foreach($data['questions']['question'] as $key => $question) {
+					$data['questions']['question'][$key]['nicedate'] =date(get_option('date_format') . ' \a\t ' . get_option('time_format'), $question['created_at']);
+				}
+			}
+
+			echo json_encode($data);
+			exit;
+		}
+
+		public static function ajax_get_flags() {
+			$data = stripslashes_deep($_REQUEST);
+
+			$atts = shortcode_atts(array(
+				'page' => 1,
+				'per_page' => 20,
+			), $data);
+
+			$flagged_questions = self::get_flags($atts);
+
+			if(false === $flagged_questions) {
+				$data = array('error' => true, 'error_message' => __('Flagged questions could not be retrieved.', 'urtak'));
+			} else {
+				$data = $flagged_questions;
+			}
+
+			echo json_encode($data);
+			exit;
+		}
+
+		public static function ajax_modify_flag() {
+			$data = stripslashes_deep($_REQUEST);
+
+			$atts = shortcode_atts(array(
+				'flag_id' => 0,
+				'status' => 'agree',
+			), $data);
+
+			extract($atts);
+
+			$flag = self::modify_flag_status($flag_id, $status);
+
+			if(false === $flag) {
+				$data = array('error' => true, 'error_message' => __('Flag could not be modified.', 'urtak'));
+			} else {
+				$data = $flag;
+			}
+
+			echo json_encode($data);
+			exit;
+		}
+
 		public static function ajax_get_urtaks() {
 			$data = stripslashes_deep($_REQUEST);
 			$atts = shortcode_atts(array(), $data);
@@ -236,27 +322,6 @@ if(!class_exists('UrtakPlugin')) {
 		}
 
 		public static function ajax_modify_question_status() {
-			$data = stripslashes_deep($_REQUEST);
-
-			$attributes = shortcode_atts(array(
-				'post_id' => 0,
-				'question_id' => 0,
-				'status' => 'approve',
-			), $data);
-
-			extract($attributes);
-
-			$updated = self::update_urtak_question($post_id, $question_id, array('question' => array('state_status_admin_event' => $status)));
-
-			if('approve' === $status) {
-				update_post_meta($post_id, self::QUESTION_CREATED_KEY, 'yes');
-			}
-
-			echo json_encode($updated);
-			exit;
-		}
-
-		public static function ajax_modify_question_flag() {
 			$data = stripslashes_deep($_REQUEST);
 
 			$attributes = shortcode_atts(array(
@@ -1013,7 +1078,7 @@ if(!class_exists('UrtakPlugin')) {
 			return $questions;
 		}
 
-		private static function update_urtak_question($post_id, $question_id, $options = array(), $urtak = null) {
+		private static function update_urtak_question($post_id, $question_id, $options = array(), $urtak_api = null) {
 			$urtak_api = self::get_urtak_api($urtak_api);
 
 			$update_response = $urtak_api->update_urtak_question('post_id', $post_id, $question_id, $options);
@@ -1021,6 +1086,22 @@ if(!class_exists('UrtakPlugin')) {
 			return $update_response->success() ? $update_response->body['question'] : false;
 		}
 
+		//// Flagged Questions
+		private static function get_flags($options, $urtak_api = null) {
+			$urtak_api = self::get_urtak_api($urtak_api);
+
+			$flagged_questions_response = $urtak_api->get_flags($options);
+
+			return $flagged_questions_response->success() ? $flagged_questions_response->body : false;
+		}
+
+		private static function modify_flag_status($flag_id, $status, $urtak_api = null) {
+			$urtak_api = self::get_urtak_api($urtak_api);
+
+			$modify_flag_status_response = $urtak_api->modify_flag_status($flag_id, $status);
+
+			return $modify_flag_status_response->success() ? $modify_flag_status_response->body : false;
+		}
 
 		//// Urtaks
 
