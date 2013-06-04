@@ -335,8 +335,6 @@ var UrtakQuestionVM = function(question) {
 
 	self.toggle_first = function(is_first) {
 		if(is_first != self.first_question()) {
-			console.log(is_first);
-
 			// Send request to backend and then update local status
 			jQuery.get(
 				ajaxurl,
@@ -347,7 +345,7 @@ var UrtakQuestionVM = function(question) {
 					question_id: self.id
 				},
 				function(data, status) {
-					console.log(data);
+
 				},
 				'json'
 			);
@@ -381,8 +379,6 @@ var UrtakFlaggedQuestionVM = function(flag) {
 	var self = this;
 
 	self.change_status = function(status) {
-		console.log(self);
-
 		jQuery.get(
 			ajaxurl,
 			{
@@ -413,12 +409,34 @@ var UrtakReviewVM = function(post_id, question_id) {
 	// Urtaks
 	self.urtaks_page = ko.observable(1);
 	self.urtaks_pages = ko.observable(1);
-	self.urtaks_per_page = ko.observable(20);
+	self.urtaks_per_page = ko.observable(2);
 	self.urtaks_search_query = ko.observable('');
 
 	self.urtaks_loading = ko.observable(false);
 
 	self.urtaks = ko.observableArray();
+
+	self.has_urtaks_pages = ko.computed(function() {
+		return !self.urtaks_loading() && self.urtaks_pages() > 1;
+	});
+
+	self.has_previous_urtaks_page = ko.computed(function() {
+		return self.urtaks_page() - 1 >= 1;
+	});
+
+	self.previous_urtaks_page = function() {
+		self.urtaks_page(self.urtaks_page() - 1);
+		self.fetch_urtaks();
+	};
+
+	self.has_next_urtaks_page = ko.computed(function() {
+		return self.urtaks_page() + 1 <= self.urtaks_pages();
+	});
+
+	self.next_urtaks_page = function() {
+		self.urtaks_page(self.urtaks_page() + 1);
+		self.fetch_urtaks();
+	};
 
 	self.add_urtak = function(urtak) {
 		self.urtaks.push(urtak);
@@ -451,8 +469,11 @@ var UrtakReviewVM = function(post_id, question_id) {
 				if(data.error) {
 					console.log(data);
 				} else {
-					for(var i = 0; i < data.length; i++) {
-						self.add_urtak(data[i]);
+					self.urtaks_page(Math.floor(data.urtaks.offset / self.urtaks_per_page()) + 1);
+					self.urtaks_pages(data.urtaks.pages);
+
+					for(var i = 0; i < data.urtaks.urtak.length; i++) {
+						self.add_urtak(data.urtaks.urtak[i]);
 					}
 				}
 			},
@@ -461,18 +482,42 @@ var UrtakReviewVM = function(post_id, question_id) {
 	};
 
 	self.load_questions_for_urtak = function(urtak) {
-
+		self.post_id(urtak.post_id);
+		self.questions_page(1);
+		self.fetch_questions();
 	};
 
 	// Questions
 	self.questions_page = ko.observable(1);
 	self.questions_pages = ko.observable(1);
-	self.questions_per_page = ko.observable(20);
+	self.questions_per_page = ko.observable(10);
 	self.questions_search_query = ko.observable('');
 
 	self.questions_loading = ko.observable(false);
 
 	self.questions = ko.observableArray();
+
+	self.has_questions_pages = ko.computed(function() {
+		return !self.questions_loading() && self.questions_pages() > 1;
+	});
+
+	self.has_previous_questions_page = ko.computed(function() {
+		return self.questions_page() - 1 >= 1;
+	});
+
+	self.previous_questions_page = function() {
+		self.questions_page(self.questions_page() - 1);
+		self.fetch_questions();
+	};
+
+	self.has_next_questions_page = ko.computed(function() {
+		return self.questions_page() + 1 <= self.questions_pages();
+	});
+
+	self.next_questions_page = function() {
+		self.questions_page(self.questions_page() + 1);
+		self.fetch_questions();
+	};
 
 	self.add_question = function(question) {
 		self.questions.push(new UrtakQuestionVM(question));
@@ -505,8 +550,11 @@ var UrtakReviewVM = function(post_id, question_id) {
 				if(data.error) {
 					console.log(data);
 				} else {
-					for(var i = 0; i < data.questions.length; i++) {
-						self.add_question(data.questions[i]);
+					self.questions_page(Math.floor(data.questions.offset / self.questions_per_page())  + 1);
+					self.questions_pages(data.questions.pages);
+
+					for(var i = 0; i < data.questions.question.length; i++) {
+						self.add_question(data.questions.question[i]);
 					}
 				}
 			},
@@ -517,11 +565,33 @@ var UrtakReviewVM = function(post_id, question_id) {
 	// Flagged questions
 	self.flags_page = ko.observable(1);
 	self.flags_pages = ko.observable(1);
-	self.flags_per_page = ko.observable(20);
+	self.flags_per_page = ko.observable(10);
 
 	self.flags_loading = ko.observable(false);
 
 	self.flags = ko.observableArray();
+
+	self.has_flags_pages = ko.computed(function() {
+		return !self.flags_loading() && self.flags_pages() > 1;
+	});
+
+	self.has_previous_flags_page = ko.computed(function() {
+		return self.flags_page() - 1 >= 1;
+	});
+
+	self.previous_flags_page = function() {
+		self.flags_page(self.flags_page() - 1);
+		self.fetch_flags();
+	};
+
+	self.has_next_flags_page = ko.computed(function() {
+		return self.flags_page() + 1 <= self.flags_pages();
+	});
+
+	self.next_flags_page = function() {
+		self.flags_page(self.flags_page() + 1);
+		self.fetch_flags();
+	};
 
 	self.add_flag = function(flag) {
 		self.flags.push(new UrtakFlaggedQuestionVM(flag));
@@ -553,6 +623,9 @@ var UrtakReviewVM = function(post_id, question_id) {
 				if(data.error) {
 					console.log(data);
 				} else {
+					self.flags_page(Math.floor(data.flags.offset / self.flags_per_page()) + 1);
+					self.flags_pages(data.flags.pages);
+
 					for(var i = 0; i < data.flags.flag.length; i++) {
 						self.add_flag(data.flags.flag[i]);
 					}

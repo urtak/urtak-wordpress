@@ -3,6 +3,20 @@
 		<div class="urtak-moderation-left-inner">
 			<h4><?php _e('Questions'); ?></h4>
 
+			<div class="tablenav top" data-bind="visible: has_questions_pages">
+				<div class="tablenav-pages">
+					<span class="pagination-links">
+						<a class="prev-page" data-bind="click: previous_questions_page, visible: has_previous_questions_page" title="Go to the previous page" href="#">‹</a>
+						<span class="paging-input">
+							<span class="current-page" data-bind="text: questions_page"></span>
+							<?php _e('of'); ?>
+							<span class="total-pages" data-bind="text: questions_pages"></span>
+						</span>
+						<a class="next-page" data-bind="click: next_questions_page, visible: has_next_questions_page" title="Go to the next page" href="#">›</a>
+					</span>
+				</div>
+			</div>
+
 			<table class="widefat fixed">
 				<thead>
 					<tr valign="top">
@@ -22,7 +36,7 @@
 
 				<tbody>
 					<tr data-bind="visible: no_questions" valign="top">
-						<td colspan="3"><?php _e('No questions found', 'urtak'); ?></td>
+						<td colspan="3"><?php _e('No pending questions found', 'urtak'); ?></td>
 					</tr>
 
 					<tr data-bind="visible: questions_loading" valign="top">
@@ -30,12 +44,34 @@
 					</tr>
 
 					<!-- ko foreach: questions -->
-
+					<tr valign="top">
+						<td data-bind="text: text"></td>
+						<td data-bind="text: number_responses"></td>
+						<td>
+							<a data-bind="click: archive" href="#"><?php _e('Archive'); ?></a>
+							|
+							<a data-bind="click: reject" href="#"><?php _e('Reject'); ?></a>
+						</td>
+					</tr>
 					<!-- /ko -->
 				</tbody>
 			</table>
 
 			<h4><?php _e('Flagged Questions'); ?></h4>
+
+			<div class="tablenav top" data-bind="visible: has_flags_pages">
+				<div class="tablenav-pages">
+					<span class="pagination-links">
+						<a class="prev-page" data-bind="click: previous_flags_page, visible: has_previous_flags_page" title="Go to the previous page" href="#">‹</a>
+						<span class="paging-input">
+							<span class="current-page" data-bind="text: flags_page"></span>
+							<?php _e('of'); ?>
+							<span class="total-pages" data-bind="text: flags_pages"></span>
+						</span>
+						<a class="next-page" data-bind="click: next_flags_page, visible: has_next_flags_page" title="Go to the next page" href="#">›</a>
+					</span>
+				</div>
+			</div>
 
 			<table class="widefat fixed">
 				<thead>
@@ -72,7 +108,6 @@
 							|
 							<a data-bind="click: function() { $parent.change_flag_status($data, 'agree'); }" href="#"><?php _e('Reject'); ?></a>
 						</td>
-
 					</tr>
 					<!-- /ko -->
 				</tbody>
@@ -83,6 +118,20 @@
 	<div class="urtak-moderation-right">
 		<div class="urtak-moderation-right-inner">
 			<h4><?php _e('Urtaks'); ?></h4>
+
+			<div class="tablenav top" data-bind="visible: has_urtaks_pages">
+				<div class="tablenav-pages">
+					<span class="pagination-links">
+						<a class="prev-page" data-bind="click: previous_urtaks_page, visible: has_previous_urtaks_page" title="Go to the previous page" href="#">‹</a>
+						<span class="paging-input">
+							<span class="current-page" data-bind="text: urtaks_page"></span>
+							<?php _e('of'); ?>
+							<span class="total-pages" data-bind="text: urtaks_pages"></span>
+						</span>
+						<a class="next-page" data-bind="click: next_urtaks_page, visible: has_next_urtaks_page" title="Go to the next page" href="#">›</a>
+					</span>
+				</div>
+			</div>
 
 			<table class="widefat fixed">
 				<thead>
@@ -126,7 +175,7 @@
 								</span>
 
 								<span class="load">
-									<a data-bind="click: $parent.load_questions_for_urtak($data)" href="#"><?php _e('Load Questions'); ?></a>
+									<a data-bind="click: function() { $parent.load_questions_for_urtak($data); }" href="#"><?php _e('Load Questions'); ?></a>
 								</span>
 							</div>
 						</td>

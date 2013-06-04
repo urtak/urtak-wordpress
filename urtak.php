@@ -3,7 +3,7 @@
  Plugin Name: Urtak
  Plugin URI: http://urtak.com/wordpress/
  Description: Conversation powered by questions. Bring simplicity and structure to any online conversation by allowing your users to ask each other questions.
- Version: 2.0.0-RC1
+ Version: 2.0.0-BETA2
  Author: Urtak, Inc.
  Author URI: http://urtak.com
  */
@@ -13,7 +13,7 @@ if(!class_exists('UrtakPlugin')) {
 		/// CONSTANTS
 
 		//// VERSION
-		const VERSION = '2.0.0-RC1';
+		const VERSION = '2.0.0-BETA2';
 
 		//// KEYS
 		const SETTINGS_KEY = '_urtak_settings';
@@ -204,7 +204,7 @@ if(!class_exists('UrtakPlugin')) {
 				'page' => 1,
 				'per_page' => 10,
 				'order' => 'time|DESC',
-				'show' => 'st|aa',
+				'show' => 'st|all',
 				'search' => '',
 				'post_id' => 0,
 				'default_question' => 0
@@ -226,7 +226,7 @@ if(!class_exists('UrtakPlugin')) {
 				$data = $response;
 
 				foreach($data['questions']['question'] as $key => $question) {
-					$data['questions']['question'][$key]['nicedate'] =date(get_option('date_format') . ' \a\t ' . get_option('time_format'), $question['created_at']);
+					$data['questions']['question'][$key]['nicedate'] = date(get_option('date_format') . ' \a\t ' . get_option('time_format'), $question['created_at']);
 				}
 			}
 
@@ -278,21 +278,24 @@ if(!class_exists('UrtakPlugin')) {
 
 		public static function ajax_get_urtaks() {
 			$data = stripslashes_deep($_REQUEST);
-			$atts = shortcode_atts(array(), $data);
+			$atts = shortcode_atts(array(
+				'page' => 1,
+				'per_page' => 10
+			), $data);
 
 			extract($atts);
 
-			$urtaks = self::get_urtaks($atts);
+			$urtaks = self::get_urtaks_response($atts);
 
 			if($urtaks) {
 				$data = $urtaks;
 
-				foreach($data as $key => $urtak) {
-					$data[$key]['editlink'] = get_edit_post_link($urtak['post_id'], 'raw');
-					$data[$key]['edittitle'] = get_the_title($urtak['post_id']);
-					$data[$key]['moderatelink'] = self::_get_moderation_url($urtak['post_id']);
-					$data[$key]['viewlink'] = get_permalink($urtak['post_id']);
-					$data[$key]['nicedate'] = date(get_option('date_format') . ' \a\t ' . get_option('time_format'), $urtak['post_created_at']);
+				foreach($data['urtaks']['urtak'] as $key => $urtak) {
+					$data['urtaks']['urtak'][$key]['editlink'] = get_edit_post_link($urtak['post_id'], 'raw');
+					$data['urtaks']['urtak'][$key]['edittitle'] = get_the_title($urtak['post_id']);
+					$data['urtaks']['urtak'][$key]['moderatelink'] = self::_get_moderation_url($urtak['post_id']);
+					$data['urtaks']['urtak'][$key]['viewlink'] = get_permalink($urtak['post_id']);
+					$data['urtaks']['urtak'][$key]['nicedate'] = date(get_option('date_format') . ' \a\t ' . get_option('time_format'), $urtak['post_created_at']);
 				}
 			} else {
 				$data = array('error' => true, 'error_message' => __('Could not retrieve Urtaks.'));
@@ -1136,12 +1139,22 @@ if(!class_exists('UrtakPlugin')) {
 			return $urtak;
 		}
 
-		private static function get_urtaks($args = array(), $urtak_api = null) {
+		private static function get_urtaks_response($args = array(), $urtak_api = null) {
 			$urtak_api = self::get_urtak_api($urtak_api);
 
-			$urtaks = false;
+			if(isset($args['per_page'])) {
+				$args['per'] = $args['per_page'];
+			}
+
 			$urtaks_response = $urtak_api->get_urtaks($args);
-			if($urtaks_response->success()) {
+
+			return $urtaks_response->success() ? $urtaks_response->body : false;
+		}
+
+		private static function get_urtaks($args = array(), $urtak_api = null) {
+			$urtaks_response = self::get_urtaks_response($args, $urtak_api);
+
+			if($urtaks_response) {
 				$urtaks = $urtaks_response->body['urtaks']['urtak'];
 				if(isset($urtaks['id'])) {
 					$urtaks = array($urtaks);
@@ -1150,9 +1163,11 @@ if(!class_exists('UrtakPlugin')) {
 				foreach($urtaks as $urtak) {
 					self::$urtaks_fetched[$urtak->post_id] = $urtak;
 				}
-			}
 
-			return $urtaks;
+				return $urtaks;
+			} else {
+				return false;
+			}
 		}
 
 		private static function update_urtak($args, $questions, $urtak_api = null) {
