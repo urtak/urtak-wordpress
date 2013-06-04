@@ -53,7 +53,7 @@ if(!class_exists('UrtakPlugin')) {
 				add_action('admin_menu', array(__CLASS__, 'add_administrative_interface_items'));
 				add_action('admin_notices', array(__CLASS__, 'show_credentials_notice'));
 				add_action('add_meta_boxes', array(__CLASS__, 'add_meta_boxes'));
-				add_action('manage_posts_custom_column', array(__CLASS__, 'add_posts_columns_output'), 10, 2);
+				// add_action('manage_posts_custom_column', array(__CLASS__, 'add_posts_columns_output'), 10, 2);
 				add_action('save_post', array(__CLASS__, 'save_post_meta'), 10, 2);
 				add_action('wp_dashboard_setup', array(__CLASS__, 'add_dashboard_widget'));
 			}
@@ -90,7 +90,7 @@ if(!class_exists('UrtakPlugin')) {
 		}
 
 		private static function add_filters() {
-			add_filter('manage_edit-post_columns', array(__CLASS__, 'add_posts_columns'));
+			// add_filter('manage_edit-post_columns', array(__CLASS__, 'add_posts_columns'));
 			add_filter('plugin_action_links_' . plugin_basename(__FILE__), array(__CLASS__, 'add_plugin_links'));
 			add_filter('the_content', array(__CLASS__, 'automatically_append_urtak'), 10000);
 			add_filter('urtak_pre_settings_save', array(__CLASS__, 'sanitize_and_validate_settings'));
