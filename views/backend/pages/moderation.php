@@ -3,16 +3,37 @@
 		<div class="urtak-moderation-left-inner">
 			<h4><?php _e('Questions'); ?></h4>
 
-			<div class="tablenav top" data-bind="visible: has_questions_pages">
+			<div class="tablenav top">
+				<div class="alignleft actions">
+					<select data-bind="value: questions_filter">
+						<option value="st|all" selected="selected"><?php _e('Status - All'); ?></option>
+						<option value="st|aa"><?php _e('Approved'); ?></option>
+						<option value="st|pe"><?php _e('Pending'); ?></option>
+						<option value="st|ap"><?php _e('Approved or Pending'); ?></option>
+						<option value="st|ar"><?php _e('Archived'); ?></option>
+						<option value="st|nu"><?php _e('Rejected'); ?></option>
+					</select>
+					<select data-bind="value: questions_order">
+						<option value="time" selected="selected"><?php _e('Order By - Time'); ?></option>
+						<option value="n_responses"><?php _e('Number of Responses'); ?></option>
+						<option value="most_cared"><?php _e('Most Cared'); ?></option>
+						<option value="least_cared"><?php _e('Least Cared'); ?></option>
+						<option value="most_agreed"><?php _e('Most Agreed'); ?></option>
+						<option value="least_agreed"><?php _e('Least Agreed'); ?></option>
+					</select>
+					<input type="button" class="button action" data-bind="click: fetch_questions" value="<?php _e('Filter'); ?>" />
+				</div>
+
 				<div class="tablenav-pages">
+					<span class="displaying-num"><span data-bind="text: questions_total"></span> <?php _e('questions'); ?></span>
 					<span class="pagination-links">
-						<a class="prev-page" data-bind="click: previous_questions_page, visible: has_previous_questions_page" title="Go to the previous page" href="#">‹</a>
+						<a class="prev-page" data-bind="click: previous_questions_page, css: { disabled: !has_previous_questions_page() }" title="<?php _e('Go to the previous page'); ?>" href="#"><?php _e('‹'); ?></a>
 						<span class="paging-input">
 							<span class="current-page" data-bind="text: questions_page"></span>
 							<?php _e('of'); ?>
 							<span class="total-pages" data-bind="text: questions_pages"></span>
 						</span>
-						<a class="next-page" data-bind="click: next_questions_page, visible: has_next_questions_page" title="Go to the next page" href="#">›</a>
+						<a class="next-page" data-bind="click: next_questions_page, css: { disabled: !has_next_questions_page() }" title="<?php _e('Go to the next page'); ?>" href="#"><?php _e('›'); ?></a>
 					</span>
 				</div>
 			</div>
@@ -59,16 +80,17 @@
 
 			<h4><?php _e('Flagged Questions'); ?></h4>
 
-			<div class="tablenav top" data-bind="visible: has_flags_pages">
+			<div class="tablenav top">
 				<div class="tablenav-pages">
+					<span class="displaying-num"><span data-bind="text: flags_total"></span> <?php _e('flags'); ?></span>
 					<span class="pagination-links">
-						<a class="prev-page" data-bind="click: previous_flags_page, visible: has_previous_flags_page" title="Go to the previous page" href="#">‹</a>
+						<a class="prev-page" data-bind="click: previous_flags_page, css: { disabled: !has_previous_flags_page() }" title="<?php _e('Go to the previous page'); ?>" href="#">‹</a>
 						<span class="paging-input">
 							<span class="current-page" data-bind="text: flags_page"></span>
 							<?php _e('of'); ?>
 							<span class="total-pages" data-bind="text: flags_pages"></span>
 						</span>
-						<a class="next-page" data-bind="click: next_flags_page, visible: has_next_flags_page" title="Go to the next page" href="#">›</a>
+						<a class="next-page" data-bind="click: next_flags_page, css: { disabled: !has_next_flags_page() }" title="<?php _e('Go to the next page'); ?>" href="#">›</a>
 					</span>
 				</div>
 			</div>
@@ -119,16 +141,23 @@
 		<div class="urtak-moderation-right-inner">
 			<h4><?php _e('Urtaks'); ?></h4>
 
-			<div class="tablenav top" data-bind="visible: has_urtaks_pages">
+			<p class="search-box">
+				<label class="screen-reader-text" for="post-search-input"><?php _e('Search Urtaks'); ?></label>
+				<input type="search" data-bind="value: urtaks_search_query" />
+				<input data-bind="click: function() {  }" type="button" name="" class="button" value="<?php _e('Search Urtaks'); ?>" />
+			</p>
+
+			<div class="tablenav top">
 				<div class="tablenav-pages">
+					<span class="displaying-num"><span data-bind="text: urtaks_total"></span> <?php _e('Urtaks'); ?></span>
 					<span class="pagination-links">
-						<a class="prev-page" data-bind="click: previous_urtaks_page, visible: has_previous_urtaks_page" title="Go to the previous page" href="#">‹</a>
+						<a class="prev-page" data-bind="click: previous_urtaks_page, css: { disabled: !has_previous_urtaks_page() }" title="<?php _e('Go to the previous page'); ?>" href="#"><?php _e('‹'); ?></a>
 						<span class="paging-input">
 							<span class="current-page" data-bind="text: urtaks_page"></span>
 							<?php _e('of'); ?>
 							<span class="total-pages" data-bind="text: urtaks_pages"></span>
 						</span>
-						<a class="next-page" data-bind="click: next_urtaks_page, visible: has_next_urtaks_page" title="Go to the next page" href="#">›</a>
+						<a class="next-page" data-bind="click: next_urtaks_page, css: { disabled: !has_next_urtaks_page() }" title="<?php _e('Go to the next page'); ?>" href="#"><?php _e('›'); ?></a>
 					</span>
 				</div>
 			</div>

@@ -19,16 +19,17 @@
 <div class="urtak-questions-editor">
 	<h4><?php _e('Questions'); ?></h4>
 
-	<div class="tablenav top" data-bind="visible: has_pages">
+	<div class="tablenav top">
 		<div class="tablenav-pages">
+			<span class="displaying-num"><span data-bind="text: total"></span> <?php _e('questions'); ?></span>
 			<span class="pagination-links">
-				<a class="prev-page" data-bind="click: previous_page, visible: has_previous_page" title="Go to the previous page" href="#">‹</a>
+				<a class="prev-page" data-bind="click: previous_page, css: { disabled: !has_previous_page() }" title="<?php _e('Go to the previous page'); ?>" href="#"><?php _e('‹'); ?></a>
 				<span class="paging-input">
 					<span class="current-page" data-bind="text: page"></span>
 					<?php _e('of'); ?>
 					<span class="total-pages" data-bind="text: pages"></span>
 				</span>
-				<a class="next-page" data-bind="click: next_page, visible: has_next_page" title="Go to the next page" href="#">›</a>
+				<a class="next-page" data-bind="click: next_page, css: { disabled: !has_next_page() }" title="<?php _e('Go to the next page'); ?>" href="#"><?php _e('›'); ?></a>
 			</span>
 		</div>
 	</div>
@@ -65,14 +66,6 @@
 		</tfoot>
 
 		<tbody>
-			<tr data-bind="visible: loading" valign="top">
-				<td colspan="2"><?php _e('Loading...'); ?></td>
-			</tr>
-
-			<tr data-bind="visible: no_questions" valign="top">
-				<td colspan="2"><?php _e('No questions found. <a href="#" data-bind="click: add_question">Add one now!</a>'); ?></td>
-			</tr>
-
 			<!-- ko foreach: questions -->
 			<tr valign="top">
 				<td class="urtak-question-title">
@@ -102,6 +95,13 @@
 			</tr>
 			<!-- /ko -->
 
+			<tr data-bind="visible: loading" valign="top">
+				<td colspan="2"><?php _e('Loading...'); ?></td>
+			</tr>
+
+			<tr data-bind="visible: no_questions" valign="top">
+				<td colspan="2"><?php _e('No questions found. <a href="#" data-bind="click: add_question">Add one now!</a>'); ?></td>
+			</tr>
 		</tbody>
 	</table>
 

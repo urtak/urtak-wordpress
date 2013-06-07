@@ -54,7 +54,7 @@ div.urtak-error .globe {
 	width: 472px;
 }
 
-.urtak-wrap input.large-text, .urtak-wrap select {
+.urtak-wrap input.large-text, .urtak-settings select {
 	height: auto;
 	padding: 10px 5px;
 }
