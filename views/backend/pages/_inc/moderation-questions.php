@@ -73,17 +73,17 @@
 				<td data-bind="text: text"></td>
 				<td data-bind="text: number_responses"></td>
 				<td>
-					<span data-bind="visible: !is_approved">
+					<span data-bind="visible: !is_approved()">
 						<a data-bind="click: approve" href="#"><?php _e('Approve'); ?></a>
 						|
 					</span>
 
-					<span data-bind="visible: !is_archived">
+					<span data-bind="visible: !is_archived()">
 						<a data-bind="click: archive" href="#"><?php _e('Archive'); ?></a>
-						|
 					</span>
 
-					<span data-bind="visible: !is_rejected">
+					<span data-bind="visible: !is_rejected()">
+						|
 						<a data-bind="click: reject" href="#"><?php _e('Reject'); ?></a>
 					</span>
 

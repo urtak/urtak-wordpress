@@ -29,6 +29,7 @@
 		<thead>
 			<tr valign="top">
 				<th scope="col"><?php _e('Post Title', 'urtak'); ?></th>
+				<th scope="col"><?php _e('Created', 'urtak'); ?></th>
 				<th scope="col"><?php _e('Questions', 'urtak'); ?></th>
 				<th scope="col"><?php _e('Responses', 'urtak'); ?></th>
 			</tr>
@@ -37,6 +38,7 @@
 		<tfoot>
 			<tr valign="top">
 				<th scope="col"><?php _e('Post Title', 'urtak'); ?></th>
+				<th scope="col"><?php _e('Created', 'urtak'); ?></th>
 				<th scope="col"><?php _e('Questions', 'urtak'); ?></th>
 				<th scope="col"><?php _e('Responses', 'urtak'); ?></th>
 			</tr>
@@ -44,11 +46,11 @@
 
 		<tbody>
 			<tr data-bind="visible: no_urtaks" valign="top">
-				<td colspan="3"><?php _e('No urtaks found', 'urtak'); ?></td>
+				<td colspan="4"><?php _e('No Urtaks found', 'urtak'); ?></td>
 			</tr>
 
 			<tr data-bind="visible: urtaks_loading" valign="top">
-				<td colspan="3"><?php _e('Loading...', 'urtak'); ?></td>
+				<td colspan="4"><?php _e('Loading...', 'urtak'); ?></td>
 			</tr>
 
 			<!-- ko foreach: urtaks -->
@@ -68,9 +70,15 @@
 
 						<span class="load">
 							<a data-bind="click: function() { $parent.load_questions_for_urtak($data); }" href="#"><?php _e('Load Questions'); ?></a>
+							|
+						</span>
+
+						<span class="load">
+							<a data-bind="attr: { href: moderatelink }" href="#"><?php _e('Moderate'); ?></a>
 						</span>
 					</div>
 				</td>
+				<td data-bind="text: nicedate"></td>
 				<td data-bind="text: approved_questions_count"></td>
 				<td data-bind="text: responses_count"></td>
 			</tr>

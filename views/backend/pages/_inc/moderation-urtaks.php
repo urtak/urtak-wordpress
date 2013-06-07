@@ -44,7 +44,7 @@
 
 		<tbody>
 			<tr data-bind="visible: no_urtaks" valign="top">
-				<td colspan="3"><?php _e('No urtaks found', 'urtak'); ?></td>
+				<td colspan="3"><?php _e('No Urtaks found', 'urtak'); ?></td>
 			</tr>
 
 			<tr data-bind="visible: urtaks_loading" valign="top">

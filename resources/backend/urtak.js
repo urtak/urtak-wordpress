@@ -181,6 +181,7 @@ jQuery(document).ready(function($) {
 
 		ko.applyBindings(window.urtak_results_vm, $results.get(0));
 
+		window.urtak_results_vm.questions_filter('st|aa');
 		window.urtak_results_vm.fetch_questions();
 		window.urtak_results_vm.fetch_urtaks();
 	}
@@ -373,13 +374,28 @@ var UrtakQuestionVM = function(question) {
 	self.first_question = ko.observable(question.first_question || false);
 	self.not_first_question = ko.computed(function() { return !self.first_question(); });
 
+	self.data = question;
+
 	self.created_at = question.created_at || Math.round(new Date().getTime() / 1000);
 	self.id = question.id || 0;
+	self.nicedate = question.nicedate;
 	self.post_id = question.post_id;
 	self.responses = question.responses || { counts: { total: 0 } };
 	self.status = ko.observable(question.status || 'pending');
 	self.text = ko.observable(question.text || '');
 	self.user_generated = question.user_generated || false;
+
+	self.nicestatus = ko.computed(function() {
+		if('approved' == self.status()) {
+			return 'Approved';
+		} else if('pending' == self.status()) {
+			return 'Pending';
+		} else if('rejected' == self.status()) {
+			return 'Rejected';
+		} else if('archived' == self.status()) {
+			return 'Archived';
+		}
+	});
 
 	self.is_approved = ko.computed(function() {
 		return 'approved' == self.status();
@@ -398,7 +414,15 @@ var UrtakQuestionVM = function(question) {
 	});
 
 	self.number_responses = ko.computed(function() {
-		return self.responses && self.responses.counts ? self.responses.counts.total : 0;
+		return self.responses && self.responses.counts && self.responses && self.responses.counts.total ? self.responses.counts.total : 0;
+	});
+
+	self.no_percent = ko.computed(function() {
+		return self.responses && self.responses.percents && self.responses.percents.yes ? self.responses.percents.yes : 0;
+	});
+
+	self.yes_percent = ko.computed(function() {
+		return self.responses && self.responses.percents && self.responses.percents.no ? self.responses.percents.no : 0;
 	});
 };
 

@@ -3,7 +3,7 @@
  Plugin Name: Urtak
  Plugin URI: http://urtak.com/wordpress/
  Description: Conversation powered by questions. Bring simplicity and structure to any online conversation by allowing your users to ask each other questions.
- Version: 2.0.0-BETA2
+ Version: 2.0.0-RC1
  Author: Urtak, Inc.
  Author URI: http://urtak.com
  */
@@ -13,7 +13,7 @@ if(!class_exists('UrtakPlugin')) {
 		/// CONSTANTS
 
 		//// VERSION
-		const VERSION = '2.0.0-BETA2';
+		const VERSION = '2.0.0-RC1';
 
 		//// KEYS
 		const SETTINGS_KEY = '_urtak_settings';
@@ -182,10 +182,6 @@ if(!class_exists('UrtakPlugin')) {
 			} else {
 				$data = $response;
 
-				foreach($data['questions']['question'] as $key => $question) {
-					$data['questions']['question'][$key]['nicedate'] =date(get_option('date_format') . ' \a\t ' . get_option('time_format'), $question['created_at']);
-				}
-
 				// Transform the urtak
 				$urtak = self::get_urtak($post_id);
 				$data['questions']['urtak'] = $urtak ? $urtak : false;
@@ -289,11 +285,17 @@ if(!class_exists('UrtakPlugin')) {
 				$data = $urtaks;
 
 				foreach($data['urtaks']['urtak'] as $key => $urtak) {
+					$post = get_post($urtak['post_id']);
+
+					if(!$post) {
+						continue;
+					}
+
 					$data['urtaks']['urtak'][$key]['editlink'] = get_edit_post_link($urtak['post_id'], 'raw');
 					$data['urtaks']['urtak'][$key]['edittitle'] = get_the_title($urtak['post_id']);
 					$data['urtaks']['urtak'][$key]['moderatelink'] = self::_get_moderation_url($urtak['post_id']);
 					$data['urtaks']['urtak'][$key]['viewlink'] = get_permalink($urtak['post_id']);
-					$data['urtaks']['urtak'][$key]['nicedate'] = date(get_option('date_format') . ' \a\t ' . get_option('time_format'), $urtak['post_created_at']);
+					$data['urtaks']['urtak'][$key]['nicedate'] = date(get_option('date_format') . ' \a\t ' . get_option('time_format'), strtotime($post->post_date));
 				}
 			} else {
 				$data = array('error' => true, 'error_message' => __('Could not retrieve Urtaks.'));
@@ -1045,6 +1047,10 @@ if(!class_exists('UrtakPlugin')) {
 			$questions_response = $urtak_api->get_urtak_questions('post_id', $post_id, $args);
 			if($questions_response->success()) {
 				$questions = (array)$questions_response->body;
+
+				foreach($questions['questions']['question'] as $key => $question) {
+					$questions['questions']['question'][$key]['nicedate'] = date(get_option('date_format') . ' \a\t ' . get_option('time_format'), $question['created_at']);
+				}
 			} else if(404 === intval($questions_response->code)) {
 				// We're trapping this particular thing because we want to make sure not to provide an error
 				// in case the Urtak for this post hasn't been created
@@ -1068,6 +1074,10 @@ if(!class_exists('UrtakPlugin')) {
 			$questions_response = $urtak_api->get_publication_questions($args);
 			if($questions_response->success()) {
 				$questions = (array)$questions_response->body;
+
+				foreach($questions['questions']['question'] as $key => $question) {
+					$questions['questions']['question'][$key]['nicedate'] = date(get_option('date_format') . ' \a\t ' . get_option('time_format'), $question['created_at']);
+				}
 			} else if(404 === intval($questions_response->code)) {
 				// We're trapping this particular thing because we want to make sure not to provide an error
 				// in case the Urtak for this post hasn't been created

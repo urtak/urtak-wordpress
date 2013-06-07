@@ -480,3 +480,25 @@ div.urtak-error .globe {
 .urtak-results-right-inner {
 	padding-left: 20px;
 }
+
+.urtak-mini-graph-container {
+	white-space: nowrap;
+	padding-right: 5px;
+}
+
+.urtak-mini-graph-bar {
+	font-size: 10px;
+	line-height: 15px;
+	margin: 0 0 3px;
+}
+
+.urtak-mini-graph-bar-inner {
+	background: #00aef0;
+	display: inline-block;
+	height: 15px;
+	vertical-align: middle;
+}
+
+.urtak-mini-graph-bar-inner.no {
+	background: #ff7100;
+}

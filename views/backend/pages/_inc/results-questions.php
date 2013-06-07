@@ -46,36 +46,49 @@
 		<thead>
 			<tr valign="top">
 				<th scope="col"><?php _e('Question', 'urtak'); ?></th>
+				<th scope="col"><?php _e('Asked', 'urtak'); ?></th>
+				<th scope="col"><?php _e('Status', 'urtak'); ?></th>
 				<th scope="col"><?php _e('Responses', 'urtak'); ?></th>
-				<th scope="col"><?php _e('Actions', 'urtak'); ?></th>
+				<th scope="col"><?php _e('% Yes', 'urtak'); ?></th>
 			</tr>
 		</thead>
 
 		<tfoot>
 			<tr valign="top">
 				<th scope="col"><?php _e('Question', 'urtak'); ?></th>
+				<th scope="col"><?php _e('Asked', 'urtak'); ?></th>
+				<th scope="col"><?php _e('Status', 'urtak'); ?></th>
 				<th scope="col"><?php _e('Responses', 'urtak'); ?></th>
-				<th scope="col"><?php _e('Actions', 'urtak'); ?></th>
+				<th scope="col"><?php _e('Yes / No', 'urtak'); ?></th>
 			</tr>
 		</tfoot>
 
 		<tbody>
 			<tr data-bind="visible: no_questions" valign="top">
-				<td colspan="3"><?php _e('No questions found', 'urtak'); ?></td>
+				<td colspan="5"><?php _e('No questions found', 'urtak'); ?></td>
 			</tr>
 
 			<tr data-bind="visible: questions_loading" valign="top">
-				<td colspan="3"><?php _e('Loading...', 'urtak'); ?></td>
+				<td colspan="5"><?php _e('Loading...', 'urtak'); ?></td>
 			</tr>
 
 			<!-- ko foreach: questions -->
 			<tr valign="top">
 				<td data-bind="text: text"></td>
+				<td data-bind="text: nicedate"></td>
+				<td data-bind="text: nicestatus"></td>
 				<td data-bind="text: number_responses"></td>
-				<td>
-					<a data-bind="click: archive" href="#"><?php _e('Archive'); ?></a>
-					|
-					<a data-bind="click: reject" href="#"><?php _e('Reject'); ?></a>
+				<td class="urtak-mini-graph-container">
+					<div class="urtak-mini-graph">
+						<div class="urtak-mini-graph-bar">
+							<div class="urtak-mini-graph-bar-inner yes" data-bind="style: { width: yes_percent() + 'px' }"></div>
+							<span class="urtak-mini-graph-bar-label" data-bind="text: yes_percent"></span>% <?php _e('Yes'); ?>
+						</div>
+						<div class="urtak-mini-graph-bar">
+							<div class="urtak-mini-graph-bar-inner no" data-bind="style: { width: no_percent() + 'px' }"></div>
+							<span class="urtak-mini-graph-bar-label" data-bind="text: no_percent"></span>% <?php _e('No'); ?>
+						</div>
+					</div>
 				</td>
 			</tr>
 			<!-- /ko -->
