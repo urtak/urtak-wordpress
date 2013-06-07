@@ -458,6 +458,10 @@ div.urtak-error .globe {
 
 }
 
+.urtak-moderation-questions {
+	margin: 0 0 50px;
+}
+
 /** Results Page **/
 .urtak-results-left {
 	float: left;

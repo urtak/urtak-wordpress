@@ -381,6 +381,18 @@ var UrtakQuestionVM = function(question) {
 	self.text = ko.observable(question.text || '');
 	self.user_generated = question.user_generated || false;
 
+	self.is_approved = ko.computed(function() {
+		return 'approved' == self.status();
+	});
+
+	self.is_archived = ko.computed(function() {
+		return 'archived' == self.status();
+	});
+
+	self.is_rejected = ko.computed(function() {
+		return 'rejected' == self.status();
+	});
+
 	self.existing = ko.computed(function() {
 		return self.id != 0;
 	});
@@ -422,10 +434,10 @@ var UrtakReviewVM = function(post_id, question_id) {
 	self.question_id = ko.observable(question_id);
 
 	// Urtaks
+	self.urtaks_order = ko.observable('n_responses|DESC');
 	self.urtaks_page = ko.observable(1);
-	self.urtaks_pages = ko.observable(1);
+	self.urtaks_pages = ko.observable(0);
 	self.urtaks_per_page = ko.observable(10);
-	self.urtaks_search_query = ko.observable('');
 	self.urtaks_total = ko.observable(0);
 
 	self.urtaks_loading = ko.observable(false);
@@ -480,6 +492,7 @@ var UrtakReviewVM = function(post_id, question_id) {
 				ajaxurl,
 				{
 					action: 'urtak_get_urtaks',
+					order: self.urtaks_order(),
 					page: self.urtaks_page(),
 					per_page: self.urtaks_per_page(),
 					post_id: self.post_id()
@@ -504,9 +517,25 @@ var UrtakReviewVM = function(post_id, question_id) {
 		}
 	};
 
+	self.filter_and_fetch_urtaks = function() {
+		self.urtaks_page(1);
+
+		self.fetch_urtaks();
+	};
+
+	self.reset_and_fetch_urtaks = function() {
+		self.urtaks_page(1);
+		self.urtaks_order('n_responses|DESC');
+
+		self.fetch_urtaks();
+	};
+
+
 	self.load_questions_for_urtak = function(urtak) {
-		self.post_id(urtak.post_id);
 		self.questions_page(1);
+
+		self.post_id(urtak.post_id);
+
 		self.fetch_questions();
 	};
 
@@ -514,7 +543,7 @@ var UrtakReviewVM = function(post_id, question_id) {
 	self.questions_filter = ko.observable('st|pe');
 	self.questions_order = ko.observable('time');
 	self.questions_page = ko.observable(1);
-	self.questions_pages = ko.observable(1);
+	self.questions_pages = ko.observable(0);
 	self.questions_per_page = ko.observable(10);
 	self.questions_search_query = ko.observable('');
 	self.questions_total = ko.observable(0);
@@ -598,9 +627,26 @@ var UrtakReviewVM = function(post_id, question_id) {
 		}
 	};
 
+	self.filter_and_fetch_questions = function() {
+		self.questions_page(1);
+
+		self.fetch_questions();
+	};
+
+	self.reset_and_fetch_questions = function() {
+		self.post_id(0);
+
+		self.questions_filter('st|pe');
+		self.questions_page(1);
+		self.questions_order('time');
+		self.questions_search_query('');
+
+		self.fetch_questions();
+	};
+
 	// Flagged questions
 	self.flags_page = ko.observable(1);
-	self.flags_pages = ko.observable(1);
+	self.flags_pages = ko.observable(0);
 	self.flags_per_page = ko.observable(10);
 	self.flags_total = ko.observable(0);
 

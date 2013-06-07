@@ -276,8 +276,9 @@ if(!class_exists('UrtakPlugin')) {
 		public static function ajax_get_urtaks() {
 			$data = stripslashes_deep($_REQUEST);
 			$atts = shortcode_atts(array(
+				'order' => 'n_responses|DESC',
 				'page' => 1,
-				'per_page' => 10
+				'per_page' => 10,
 			), $data);
 
 			extract($atts);
@@ -1141,6 +1142,7 @@ if(!class_exists('UrtakPlugin')) {
 
 			if(isset($args['per_page'])) {
 				$args['per'] = $args['per_page'];
+				unset($args['per_page']);
 			}
 
 			$urtaks_response = $urtak_api->get_urtaks($args);
