@@ -130,6 +130,14 @@ jQuery(document).ready(function($) {
 		});
 	}
 
+	$('#urtak-force-hide-urtak').change(function(event) {
+		if($(this).is(':checked')) {
+			$editor.hide();
+		} else {
+			$editor.show();
+		}
+	}).change();
+
 
 	/* End Post Editing VM */
 

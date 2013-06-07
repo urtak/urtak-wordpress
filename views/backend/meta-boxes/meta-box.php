@@ -1,24 +1,13 @@
-<h4><?php _e('Content Controls'); ?></h4>
+<input type="hidden" name="urtak-force-hide-urtak" value="no" />
 
-<table class="form-table">
-	<tbody>
-		<tr valign="top">
-			<th scope="row"><label for="urtak-force-hide-urtak"><?php _e('Hide Urtak'); ?></label></th>
-			<td>
-				<input type="hidden" name="urtak-force-hide-urtak" value="no" />
-
-				<label>
-					<input <?php checked($force_hide, 'yes'); ?> type="checkbox" name="urtak-force-hide-urtak" id="urtak-force-hide-urtak" value="yes" />
-					<?php _e('The Urtak for this content should not show', 'urtak'); ?>
-				</label>
-			</td>
-		</tr>
-	</tbody>
-</table>
+<p>
+	<label>
+		<input <?php checked($force_hide, 'yes'); ?> type="checkbox" name="urtak-force-hide-urtak" id="urtak-force-hide-urtak" value="yes" />
+		<?php _e('The Urtak for this content should not show', 'urtak'); ?>
+	</label>
+</p>
 
 <div class="urtak-questions-editor">
-	<h4><?php _e('Questions'); ?></h4>
-
 	<div class="tablenav top">
 		<div class="tablenav-pages">
 			<span class="displaying-num"><span data-bind="text: total"></span> <?php _e('questions'); ?></span>
@@ -69,7 +58,7 @@
 			<!-- ko foreach: questions -->
 			<tr valign="top">
 				<td class="urtak-question-title">
-					<input type="text" class="large-text" data-bind="value: text, visible: !existing()" placeholder="<?php _e('Ask a question', 'urtak'); ?>" />
+					<input type="text" class="large-text" data-bind="value: text, visible: !existing()" placeholder="<?php _e('Ask a YES or NO question', 'urtak'); ?>" />
 
 					<strong data-bind="text: text, visible: existing"></strong>
 
