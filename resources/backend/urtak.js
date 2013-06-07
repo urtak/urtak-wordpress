@@ -266,6 +266,16 @@ var UrtakQuestionsVM = function(post_id) {
 		self.add_question({}, true);
 	};
 
+	self.check_for_add = function(data, event) {
+		if(13 === event.keyCode || 13 === event.which) {
+			self.add_new_question();
+
+			jQuery('.urtak-questions-editor input[type="text"]:first').focus();
+		} else {
+			return true;
+		}
+	};
+
 	self.remove_question = function() {
 		if(confirm(Urtak_Vars.remove_question)) {
 			this.reject();
@@ -322,6 +332,18 @@ var UrtakQuestionsVM = function(post_id) {
 			);
 		}
 	};
+
+	self.has_new_questions = ko.computed(function() {
+		var dirty = false;
+
+		ko.utils.arrayForEach(self.questions(), function(question) {
+			if(!question.existing() && '' !== question.text()) {
+				dirty = true;
+			}
+		});
+
+		return dirty;
+	});
 };
 
 var UrtakQuestionVM = function(question) {

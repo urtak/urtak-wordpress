@@ -35,15 +35,6 @@
 			</tr>
 		</thead>
 
-		<tfoot>
-			<tr valign="top">
-				<th scope="col"><?php _e('Post Title', 'urtak'); ?></th>
-				<th scope="col"><?php _e('Created', 'urtak'); ?></th>
-				<th scope="col"><?php _e('Questions', 'urtak'); ?></th>
-				<th scope="col"><?php _e('Responses', 'urtak'); ?></th>
-			</tr>
-		</tfoot>
-
 		<tbody>
 			<tr data-bind="visible: no_urtaks" valign="top">
 				<td colspan="4"><?php _e('No Urtaks found', 'urtak'); ?></td>

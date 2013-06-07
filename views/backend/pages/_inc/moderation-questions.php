@@ -51,14 +51,6 @@
 			</tr>
 		</thead>
 
-		<tfoot>
-			<tr valign="top">
-				<th scope="col"><?php _e('Question', 'urtak'); ?></th>
-				<th scope="col"><?php _e('Responses', 'urtak'); ?></th>
-				<th scope="col"><?php _e('Actions', 'urtak'); ?></th>
-			</tr>
-		</tfoot>
-
 		<tbody>
 			<tr data-bind="visible: no_questions" valign="top">
 				<td colspan="3"><?php _e('No questions found', 'urtak'); ?></td>

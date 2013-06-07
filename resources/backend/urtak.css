@@ -431,6 +431,10 @@ div.urtak-error .globe {
 }
 
 /** Post Meta Table **/
+.urtak-save-warning {
+	color: #cc0000;
+}
+
 .urtak-question-title {
 	width: 75%;
 }

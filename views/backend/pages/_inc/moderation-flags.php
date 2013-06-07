@@ -23,14 +23,6 @@
 			</tr>
 		</thead>
 
-		<tfoot>
-			<tr valign="top">
-				<th scope="col"><?php _e('Flagged Question', 'urtak'); ?></th>
-				<th scope="col"><?php _e('Times Flagged', 'urtak'); ?></th>
-				<th scope="col"><?php _e('Actions', 'urtak'); ?></th>
-			</tr>
-		</tfoot>
-
 		<tbody>
 			<tr data-bind="visible: no_flags" valign="top">
 				<td colspan="3"><?php _e('No flagged questions found', 'urtak'); ?></td>
