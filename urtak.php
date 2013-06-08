@@ -68,6 +68,7 @@ if(!class_exists('UrtakPlugin')) {
 
 			//// Post editing meta box support
 			add_action('wp_ajax_urtak_get_post_data', array(__CLASS__, 'ajax_get_post_data'));
+			add_action('wp_ajax_urtak_get_post_title', array(__CLASS__, 'ajax_get_post_title'));
 
 			//// For retrieving site wide and non-sitewide questions
 			add_action('wp_ajax_urtak_get_questions', array(__CLASS__, 'ajax_get_questions'));
@@ -191,6 +192,15 @@ if(!class_exists('UrtakPlugin')) {
 			exit;
 		}
 
+		public static function ajax_get_post_title() {
+			$data = stripslashes_deep($_REQUEST);
+
+			$post = get_post($data['post_id']);
+
+			echo json_encode(array('post_id' => $data['post_id'], 'post_title' => $post->post_title));
+			exit;
+		}
+
 		public static function ajax_get_questions() {
 			$data = stripslashes_deep($_REQUEST);
 
@@ -219,7 +229,7 @@ if(!class_exists('UrtakPlugin')) {
 				$data = $response;
 
 				foreach($data['questions']['question'] as $key => $question) {
-					$data['questions']['question'][$key]['nicedate'] = date(get_option('date_format') . ' \a\t ' . get_option('time_format'), $question['created_at']);
+					$data['questions']['question'][$key]['nicedate'] = date(get_option('date_format'), $question['created_at']);
 				}
 			}
 
@@ -295,7 +305,7 @@ if(!class_exists('UrtakPlugin')) {
 					$data['urtaks']['urtak'][$key]['edittitle'] = get_the_title($urtak['post_id']);
 					$data['urtaks']['urtak'][$key]['moderatelink'] = self::_get_moderation_url($urtak['post_id']);
 					$data['urtaks']['urtak'][$key]['viewlink'] = get_permalink($urtak['post_id']);
-					$data['urtaks']['urtak'][$key]['nicedate'] = date(get_option('date_format') . ' \a\t ' . get_option('time_format'), strtotime($post->post_date));
+					$data['urtaks']['urtak'][$key]['nicedate'] = date(get_option('date_format'), strtotime($post->post_date));
 				}
 			} else {
 				$data = array('error' => true, 'error_message' => __('Could not retrieve Urtaks.'));
@@ -1077,6 +1087,7 @@ if(!class_exists('UrtakPlugin')) {
 
 				foreach($questions['questions']['question'] as $key => $question) {
 					$questions['questions']['question'][$key]['nicedate'] = date(get_option('date_format') . ' \a\t ' . get_option('time_format'), $question['created_at']);
+					$questions['questions']['question'][$key]['post_id'] = $question['urtak']['post_id'];
 				}
 			} else if(404 === intval($questions_response->code)) {
 				// We're trapping this particular thing because we want to make sure not to provide an error

@@ -1,4 +1,6 @@
 <div class="urtak-results-urtaks">
+	<h3 class="table-heading"><?php _e('Posts with Urtak Polls'); ?></h3>
+
 	<div class="tablenav top">
 		<div class="alignleft actions">
 			<select data-bind="value: urtaks_order">
@@ -29,9 +31,9 @@
 		<thead>
 			<tr valign="top">
 				<th scope="col"><?php _e('Post Title', 'urtak'); ?></th>
-				<th scope="col"><?php _e('Created', 'urtak'); ?></th>
-				<th scope="col"><?php _e('Questions', 'urtak'); ?></th>
-				<th scope="col"><?php _e('Responses', 'urtak'); ?></th>
+				<th class="urtak-responses-column" scope="col"><?php _e('Questions', 'urtak'); ?></th>
+				<th class="urtak-pending-questions-column" scope="col"><?php _e('Pending Questions', 'urtak'); ?></th>
+				<th class="urtak-responses-column" scope="col"><?php _e('Responses', 'urtak'); ?></th>
 			</tr>
 		</thead>
 
@@ -48,6 +50,7 @@
 			<tr valign="top">
 				<td>
 					<strong><a data-bind="attr: { href: editlink }, text: edittitle" target="_blank"></a></strong>
+					<small class="urtak-date"> - <span data-bind="text: nicedate"></span></small>
 					<div class="row-actions">
 						<span class="edit">
 							<a data-bind="attr: { href: editlink }" target="_blank"><?php _e('Edit'); ?></a>
@@ -69,9 +72,9 @@
 						</span>
 					</div>
 				</td>
-				<td data-bind="text: nicedate"></td>
-				<td data-bind="text: approved_questions_count"></td>
-				<td data-bind="text: responses_count"></td>
+				<td class="urtak-responses-column" data-bind="text: approved_questions_count"></td>
+				<td class="urtak-pending-questions-column" data-bind="text: pending_questions_count"></td>
+				<td class="urtak-responses-column" data-bind="text: responses_count"></td>
 			</tr>
 			<!-- /ko -->
 		</tbody>

@@ -46,8 +46,18 @@ div.urtak-error .globe {
 	min-width: 800px;
 }
 
+.urtak-wrap h3.table-heading {
+	margin-top: 0;
+}
+
 .urtak-wrap .actions label {
 	float: left;
+	margin: 0 5px 0 0;
+	line-height: 25px;
+}
+
+.urtak-wrap .actions select {
+	margin: 0 10px 0 0;
 }
 
 .urtak-wrap > div.updated, .urtak-wrap > div.error {
@@ -434,6 +444,16 @@ div.urtak-error .globe {
 	width: 90px !important;
 }
 
+.urtak-pending-questions-column {
+	max-width: 150px !important;
+	width: 150px !important;
+}
+
+.urtak-status-column {
+	max-width: 90px !important;
+	width: 90px !important;
+}
+
 /** Post Meta Table **/
 .urtak-save-warning {
 	color: #cc0000;
@@ -450,7 +470,7 @@ div.urtak-error .globe {
 /** Moderation Page **/
 .urtak-change-status-column {
 	text-align: left;
-	width: 150px;
+	width: 90px;
 }
 
 .urtak-moderation-left {
@@ -495,8 +515,9 @@ div.urtak-error .globe {
 }
 
 .urtak-mini-graph-container {
-	white-space: nowrap;
 	padding-right: 5px;
+	white-space: nowrap;
+	width: 175px;
 }
 
 .urtak-mini-graph-bar {
@@ -514,4 +535,8 @@ div.urtak-error .globe {
 
 .urtak-mini-graph-bar-inner.no {
 	background: #ff7100;
+}
+
+.urtak-mini-graph-bar-inner.care {
+	background: #999999;
 }

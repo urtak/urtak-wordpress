@@ -349,15 +349,29 @@ var UrtakQuestionsVM = function(post_id) {
 var UrtakQuestionVM = function(question) {
 	var self = this;
 
-	self.change_status = function(status) {
+	self.change_status = function(action) {
 		if(self.existing()) {
+			var status;
+			switch(action) {
+				case 'approve':
+					status = 'approved';
+					break;
+				case 'reject':
+					status = 'rejected';
+					break;
+				case 'archive':
+					status = 'archived';
+					break;
+			}
+			self.status(status);
+
 			jQuery.get(
 				ajaxurl,
 				{
 					action: 'urtak_modify_question_status',
 					post_id: self.post_id,
 					question_id: self.id,
-					status: status
+					status: action
 				},
 				function(data, status) {
 
@@ -447,12 +461,16 @@ var UrtakQuestionVM = function(question) {
 		return self.responses && self.responses.counts && self.responses && self.responses.counts.total ? self.responses.counts.total : 0;
 	});
 
-	self.no_percent = ko.computed(function() {
+	self.yes_percent = ko.computed(function() {
 		return self.responses && self.responses.percents && self.responses.percents.yes ? self.responses.percents.yes : 0;
 	});
 
-	self.yes_percent = ko.computed(function() {
+	self.no_percent = ko.computed(function() {
 		return self.responses && self.responses.percents && self.responses.percents.no ? self.responses.percents.no : 0;
+	});
+
+	self.care_percent = ko.computed(function() {
+		return self.responses && self.responses.percents && self.responses.percents.care ? self.responses.percents.care : 0;
 	});
 };
 
@@ -486,6 +504,38 @@ var UrtakReviewVM = function(post_id, question_id) {
 
 	self.post_id = ko.observable(post_id);
 	self.question_id = ko.observable(question_id);
+
+	var post_titles = {};
+
+	self.post_title_accessor = ko.observable('');
+	self.post_title = ko.computed(function() {
+		var post_id = self.post_id(),
+			post_title = self.post_title_accessor();
+
+		if(post_titles[post_id]) {
+			self.post_title_accessor(post_titles[post_id]);
+
+			return post_titles[post_id];
+		} else {
+			jQuery.get(
+				ajaxurl,
+				{
+					action: 'urtak_get_post_title',
+					post_id: post_id
+				},
+				function(data, status) {
+					if(data.post_title) {
+						post_titles[data.post_id] = data.post_title;
+
+						self.post_title_accessor(data.post_title);
+					}
+				},
+				'json'
+			);
+
+			return 'Post ID ' + post_id;
+		}
+	});
 
 	// Urtaks
 	self.urtaks_order = ko.observable('n_responses|DESC');

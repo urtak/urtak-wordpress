@@ -1,8 +1,12 @@
 <div class="urtak-results-questions">
+	<h3 class="table-heading" data-bind="visible: post_id() > 0"><?php _e('Questions in "'); ?><span data-bind="text: post_title"></span>"</h3>
+
+	<h3 class="table-heading" data-bind="visible: post_id() == 0"><?php _e('All Questions'); ?></h3>
+
 	<div class="tablenav top">
 		<div class="alignleft actions">
 			<select data-bind="value: questions_filter">
-				<option value="st|all" selected="selected"><?php _e('Status - All'); ?></option>
+				<option value="st|all"><?php _e('Status - All'); ?></option>
 				<option value="st|aa"><?php _e('Approved'); ?></option>
 				<option value="st|pe"><?php _e('Pending'); ?></option>
 				<option value="st|ap"><?php _e('Approved or Pending'); ?></option>
@@ -11,7 +15,7 @@
 			</select>
 
 			<select data-bind="value: questions_order">
-				<option value="time" selected="selected"><?php _e('Order By - Time'); ?></option>
+				<option value="time"><?php _e('Order By - Time'); ?></option>
 				<option value="n_responses"><?php _e('Number of Responses'); ?></option>
 				<option value="most_cared"><?php _e('Most Cared'); ?></option>
 				<option value="least_cared"><?php _e('Least Cared'); ?></option>
@@ -46,26 +50,27 @@
 		<thead>
 			<tr valign="top">
 				<th scope="col"><?php _e('Question', 'urtak'); ?></th>
-				<th scope="col"><?php _e('Asked', 'urtak'); ?></th>
-				<th scope="col"><?php _e('Status', 'urtak'); ?></th>
-				<th scope="col"><?php _e('Responses', 'urtak'); ?></th>
-				<th scope="col"><?php _e('Results', 'urtak'); ?></th>
+				<th class="urtak-responses-column" scope="col"><?php _e('Responses', 'urtak'); ?></th>
+				<th class="urtak-responses-column" scope="col"><?php _e('Status', 'urtak'); ?></th>
+				<th class="urtak-mini-graph-container" scope="col"><?php _e('Results', 'urtak'); ?></th>
 			</tr>
 		</thead>
 
 		<tbody>
 			<tr data-bind="visible: no_questions" valign="top">
-				<td colspan="5"><?php _e('No questions found', 'urtak'); ?></td>
+				<td colspan="4"><?php _e('No questions found', 'urtak'); ?></td>
 			</tr>
 
 			<tr data-bind="visible: questions_loading" valign="top">
-				<td colspan="5"><?php _e('Loading...', 'urtak'); ?></td>
+				<td colspan="4"><?php _e('Loading...', 'urtak'); ?></td>
 			</tr>
 
 			<!-- ko foreach: questions -->
 			<tr valign="top">
-				<td data-bind="text: text"></td>
-				<td data-bind="text: nicedate"></td>
+				<td>
+					<strong data-bind="text: text"></strong>
+					<small class="urtak-date"> - <span data-bind="text: nicedate"></span></small>
+				</td>
 				<td data-bind="text: nicestatus"></td>
 				<td data-bind="text: number_responses"></td>
 				<td class="urtak-mini-graph-container">
@@ -77,6 +82,10 @@
 						<div class="urtak-mini-graph-bar">
 							<div class="urtak-mini-graph-bar-inner no" data-bind="style: { width: no_percent() + 'px' }"></div>
 							<span class="urtak-mini-graph-bar-label" data-bind="text: no_percent"></span>% <?php _e('No'); ?>
+						</div>
+						<div class="urtak-mini-graph-bar">
+							<div class="urtak-mini-graph-bar-inner care" data-bind="style: { width: care_percent() + 'px' }"></div>
+							<span class="urtak-mini-graph-bar-label" data-bind="text: care_percent"></span>% <?php _e('Care'); ?>
 						</div>
 					</div>
 				</td>

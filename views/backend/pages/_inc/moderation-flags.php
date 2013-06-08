@@ -1,20 +1,5 @@
 <div class="urtak-moderation-flags">
-	<h3><?php _e('Flagged Questions'); ?></h3>
-
-	<div class="tablenav top">
-		<div class="tablenav-pages">
-			<span class="displaying-num"><span data-bind="text: flags_total"></span> <?php _e('Flags'); ?></span>
-			<span class="pagination-links" data-bind="visible: flags_pages() > 0">
-				<a class="prev-page" data-bind="click: previous_flags_page, css: { disabled: !has_previous_flags_page() }" title="<?php _e('Go to the previous page'); ?>" href="#">‹</a>
-				<span class="paging-input">
-					<span class="current-page" data-bind="text: flags_page"></span>
-					<?php _e('of'); ?>
-					<span class="total-pages" data-bind="text: flags_pages"></span>
-				</span>
-				<a class="next-page" data-bind="click: next_flags_page, css: { disabled: !has_next_flags_page() }" title="<?php _e('Go to the next page'); ?>" href="#">›</a>
-			</span>
-		</div>
-	</div>
+	<h3 class="table-heading"><?php _e('Flagged Questions'); ?></h3>
 
 	<table class="widefat fixed">
 		<thead>
@@ -45,4 +30,19 @@
 			<!-- /ko -->
 		</tbody>
 	</table>
+
+	<div class="tablenav bottom">
+		<div class="tablenav-pages">
+			<span class="displaying-num"><span data-bind="text: flags_total"></span> <?php _e('Flags'); ?></span>
+			<span class="pagination-links" data-bind="visible: flags_pages() > 0">
+				<a class="prev-page" data-bind="click: previous_flags_page, css: { disabled: !has_previous_flags_page() }" title="<?php _e('Go to the previous page'); ?>" href="#">‹</a>
+				<span class="paging-input">
+					<span class="current-page" data-bind="text: flags_page"></span>
+					<?php _e('of'); ?>
+					<span class="total-pages" data-bind="text: flags_pages"></span>
+				</span>
+				<a class="next-page" data-bind="click: next_flags_page, css: { disabled: !has_next_flags_page() }" title="<?php _e('Go to the next page'); ?>" href="#">›</a>
+			</span>
+		</div>
+	</div>
 </div>
