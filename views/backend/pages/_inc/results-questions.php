@@ -49,7 +49,7 @@
 				<th scope="col"><?php _e('Asked', 'urtak'); ?></th>
 				<th scope="col"><?php _e('Status', 'urtak'); ?></th>
 				<th scope="col"><?php _e('Responses', 'urtak'); ?></th>
-				<th scope="col"><?php _e('% Yes', 'urtak'); ?></th>
+				<th scope="col"><?php _e('Results', 'urtak'); ?></th>
 			</tr>
 		</thead>
 

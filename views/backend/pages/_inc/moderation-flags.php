@@ -1,4 +1,6 @@
 <div class="urtak-moderation-flags">
+	<h3><?php _e('Flagged Questions'); ?></h3>
+
 	<div class="tablenav top">
 		<div class="tablenav-pages">
 			<span class="displaying-num"><span data-bind="text: flags_total"></span> <?php _e('Flags'); ?></span>
@@ -17,26 +19,24 @@
 	<table class="widefat fixed">
 		<thead>
 			<tr valign="top">
-				<th scope="col"><?php _e('Flagged Question', 'urtak'); ?></th>
-				<th scope="col"><?php _e('Times Flagged', 'urtak'); ?></th>
-				<th scope="col"><?php _e('Actions', 'urtak'); ?></th>
+				<th scope="col"><?php _e('Question', 'urtak'); ?></th>
+				<th class="urtak-change-status-column" scope="col"><?php _e('Change Status', 'urtak'); ?></th>
 			</tr>
 		</thead>
 
 		<tbody>
 			<tr data-bind="visible: no_flags" valign="top">
-				<td colspan="3"><?php _e('No flagged questions found', 'urtak'); ?></td>
+				<td colspan="2"><?php _e('No flagged questions found', 'urtak'); ?></td>
 			</tr>
 
 			<tr data-bind="visible: flags_loading" valign="top">
-				<td colspan="3"><?php _e('Loading...', 'urtak'); ?></td>
+				<td colspan="2"><?php _e('Loading...', 'urtak'); ?></td>
 			</tr>
 
 			<!-- ko foreach: flags -->
 			<tr valign="top">
 				<td data-bind="text: question"></td>
-				<td data-bind="text: count"></td>
-				<td>
+				<td class="urtak-change-status-column">
 					<a data-bind="click: function() { $parent.change_flag_status($data, 'ignore'); }" href="#"><?php _e('Keep'); ?></a>
 					|
 					<a data-bind="click: function() { $parent.change_flag_status($data, 'agree'); }" href="#"><?php _e('Reject'); ?></a>

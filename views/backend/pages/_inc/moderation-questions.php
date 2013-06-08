@@ -1,4 +1,6 @@
 <div class="urtak-moderation-questions">
+	<h3><?php _e('All Questions'); ?></h3>
+
 	<div class="tablenav top">
 		<div class="alignleft actions">
 			<select data-bind="value: questions_filter">
@@ -47,7 +49,7 @@
 			<tr valign="top">
 				<th scope="col"><?php _e('Question', 'urtak'); ?></th>
 				<th scope="col"><?php _e('Responses', 'urtak'); ?></th>
-				<th scope="col"><?php _e('Actions', 'urtak'); ?></th>
+				<th class="urtak-change-status-column" scope="col"><?php _e('Change Status', 'urtak'); ?></th>
 			</tr>
 		</thead>
 
@@ -64,7 +66,7 @@
 			<tr valign="top">
 				<td data-bind="text: text"></td>
 				<td data-bind="text: number_responses"></td>
-				<td>
+				<td class="urtak-change-status-column">
 					<span data-bind="visible: !is_approved()">
 						<a data-bind="click: approve" href="#"><?php _e('Approve'); ?></a>
 						|

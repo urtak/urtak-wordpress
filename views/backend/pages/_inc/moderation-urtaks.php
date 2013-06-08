@@ -1,8 +1,11 @@
 <div class="urtak-moderation-urtaks">
+	<h3><?php _e('Posts with Urtak Polls'); ?></h3>
+
 	<div class="tablenav top">
 		<div class="alignleft actions">
+			<label><?php _e('Order By'); ?></label>
 			<select data-bind="value: urtaks_order">
-				<option value="n_responses|DESC" selected="selected"><?php _e('Order By - Most Responses'); ?></option>
+				<option value="n_responses|DESC" selected="selected"><?php _e('Most Responses'); ?></option>
 				<option value="n_responses|ASC"><?php _e('Least Responses'); ?></option>
 			</select>
 
@@ -59,7 +62,7 @@
 						</span>
 
 						<span class="load">
-							<a data-bind="click: function() { $parent.load_questions_for_urtak($data); }" href="#"><?php _e('Load Questions'); ?></a>
+							<a data-bind="click: function() { $parent.load_questions_for_urtak($data); }" href="#"><?php _e('Show Questions'); ?></a>
 						</span>
 					</div>
 				</td>

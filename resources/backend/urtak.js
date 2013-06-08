@@ -132,9 +132,9 @@ jQuery(document).ready(function($) {
 
 	$('#urtak-force-hide-urtak').change(function(event) {
 		if($(this).is(':checked')) {
-			$editor.hide();
+			$editor.find('table,.tablenav-pages').hide();
 		} else {
-			$editor.show();
+			$editor.find('table,.tablenav-pages').show();
 		}
 	}).change();
 

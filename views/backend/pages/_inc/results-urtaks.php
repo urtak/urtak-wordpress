@@ -60,7 +60,7 @@
 						</span>
 
 						<span class="load">
-							<a data-bind="click: function() { $parent.load_questions_for_urtak($data); }" href="#"><?php _e('Load Questions'); ?></a>
+							<a data-bind="click: function() { $parent.load_questions_for_urtak($data); }" href="#"><?php _e('Show Questions'); ?></a>
 							|
 						</span>
 
