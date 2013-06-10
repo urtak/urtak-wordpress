@@ -1,12 +1,13 @@
 <div class="urtak-results-questions">
-	<h3 class="table-heading" data-bind="visible: post_id() > 0"><?php _e('Questions in "'); ?><span data-bind="text: post_title"></span>"</h3>
+	<h3 class="table-heading" data-bind="visible: post_id() > 0"><?php _e('Questions in '); ?><a href="#" target="_blank" data-bind="attr: { href: '<?php echo admin_url('post.php?action=edit&post='); ?>' + post_id() }, text: post_title"></a></h3>
 
 	<h3 class="table-heading" data-bind="visible: post_id() == 0"><?php _e('All Questions'); ?></h3>
 
 	<div class="tablenav top">
 		<div class="alignleft actions">
+			<label><?php _e('Status'); ?></label>
 			<select data-bind="value: questions_filter">
-				<option value="st|all"><?php _e('Status - All'); ?></option>
+				<option value="st|all"><?php _e('All'); ?></option>
 				<option value="st|aa"><?php _e('Approved'); ?></option>
 				<option value="st|pe"><?php _e('Pending'); ?></option>
 				<option value="st|ap"><?php _e('Approved or Pending'); ?></option>
@@ -14,8 +15,9 @@
 				<option value="st|nu"><?php _e('Rejected'); ?></option>
 			</select>
 
+			<label><?php _e('Order By'); ?></label>
 			<select data-bind="value: questions_order">
-				<option value="time"><?php _e('Order By - Time'); ?></option>
+				<option value="time"><?php _e('Time'); ?></option>
 				<option value="n_responses"><?php _e('Number of Responses'); ?></option>
 				<option value="most_cared"><?php _e('Most Cared'); ?></option>
 				<option value="least_cared"><?php _e('Least Cared'); ?></option>
@@ -25,8 +27,6 @@
 
 			<label class="screen-reader-text"><?php _e('Search Questions'); ?></label>
 			<input type="text" data-bind="value: questions_search_query" placeholder="<?php _e('Search Questions'); ?>" />
-
-			<a data-bind="visible: post_id() > 0, attr: { href: '<?php echo admin_url('post.php?action=edit&post='); ?>' + post_id() }" target="_blank" href="#"><?php _e('Related Post'); ?></a>
 
 			<input type="button" class="button action" data-bind="click: filter_and_fetch_questions" value="<?php _e('Filter'); ?>" />
 			<input type="button" class="button action" data-bind="click: reset_and_fetch_questions" value="<?php _e('Reset'); ?>" />

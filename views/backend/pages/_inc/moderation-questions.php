@@ -1,5 +1,5 @@
 <div class="urtak-moderation-questions">
-	<h3 class="table-heading" data-bind="visible: post_id() > 0"><?php _e('Questions in "'); ?><span data-bind="text: post_title"></span>"</h3>
+		<h3 class="table-heading" data-bind="visible: post_id() > 0"><?php _e('Questions in '); ?><a href="#" target="_blank" data-bind="attr: { href: '<?php echo admin_url('post.php?action=edit&post='); ?>' + post_id() }, text: post_title"></a></h3>
 
 	<h3 class="table-heading" data-bind="visible: post_id() == 0"><?php _e('All Questions'); ?></h3>
 

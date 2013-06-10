@@ -3,8 +3,9 @@
 
 	<div class="tablenav top">
 		<div class="alignleft actions">
+			<label><?php _e('Order By'); ?></label>
 			<select data-bind="value: urtaks_order">
-				<option value="n_responses|DESC" selected="selected"><?php _e('Order By - Most Responses'); ?></option>
+				<option value="n_responses|DESC" selected="selected"><?php _e('Most Responses'); ?></option>
 				<option value="n_responses|ASC"><?php _e('Least Responses'); ?></option>
 			</select>
 
