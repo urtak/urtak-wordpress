@@ -630,10 +630,12 @@ if(!class_exists('UrtakPlugin')) {
 		    $new = array();
 		    foreach($questions as $question) {
 		    	if(!$question['existing']) {
-		    		$new[] = array(
-		    			'first_question' => $question['first_question'] ? 1 : 0,
-		    			'text' => $question['text'],
-		    		);
+		    		if(!empty($question['text'])) {
+			    		$new[] = array(
+			    			'first_question' => $question['first_question'] ? 1 : 0,
+			    			'text' => $question['text'],
+			    		);
+		    		}
 		    	}
 		    }
 
@@ -642,11 +644,15 @@ if(!class_exists('UrtakPlugin')) {
 				$urtak = self::create_urtak($args, $new);
 				if($urtak && isset($urtak['id']) && !empty($urtak['id']) && !empty($new)) {
 					update_post_meta($post_id, self::QUESTION_CREATED_KEY, 'yes');
+				} else {
+					delete_post_meta($post_id, self::QUESTION_CREATED_KEY);
 				}
 			} else {
 				$urtak = self::update_urtak($args, $new);
 				if($urtak && !empty($new)) {
 					update_post_meta($post_id, self::QUESTION_CREATED_KEY, 'yes');
+				} else {
+					delete_post_meta($post_id, self::QUESTION_CREATED_KEY);
 				}
 			}
 
