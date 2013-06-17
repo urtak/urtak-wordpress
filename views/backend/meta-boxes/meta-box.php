@@ -10,6 +10,8 @@
 					-
 					<small><a href="#" data-bind="click: add_new_question"><?php _e('Add New', 'urtak'); ?></a></small>
 
+					<span class="urtak-save-warning" data-bind="visible: is_focused"><?php _e(' - Press enter to add multiple questions'); ?></span>
+
 					<span class="urtak-save-warning" data-bind="visible: has_new_questions"><?php _e(' - Save post to submit new questions'); ?></span>
 				</th>
 				<th scope="col" class="urtak-question-responses">
@@ -25,7 +27,7 @@
 			<!-- ko foreach: questions -->
 			<tr valign="top">
 				<td class="urtak-question-title">
-					<input type="text" class="large-text" data-bind="event: { keydown: $parent.check_for_add }, value: text, visible: !existing()" placeholder="<?php _e('Ask a YES or NO question', 'urtak'); ?>" />
+					<input type="text" class="large-text" data-bind="event: { keydown: $parent.check_for_add }, value: text, visible: !existing(), hasfocus: has_focus, valueUpdate: 'afterkeydown'" placeholder="<?php _e('Ask a YES or NO question', 'urtak'); ?>" />
 
 					<strong data-bind="text: text, visible: existing"></strong>
 

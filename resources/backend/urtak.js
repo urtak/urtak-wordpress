@@ -200,6 +200,7 @@ jQuery(document).ready(function($) {
 var UrtakQuestionsVM = function(post_id) {
 	var self = this;
 
+
 	self.page = ko.observable(1);
 	self.pages = ko.observable(1);
 	self.per_page = ko.observable(10);
@@ -242,6 +243,16 @@ var UrtakQuestionsVM = function(post_id) {
 		return !self.loading() && self.questions().length === 0;
 	});
 
+	self.is_focused = ko.computed(function() {
+		for(var i = 0; i < self.questions().length; i++) {
+			if(self.questions()[i].has_focus()) {
+				return true;
+			}
+		}
+
+		return false;
+	});
+
 	self.has_urtak = ko.computed(function() {
 		return false !== self.urtak();
 	});
@@ -255,22 +266,26 @@ var UrtakQuestionsVM = function(post_id) {
 	self.add_question = function(question, beginning) {
 		question.post_id = self.post_id;
 
+		var question_vm = new UrtakQuestionVM(question);
+
 		if(beginning) {
-			self.questions.unshift(new UrtakQuestionVM(question));
+			self.questions.unshift(question_vm);
 		} else {
-			self.questions.push(new UrtakQuestionVM(question));
+			self.questions.push(question_vm);
 		}
+
+		return question_vm;
 	};
 
 	self.add_new_question = function() {
-		self.add_question({}, true);
+		return self.add_question({}, true);
 	};
 
 	self.check_for_add = function(data, event) {
 		if(13 === event.keyCode || 13 === event.which) {
-			self.add_new_question();
+			var question = self.add_new_question();
 
-			jQuery('.urtak-questions-editor input[type="text"]:first').focus();
+			question.has_focus(true);
 		} else {
 			return true;
 		}
@@ -415,6 +430,7 @@ var UrtakQuestionVM = function(question) {
 		}
 	};
 
+	self.has_focus = ko.observable(false);
 	self.first_question = ko.observable(question.first_question || false);
 	self.not_first_question = ko.computed(function() { return !self.first_question(); });
 
