@@ -37,6 +37,7 @@ if(!class_exists('UrtakPlugin')) {
 		private static $manage_page_urtaks = null;
 		private static $urtak_api = null;
 		private static $urtaks_fetched = array();
+		private static $urtaks_shown = array();
 
 		public static function init() {
 			load_plugin_textdomain('urtak', null, path_join(dirname(plugin_basename(__FILE__)), 'lang/'));
@@ -648,8 +649,8 @@ if(!class_exists('UrtakPlugin')) {
 					delete_post_meta($post_id, self::QUESTION_CREATED_KEY);
 				}
 			} else {
-				$urtak = self::update_urtak($args, $new);
-				if($urtak && !empty($new)) {
+				$urtak_updated = self::update_urtak($args, $new);
+				if($urtak && (!empty($new) || $urtak['approved_questions_count'] > 0)) {
 					update_post_meta($post_id, self::QUESTION_CREATED_KEY, 'yes');
 				} else {
 					delete_post_meta($post_id, self::QUESTION_CREATED_KEY);
@@ -1404,10 +1405,13 @@ if(!class_exists('UrtakPlugin')) {
 										&& ('yes' === self::get_settings('user-start')
 											|| 'yes' === get_post_meta($post_id, self::QUESTION_CREATED_KEY, true)));
 
+			$should_show = $should_show && (!isset(self::$urtaks_shown[$post_id]));
+
 			if(!$should_show) {
 				return '';
 			}
 
+			self::$urtaks_shown[$post_id] = true;
 
 			$height = self::get_settings('height');
 			$permalink = get_permalink($post_id);
