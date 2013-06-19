@@ -3,86 +3,73 @@
 Contributors: nickohrn, urtak
 Tags: urtak, questions, conversation, discussion, comments, surveys, polls, engagement, insights, audience, community
 Requires at least: 3.4
-Tested up to: 3.5.1
-Stable tag: 1.3.1
+Tested up to: 3.6
+Stable tag: 2.0.0
 License: MIT
 
-Conversation powered by questions. Bring simplicity and structure to any online
-conversation by allowing your users to ask each other questions.
+An Urtak poll is the simplest and fastest way to find out what an online
+audience is thinking.
 
 == Description ==
 
-Better understand your audience. Are you thinking what your audience is
-thinking? Find out with Urtak.
+The Urtak plugin for WordPress makes it extremely easy to add, moderate, and
+create insights from Urtak polls on your site.
 
-Engage ten times as many people. Urtak lowers the barrier to participation with
-fun, simple questions.
+Urtak is the only poll where everyone who participates can ask questions. By
+asking your audience simple yes or no questions, and by letting them ask
+questions of their own, you can quickly create a valuable resource of opinion
+insights.
 
-= Benefits =
+Urtak is in use by great online publishers like Mashable, The Blaze, The Daily
+Beast, CBC, Sports Illustrated, InStyle, Women’s Health, and Andrew Sullivan’s
+The Dish.
 
-* **Bring your site to life**
-  Show off the increased engagement with Urtak’s response counter. No more
-  zeroes!
-* **More time on site**
-  On average, Urtak users spend 90 seconds more time on articles or videos.
-* **Detailed reports, straight to your inbox**
-  Whenever you ask questions, Urtak makes sure that you get the results sent
-  right to you.
-* **Politeness by design**
-  Think about it. Isn’t it always nicer to frame your thoughts as a question?
-  No more shouting!
-* **Less work moderating**
-  It’s a lot easier to deal with yes or no questions than lengthy comments.
-* **Cross-tabulation**
-  Dig deeper into the results with our cross-tabulation tool. Are men more
-  likely to enjoy your articles? Do first-time visitors think the same as your
-  current community. The power to find out is yours.
-* **Log in with Facebook and Twitter**
-  It couldn’t be easier for your audience to sign up with their social profiles
-  to ask questions and share the results with their networks.
-* **Intelligent algorithm**
-  We’ve developed a powerful algorithm that makes sure that the questions
-  people care about get asked more often.
-* **Robust and reliable**
-  Our technology is designed to handle massive traffic. Huge brands like
-  Mashable, The Daily Beast, and The Huffington Post have used Urtak. We worked
-  for them, we’ll work for you.
-* **Available in English and Spanish**
-  Sí, no, no me importa? We develop and fully support Urtak en español. We’re
-  huge in Colombia.
-* **Use from the WP Dashboard**
-  One click installation. Ask questions and manage Urtak conversations right
-  from your Dashboard.
+<h4>Why Choose Urtak?</h4>
+
+* **More Engagement**
+  Urtak creates 10x more reactions than any other solution
+
+* **Increase Time on Site**
+  Urtak users answer more than 20 questions per session
+
+* **Empower your community**
+  User-generated questions help you make better polls
+
+* **Understand your audience**
+  Create new insights from a wealth of opinion data
+
+* **Fast**
+  Create and embed an Urtak poll on your site in less than a minute
+
+* **Responsive**
+  Urtak delivers the same great experience on web, tablet, and mobile
+
+* **Increase revenue**
+  Urtak is creating thousands in new revenue for online publishers. Contact us
+  to learn how.
+
+Visit [urtak.com/explore]("https://urtak.com/explore") to see examples of Urtak
+in action.
 
 == Installation ==
 
-Installing the Urtak WordPress plugin takes about five minutes. Here’s a step
-by step guide.
+You may install Urtak using the built in WordPress plugin installer. You can
+also manually install the plugin by uploading it to your `/wp-content/plugins`
+directory.
 
-1. From your WordPress dashboard, go to the Install Plugins page and search for
-   Urtak.
-2. Click “Install Plugin.”
-3. After a few seconds, you will be able to activate Urtak by clicking
-   “Activate Plugin.”
-4. Then it’s time to Sign Up (or Login if you already have an Urtak account).
-5. You’ll be taken to the plugin Settings page, where you’ll enter your email
-   address, and select the settings you want for your site.
-6. Hit “Save Changes,” and you’re done.
-7. You’ll now be able to start Urtak conversations right from your posts.
+Once you have installed and activated the plugin, an “Urtak” link should appear
+in your dashboard’s left navigation menu. In the “Settings” sub-section of the
+Urtak plugin, you may sign up for an Urtak account or log in with your existing
+credentials if you already have an account.
 
-= Using the Plugin =
+Once you’ve signed in and completed your selections on the “Settings” page, you
+will see an Urtak meta-box on your Post Edit pages from which you can create
+Urtak polls.
 
-Once Urtak is installed, you’ll be able to start conversations right from your
-post edit page. Every post has its own Urtak conversation associated with it.
-The questions are asked to users in a random order. As the creator of the
-conversation, you will receive an email report of results, as well as having
-access to the insights page of the plugin.
+For more information visit [about.urtak.com](http://about.urtak.com/).
 
-For more information on settings and features, [visit the Frequently Asked
-Questions](http://about.urtak.com/faq).
-
-Please note that use of Urtak is subject to our
-[Terms and Privacy Policy](http://about.urtak.com/terms).
+Please note that use of Urtak is subject to our [Terms and Privacy
+Policy](http://about.urtak.com/terms).
 
 == Screenshots ==
 
@@ -95,9 +82,20 @@ Please note that use of Urtak is subject to our
 
 == Changelog ==
 
+= 2.0.0 =
+
+* Urtak polls can now be dynamically positioned within a post using the
+  shortcode `[urtak]`. Using this shortcode will prevent the widget from
+  displaying after the post or in the custom location specified in your
+  template.
+* Simplified the post edit page Urtak meta-box.
+* Moved question moderation to a dedicated “Moderation” dashboard section.
+* Replaced “Insights” dashboard section with a “Results” section.
+* Added profanity filter controls to settings.
+
 = 1.3.1 =
 
-* Fixed a bug preventing Urtak's meta box from displaying on custom post types.
+* Fixed a bug preventing Urtak’s meta box from displaying on custom post types.
 
 = 1.3.0 =
 
