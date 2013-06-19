@@ -2,7 +2,7 @@
 /*
  Plugin Name: Urtak
  Plugin URI: http://urtak.com/wordpress/
- Description: Conversation powered by questions. Bring simplicity and structure to any online conversation by allowing your users to ask each other questions.
+ Description: An Urtak poll is the simplest and fastest way to find out what an online audience is thinking.
  Version: 2.0.0
  Author: Urtak, Inc.
  Author URI: http://urtak.com
