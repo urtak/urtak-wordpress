@@ -220,8 +220,20 @@ class Urtak {
   }
 
   // --------------------------------------------------------------------
+  //                                FLAGS
+  // --------------------------------------------------------------------
+
+  // --------------------------------------------------------------------
   //                                QUESTIONS
   // --------------------------------------------------------------------
+
+  public function get_flags($options) {
+    return $this->make_request('/flags', 'GET', $options);
+  }
+
+  public function modify_flag_status($flag_id, $status) {
+    return $this->make_request(sprintf('/flags/%d', $flag_id), 'PUT', array('flag' => array('status_event' => $status)));
+  }
 
   /** Retrieve Questions on an Urtak by Urtak ID, post id, or post permalink
    *

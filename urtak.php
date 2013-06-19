@@ -3,7 +3,7 @@
  Plugin Name: Urtak
  Plugin URI: http://urtak.com/wordpress/
  Description: Conversation powered by questions. Bring simplicity and structure to any online conversation by allowing your users to ask each other questions.
- Version: 1.3.1
+ Version: 2.0.0
  Author: Urtak, Inc.
  Author URI: http://urtak.com
  */
@@ -13,7 +13,7 @@ if(!class_exists('UrtakPlugin')) {
 		/// CONSTANTS
 
 		//// VERSION
-		const VERSION = '1.3.1';
+		const VERSION = '2.0.0';
 
 		//// KEYS
 		const SETTINGS_KEY = '_urtak_settings';
@@ -22,7 +22,8 @@ if(!class_exists('UrtakPlugin')) {
 
 		//// SLUGS
 		const TOP_LEVEL_PAGE_SLUG = 'urtak';
-		const SUB_LEVEL_INSIGHTS_SLUG = 'urtak';
+		const SUB_LEVEL_MODERATION_SLUG = 'urtak';
+		const SUB_LEVEL_RESULTS_SLUG = 'urtak-results';
 		const SUB_LEVEL_SETTINGS_SLUG = 'urtak-settings';
 
 		//// CACHE
@@ -36,6 +37,7 @@ if(!class_exists('UrtakPlugin')) {
 		private static $manage_page_urtaks = null;
 		private static $urtak_api = null;
 		private static $urtaks_fetched = array();
+		private static $urtaks_shown = array();
 
 		public static function init() {
 			load_plugin_textdomain('urtak', null, path_join(dirname(plugin_basename(__FILE__)), 'lang/'));
@@ -52,31 +54,43 @@ if(!class_exists('UrtakPlugin')) {
 				add_action('admin_menu', array(__CLASS__, 'add_administrative_interface_items'));
 				add_action('admin_notices', array(__CLASS__, 'show_credentials_notice'));
 				add_action('add_meta_boxes', array(__CLASS__, 'add_meta_boxes'));
-				add_action('manage_posts_custom_column', array(__CLASS__, 'add_posts_columns_output'), 10, 2);
 				add_action('save_post', array(__CLASS__, 'save_post_meta'), 10, 2);
 				add_action('wp_dashboard_setup', array(__CLASS__, 'add_dashboard_widget'));
 			}
 
-			add_action('admin_bar_menu', array(__CLASS__, 'add_admin_bar_items'), 35);
 			add_action('init', array(__CLASS__, 'initialize_api_object'));
 			add_action('wp_head', array(__CLASS__, 'enqueue_frontend_resources'), 1);
 
 			/// AJAX
-			add_action('wp_ajax_urtak_display_meta_box__dashboard', array(__CLASS__, 'ajax_display_meta_box'));
 			add_action('wp_ajax_urtak_display_meta_box__insights', array(__CLASS__, 'ajax_display_meta_box'));
 			add_action('wp_ajax_urtak_display_meta_box__questions', array(__CLASS__, 'ajax_display_meta_box'));
 			add_action('wp_ajax_urtak_display_meta_box__top_urtaks', array(__CLASS__, 'ajax_display_meta_box'));
 			add_action('wp_ajax_urtak_display_meta_box__stats', array(__CLASS__, 'ajax_display_meta_box'));
-			add_action('wp_ajax_urtak_display_meta_box__posts_without_urtaks', array(__CLASS__, 'ajax_display_meta_box'));
+
+			//// Post editing meta box support
+			add_action('wp_ajax_urtak_get_post_data', array(__CLASS__, 'ajax_get_post_data'));
+			add_action('wp_ajax_urtak_get_post_title', array(__CLASS__, 'ajax_get_post_title'));
+
+			//// For retrieving site wide and non-sitewide questions
 			add_action('wp_ajax_urtak_get_questions', array(__CLASS__, 'ajax_get_questions'));
+
+			//// For retrieving and modifying flags
+			add_action('wp_ajax_urtak_get_flags', array(__CLASS__, 'ajax_get_flags'));
+			add_action('wp_ajax_urtak_modify_flag', array(__CLASS__, 'ajax_modify_flag'));
+
+			//// For retrieving urtaks
+			add_action('wp_ajax_urtak_get_urtaks', array(__CLASS__, 'ajax_get_urtaks'));
+
+			// These are needed for the frontend when we are dynamically loading response counts
 			add_action('wp_ajax_urtak_fetch_responses_counts', array(__CLASS__, 'ajax_fetch_responses_count'));
 			add_action('wp_ajax_nopriv_urtak_fetch_responses_counts', array(__CLASS__, 'ajax_fetch_responses_count'));
+
+			// For post edit and moderation page
 			add_action('wp_ajax_urtak_modify_question_first', array(__CLASS__, 'ajax_modify_question_first'));
 			add_action('wp_ajax_urtak_modify_question_status', array(__CLASS__, 'ajax_modify_question_status'));
 		}
 
 		private static function add_filters() {
-			add_filter('manage_edit-post_columns', array(__CLASS__, 'add_posts_columns'));
 			add_filter('plugin_action_links_' . plugin_basename(__FILE__), array(__CLASS__, 'add_plugin_links'));
 			add_filter('the_content', array(__CLASS__, 'automatically_append_urtak'), 10000);
 			add_filter('urtak_pre_settings_save', array(__CLASS__, 'sanitize_and_validate_settings'));
@@ -107,6 +121,11 @@ if(!class_exists('UrtakPlugin')) {
 			// Counter settings
 			self::$default_settings['counter-icon'] = 'yes';
 			self::$default_settings['counter-responses'] = 'yes';
+
+			// Profanity
+			self::$default_settings['blacklisting'] = 'no';
+			self::$default_settings['blacklist_override'] = 'no';
+			self::$default_settings['blacklist_words'] = '';
 		}
 
 		private static function register_shortcodes() {
@@ -142,40 +161,76 @@ if(!class_exists('UrtakPlugin')) {
 			exit;
 		}
 
-		public static function ajax_get_questions() {
+		public static function ajax_get_post_data() {
 			$data = stripslashes_deep($_REQUEST);
-			$atts = shortcode_atts(array('page' => 1, 'per_page' => 10, 'order' => 'time|DESC', 'show' => 'all', 'search' => '', 'post_id' => 0, 'default_question' => 0), $data);
+
+			$atts = shortcode_atts(array(
+				'page' => 1,
+				'per_page' => 10,
+				'order' => 'time|DESC',
+				'show' => 'pub',
+				'search' => '',
+				'post_id' => 0,
+				'default_question' => 0
+			), $data);
 
 			extract($atts);
-			if(empty($post_id)) {
-				$data = array('error' => true, 'error_message' => __('No post id was provided so the appropriate questions could not be retrieved.', 'urtak'));
+
+			$post_data = false;
+			$response = self::get_questions_response($page, $per_page, $order, $show, $search, $post_id);
+
+			if(false === $response) {
+				$data = array('error' => true, 'error_message' => __('Questions could not be retrieved.', 'urtak'));
 			} else {
-				$questions_response = self::get_questions_response($page, $per_page, $order, $show, $search, $post_id);
+				$data = $response;
 
-				if(false === $questions_response) {
-					$data = array('error' => true, 'error_message' => __('The questions for the Urtak related to this post could not be retrieved. Please try again later.', 'urtak'));
-				} else {
-					if('st|ap' === $show && empty($search) && empty($questions_response['questions']['question'])) {
-						delete_post_meta($post_id, self::QUESTION_CREATED_KEY);
-					} else if('st|ap' === $show && !empty($questions_response['questions']['question'])) {
-						update_post_meta($post_id, self::QUESTION_CREATED_KEY, 'yes');
-					}
+				// Transform the urtak
+				$urtak = self::get_urtak($post_id);
+				$data['questions']['urtak'] = $urtak ? $urtak : false;
+			}
 
-					$cards = '';
-					foreach($questions_response['questions']['question'] as $question) {
-						$cards .= self::_get_card($question, $post_id, true);
-					}
+			echo json_encode($data);
+			exit;
+		}
 
-					$pager = self::_get_pager($page, $questions_response['questions']['pages']);
+		public static function ajax_get_post_title() {
+			$data = stripslashes_deep($_REQUEST);
 
-					$default_first_question_text = '';
-					if($default_question && empty($cards)) {
-						$publication = self::get_publication(self::get_credentials('publication-key'));
+			$post = get_post($data['post_id']);
 
-						$default_first_question_text = $publication['default_first_question_text'];
-					}
+			echo json_encode(array('post_id' => $data['post_id'], 'post_title' => $post->post_title));
+			exit;
+		}
 
-					$data = compact('pager', 'cards', 'default_first_question_text');
+		public static function ajax_get_questions() {
+			$data = stripslashes_deep($_REQUEST);
+
+			$atts = shortcode_atts(array(
+				'page' => 1,
+				'per_page' => 10,
+				'order' => 'time|DESC',
+				'show' => 'st|all',
+				'search' => '',
+				'post_id' => 0
+			), $data);
+
+			extract($atts);
+
+			$post_data = false;
+
+			if($post_id) {
+				$response = self::get_questions_response($page, $per_page, $order, $show, $search, $post_id);
+			} else {
+				$response = self::get_publication_questions_response($page, $per_page, $order, $show, $search);
+			}
+
+			if(false === $response) {
+				$data = array('error' => true, 'error_message' => __('Questions could not be retrieved.', 'urtak'));
+			} else {
+				$data = $response;
+
+				foreach($data['questions']['question'] as $key => $question) {
+					$data['questions']['question'][$key]['nicedate'] = date(get_option('date_format'), $question['created_at']);
 				}
 			}
 
@@ -183,32 +238,118 @@ if(!class_exists('UrtakPlugin')) {
 			exit;
 		}
 
+		public static function ajax_get_flags() {
+			$data = stripslashes_deep($_REQUEST);
+
+			$atts = shortcode_atts(array(
+				'page' => 1,
+				'per_page' => 20,
+			), $data);
+
+			$flagged_questions = self::get_flags($atts);
+
+			if(false === $flagged_questions) {
+				$data = array('error' => true, 'error_message' => __('Flagged questions could not be retrieved.', 'urtak'));
+			} else {
+				$data = $flagged_questions;
+			}
+
+			echo json_encode($data);
+			exit;
+		}
+
+		public static function ajax_modify_flag() {
+			$data = stripslashes_deep($_REQUEST);
+
+			$atts = shortcode_atts(array(
+				'flag_id' => 0,
+				'status' => 'agree',
+			), $data);
+
+			extract($atts);
+
+			$flag = self::modify_flag_status($flag_id, $status);
+
+			if(false === $flag) {
+				$data = array('error' => true, 'error_message' => __('Flag could not be modified.', 'urtak'));
+			} else {
+				$data = $flag;
+			}
+
+			echo json_encode($data);
+			exit;
+		}
+
+		public static function ajax_get_urtaks() {
+			$data = stripslashes_deep($_REQUEST);
+			$atts = shortcode_atts(array(
+				'order' => 'n_responses|DESC',
+				'page' => 1,
+				'per_page' => 10,
+			), $data);
+
+			extract($atts);
+
+			$urtaks = self::get_urtaks_response($atts);
+
+			if($urtaks) {
+				$data = $urtaks;
+
+				foreach($data['urtaks']['urtak'] as $key => $urtak) {
+					$post = get_post($urtak['post_id']);
+
+					if(!$post) {
+						continue;
+					}
+
+					$data['urtaks']['urtak'][$key]['editlink'] = get_edit_post_link($urtak['post_id'], 'raw');
+					$data['urtaks']['urtak'][$key]['edittitle'] = get_the_title($urtak['post_id']);
+					$data['urtaks']['urtak'][$key]['moderatelink'] = self::_get_moderation_url($urtak['post_id']);
+					$data['urtaks']['urtak'][$key]['viewlink'] = get_permalink($urtak['post_id']);
+					$data['urtaks']['urtak'][$key]['nicedate'] = date(get_option('date_format'), strtotime($post->post_date));
+				}
+			} else {
+				$data = array('error' => true, 'error_message' => __('Could not retrieve Urtaks.'));
+			}
+
+			echo json_encode($data);
+			exit;
+		}
 
 		public static function ajax_modify_question_first() {
 			$data = stripslashes_deep($_REQUEST);
 
-			$first_question = 1 == $data['first_question'];
+			$attributes = shortcode_atts(array(
+				'first_question' => false,
+				'post_id' => 0,
+				'question_id' => 0,
+			), $data);
 
-			self::update_urtak_question($data['post_id'], $data['question_id'], array('question' => array('first_question' => $first_question)));
+			extract($attributes);
+
+			$first_question = 'false' !== $first_question;
+
+			$updated = self::update_urtak_question($post_id, $question_id, array('question' => array('first_question' => $first_question)));
+
+			echo json_encode($updated);
+			exit;
 		}
 
 		public static function ajax_modify_question_status() {
 			$data = stripslashes_deep($_REQUEST);
 
-			$approved_questions = array();
-			$questions = (array)$data['questions'];
+			$attributes = shortcode_atts(array(
+				'post_id' => 0,
+				'question_id' => 0,
+				'status' => 'approve',
+			), $data);
 
-			$updated = array();
-			foreach($questions as $question) {
-				if('approve' === $question['action']) {
-					$approved_questions[] = $question['post_id'];
-				}
+			extract($attributes);
 
-				$updated[$question['question_id']] = self::update_urtak_question($question['post_id'], $question['question_id'], array('question' => array('state_status_admin_event' => $question['action'])));
-			}
+			$updated = self::update_urtak_question($post_id, $question_id, array('question' => array('state_status_admin_event' => $status)));
 
-			foreach(array_unique($approved_questions) as $approved_question_post_id) {
-				update_post_meta($approved_question_post_id, self::QUESTION_CREATED_KEY, 'yes');
+			if('approve' === $status) {
+				update_post_meta($post_id, self::QUESTION_CREATED_KEY, 'yes');
 			}
 
 			echo json_encode($updated);
@@ -217,42 +358,27 @@ if(!class_exists('UrtakPlugin')) {
 
 		/// CALLBACKS
 
-		public static function add_admin_bar_items($wp_admin_bar) {
-			if(is_admin() && self::has_credentials() && '' != self::get_credentials('publication-key')) {
-				$pending_questions_count = self::get_publication_count('pending_questions');
-				if($pending_questions_count) {
-					$wp_admin_bar->add_menu( array(
-						'id' => 'urtak',
-						'title' => sprintf(__('+%s', 'urtak'), number_format_i18n($pending_questions_count)),
-						'href' => self::_get_insights_url()
-					));
-				}
-			}
-		}
-
 		public static function add_administrative_interface_items() {
 			if(current_user_can('manage_options') || self::has_credentials()) {
-				self::$admin_page_hooks[] = $top_level = add_menu_page(__('Urtak Insights', 'urtak'), __('Urtak', 'urtak'), 'delete_others_pages', self::TOP_LEVEL_PAGE_SLUG, array(__CLASS__, 'display_insights_page'), plugins_url('resources/backend/img/urtak-logo-15.png', __FILE__), 56);
-				self::$admin_page_hooks[] = $sub_level_insights = add_submenu_page(self::TOP_LEVEL_PAGE_SLUG, __('Urtak Insights', 'urtak'), __('Insights', 'urtak'), 'delete_others_pages', self::SUB_LEVEL_INSIGHTS_SLUG, array(__CLASS__, 'display_insights_page'));
+				// Top Level
+				self::$admin_page_hooks[] = $top_level = add_menu_page(__('Urtak Insights', 'urtak'), __('Urtak', 'urtak'), 'delete_others_pages', self::TOP_LEVEL_PAGE_SLUG, array(__CLASS__, 'display_moderation_page'), plugins_url('resources/backend/img/urtak-logo-15.png', __FILE__), 56);
+
+				// Moderation
+				self::$admin_page_hooks[] = $sub_level_moderation = add_submenu_page(self::TOP_LEVEL_PAGE_SLUG, __('Urtak Moderation', 'urtak'), __('Moderation', 'urtak'), 'manage_options', self::SUB_LEVEL_MODERATION_SLUG, array(__CLASS__, 'display_moderation_page'));
+
+				// Results
+				self::$admin_page_hooks[] = $sub_level_results = add_submenu_page(self::TOP_LEVEL_PAGE_SLUG, __('Urtak Results', 'urtak'), __('Results', 'urtak'), 'manage_options', self::SUB_LEVEL_RESULTS_SLUG, array(__CLASS__, 'display_results_page'));
+
+				// Settings
 				self::$admin_page_hooks[] = $sub_level_settings = add_submenu_page(self::TOP_LEVEL_PAGE_SLUG, __('Urtak Settings', 'urtak'), __('Settings', 'urtak'), 'manage_options', self::SUB_LEVEL_SETTINGS_SLUG, array(__CLASS__, 'display_settings_page'));
 
 				add_action("load-{$sub_level_settings}", array(__CLASS__, 'process_settings_actions'));
-
-				add_meta_box('urtak-at-a-glance', __('At a Glance', 'urtak'), array(__CLASS__, 'display_meta_box__insights'), 'urtak', 'top');
-
-				$posts_without_urtaks = self::get_nonassociated_post_ids();
-				if(!empty($posts_without_urtaks)) {
-					add_meta_box('urtak-posts-without-urtaks', __('Posts without Urtak', 'urtak'), array(__CLASS__, 'display_meta_box__posts_without_urtaks'), 'urtak', 'left');
-				}
-
-
-				add_meta_box('urtak-top-questions', __('Questions', 'urtak'), array(__CLASS__, 'display_meta_box__questions'), 'urtak', 'right');
 			}
 		}
 
 		public static function add_dashboard_widget() {
 			if(current_user_can('delete_others_pages') && self::has_credentials()) {
-				wp_add_dashboard_widget('urtak', __('Urtak', 'urtak'), array(__CLASS__, 'display_meta_box__dashboard'));
+				wp_add_dashboard_widget('urtak', __('At a Glance', 'urtak'), array(__CLASS__, 'display_meta_box__insights'));
 			}
 		}
 
@@ -326,7 +452,8 @@ if(!class_exists('UrtakPlugin')) {
 			$new_links = array();
 
 			if(self::has_credentials()) {
-				$new_links[] = $insights_link = sprintf('<a href="%s">%s</a>', self::_get_insights_url(), __('Insights', 'urtak'));
+				$new_links[] = sprintf('<a href="%s">%s</a>', self::_get_moderation_url(), __('Moderation', 'urtak'));
+				$new_links[] = sprintf('<a href="%s">%s</a>', self::_get_results_url(), __('Results', 'urtak'));
 			}
 
 			$new_links[] = $settings_link = sprintf('<a href="%s">%s</a>', self::_get_settings_url(), __('Settings', 'urtak'));
@@ -355,11 +482,14 @@ if(!class_exists('UrtakPlugin')) {
 			wp_enqueue_script('jquery-flot', plugins_url('resources/backend/flot/jquery.flot.min.js', __FILE__), array('jquery'));
 			wp_enqueue_script('jquery-flot-barnumbers', plugins_url('resources/backend/jquery.flot.barnumbers.js', __FILE__), array('jquery-flot'));
 
-			wp_enqueue_script('urtak-backend', plugins_url('resources/backend/urtak.js', __FILE__), array('jquery', 'postbox', 'jquery-flot', 'jquery-flot-barnumbers'), self::VERSION);
+			wp_enqueue_script('knockout', plugins_url('resources/backend/knockout/knockout.js', __FILE__), array(), '2.2.1');
+
+			wp_enqueue_script('urtak-backend', plugins_url('resources/backend/urtak.js', __FILE__), array('jquery', 'postbox', 'jquery-flot', 'jquery-flot-barnumbers', 'knockout'), self::VERSION);
 			wp_localize_script('urtak-backend', 'Urtak_Vars', array(
 				'see_all' => __('See all...', 'urtak'),
 				'help_close' => __('Close', 'urtak'),
-				'help_text' => __('Help', 'urtak')
+				'help_text' => __('Help', 'urtak'),
+				'remove_question' => __('Are you sure you want to remove this question?', 'urtak'),
 			));
 
 			add_action('admin_print_footer_scripts', array(__CLASS__, 'print_excanvas_script'));
@@ -424,63 +554,54 @@ if(!class_exists('UrtakPlugin')) {
 			$settings['width'] = is_numeric($settings['width']) ? intval($settings['width']) : '';
 			$settings['width'] = is_int($settings['width']) && $settings['width'] < 280 ? 280 : $settings['width'];
 
+			$settings['blacklisting'] = pd_yes_no($settings['blacklisting']);
+			$settings['blacklist_override'] = pd_yes_no($settings['blacklist_override']);
+
 			$publication_fields = $settings['publication'];
 			unset($settings['publication']);
 			$publication_data = json_decode($publication_fields['publication-data'], true);
+
+			$publication_attributes = array(
+				'blacklisting' => 'yes' === $settings['blacklisting'],
+				'blacklist_override' => 'yes' === $settings['blacklist_override'],
+				'blacklist_words' => 'yes' === $settings['blacklist_override'] ? $settings['blacklist_words'] : '',
+				'default_first_question_text' => $settings['default_first_question'],
+				'email' => $settings['credentials']['email'],
+				'moderation' => $settings['moderation'],
+			);
 
 			if(!empty($settings['credentials']['api-key']) && !empty($settings['credentials']['email'])) {
 				$urtak_api = new WordPressUrtak(array('api_key' => $settings['credentials']['api-key'], 'email' => $settings['credentials']['email']));
 
 				if(empty($settings['credentials']['publication-key'])) {
-					$host = parse_url(home_url('/'), PHP_URL_HOST);
-					$name = get_bloginfo('name');
+					$publication_attributes['domains'] = parse_url(home_url('/'), PHP_URL_HOST);
+					$publication_attributes['name'] = get_bloginfo('name');
 
-					$publication = self::create_or_get_publication_for_host(
-											$name,
-											$host,
-											$settings['default_first_question'],
-											$settings['moderation'],
-											$settings['credentials']['email'],
-											$urtak_api);
+					$publication = self::create_or_get_publication_for_host($publication_attributes, $urtak_api);
 
-					if($publication && isset($publication['key']) && !empty($publication['key'])) {
-						$settings['credentials']['publication-key'] = $publication['key'];
-					}
+					$settings['credentials']['publication-key'] = ($publication && isset($publication['key']) && !empty($publication['key'])) ? $publication['key'] : '';
 				} else if(-1 == $settings['credentials']['publication-key']) {
 					// Let's create a new site
-					$name = $publication_fields['name'];
-					$host = empty($publication_fields['domains']) ? parse_url(home_url('/'), PHP_URL_HOST) : $publication_fields['domains'];
+					$publication_attributes['domains'] = empty($publication_fields['domains']) ? parse_url(home_url('/'), PHP_URL_HOST) : $publication_fields['domains'];
+					$publication_attributes['name'] = $publication_fields['name'];
 
-					$publication = self::create_publication(
-											$name,
-											$host,
-											$settings['default_first_question'],
-											$settings['moderation'],
-											$settings['credentials']['email'],
-											$urtak_api);
+					$publication = self::create_publication($publication_attributes, $urtak_api);
 
-					if($publication && isset($publication['key']) && !empty($publication['key'])) {
-						$settings['credentials']['publication-key'] = $publication['key'];
-					} else {
-						$settings['credentials']['publication-key'] = '';
-					}
+					$settings['credentials']['publication-key'] = ($publication && isset($publication['key']) && !empty($publication['key'])) ? $publication['key'] : '';
 				} else {
 					$name = '';
+
 					foreach($publication_data as $existing_publication) {
 						if($settings['credentials']['publication-key'] == $existing_publication['key']) {
 							$name = $existing_publication['name'];
 						}
 					}
 
-					$host = empty($publication_fields['domains']) ? parse_url(home_url('/'), PHP_URL_HOST) : $publication_fields['domains'];
+					$publication_attributes['key'] = $settings['credentials']['publication-key'];
+					$publication_attributes['domains'] = empty($publication_fields['domains']) ? parse_url(home_url('/'), PHP_URL_HOST) : $publication_fields['domains'];
+					$publication_attributes['name'] = $name;
 
-					$publication = self::update_publication(
-											$name,
-											$host,
-											$settings['default_first_question'],
-											$settings['moderation'],
-											$settings['credentials']['publication-key'],
-											$urtak_api);
+					$publication = self::update_publication($publication_attributes, $urtak_api);
 				}
 			}
 
@@ -489,6 +610,7 @@ if(!class_exists('UrtakPlugin')) {
 
 		public static function save_post_meta($post_id, $post) {
 			$data = stripslashes_deep($_POST);
+
 			if(wp_is_post_autosave($post_id) || wp_is_post_revision($post_id) || !wp_verify_nonce($data['save-urtak-meta-nonce'], 'save-urtak-meta')) {
 				return;
 			}
@@ -498,38 +620,45 @@ if(!class_exists('UrtakPlugin')) {
 			}
 
 		    $args = array(
-		      'post_id'     => $post_id,
-		      'permalink'   => get_permalink($post_id),
-		      'title'       => $post->post_title,
+		      'post_id' => $post_id,
+		      'permalink' => get_permalink($post_id),
+		      'title' => $post->post_title,
 		    );
 
-		    $question_texts = array();
-		    $new_questions = array();
-		    foreach((array)$data['urtak']['question']['text'] as $key => $question_text) {
-		    	if(!empty($question_text) && !in_array($question_text, $question_texts)) {
-			    	$new_questions[] = array(
-			    		'text' => $question_text,
-			    		'first_question' => 1 == $data['urtak']['question']['first_question'][$key] ? '1' : '0',
-			    	);
-			    	$question_texts[] = $question_text;
+		    $urtak_data = json_decode($data['urtak-serialized'], true);
+		    $questions = isset($urtak_data['questions']) && is_array($urtak_data['questions']) ? $urtak_data['questions'] : array();
+
+		    $new = array();
+		    foreach($questions as $question) {
+		    	if(!$question['existing']) {
+		    		if(!empty($question['text'])) {
+			    		$new[] = array(
+			    			'first_question' => $question['first_question'] ? 1 : 0,
+			    			'text' => $question['text'],
+			    		);
+		    		}
 		    	}
 		    }
 
 			$urtak = self::get_urtak($post_id);
 			if(empty($urtak)) {
-				$urtak = self::create_urtak($args, $new_questions);
-				if($urtak && isset($urtak['id']) && !empty($urtak['id']) && !empty($new_questions)) {
+				$urtak = self::create_urtak($args, $new);
+				if($urtak && isset($urtak['id']) && !empty($urtak['id']) && !empty($new)) {
 					update_post_meta($post_id, self::QUESTION_CREATED_KEY, 'yes');
+				} else {
+					delete_post_meta($post_id, self::QUESTION_CREATED_KEY);
 				}
 			} else {
-				$urtak = self::update_urtak($args, $new_questions);
-				if($urtak && !empty($new_questions)) {
+				$urtak_updated = self::update_urtak($args, $new);
+				if($urtak && (!empty($new) || $urtak['approved_questions_count'] > 0)) {
 					update_post_meta($post_id, self::QUESTION_CREATED_KEY, 'yes');
+				} else {
+					delete_post_meta($post_id, self::QUESTION_CREATED_KEY);
 				}
 			}
 
 			if(false === $urtak) {
-				set_transient('urtak_failed_update_' . $post_id, array($new_questions), 30);
+				set_transient('urtak_failed_update_' . $post_id, array($new), 30);
 			}
 
 			if(isset($data['urtak-force-hide-urtak']) && 'yes' === $data['urtak-force-hide-urtak']) {
@@ -542,56 +671,57 @@ if(!class_exists('UrtakPlugin')) {
 		public static function show_credentials_notice() {
 			$data = stripslashes_deep($_REQUEST);
 
-			if(current_user_can('manage_options') && !self::has_credentials() && (!isset($data['page']) || !in_array($data['page'], array(self::SUB_LEVEL_INSIGHTS_SLUG, self::SUB_LEVEL_SETTINGS_SLUG)))) {
+			if(current_user_can('manage_options')
+				&& !self::has_credentials()
+				&& (!isset($data['page']) || !in_array($data['page'], array(self::SUB_LEVEL_MODERATION_SLUG, self::SUB_LEVEL_RESULTS_SLUG, self::SUB_LEVEL_SETTINGS_SLUG)))) {
+
 				include('views/backend/misc/admin-notice.php');
 			}
 		}
 
 		/// DISPLAY CALLBACKS
 
-		public static function display_meta_box__dashboard($ajax = false) {
-			if($ajax) {
-				$publication = self::get_publication(self::get_credentials('publication-key'));
+		//// PAGES
 
-				$days = array();
-				if(!is_wp_error($publication) && isset($publication['statistics'])) {
-					$total_responses = $publication['statistics']['total_responses'];
-					$total_questions = $publication['statistics']['total_urtak_questions'];
-					$total_urtaks = $publication['statistics']['total_urtaks'];
+		private static function _display_page_header($current_tab) {
+			$has_credentials = self::has_credentials();
+			$manage_options = current_user_can('manage_options');
 
-					foreach(array_slice($publication['statistics']['rpd_prev_14d'], -7) as $day_response_datum) {
-						$days[] = array(
-							'responses' => $day_response_datum['responses'],
-							'date' => date('D,<b\r />M j', $day_response_datum['start_time'])
-						);
-					}
-				}
-
-				include('views/backend/dashboard/widget.php');
-			} else {
-				self::echo_ajax_loading_action(__FUNCTION__);
-			}
-		}
-
-		public static function display_insights_page() {
-			$is_insights = true;
-			$settings = self::get_settings();
-
-			include('views/backend/misc/header.php');
-
-			if(self::has_credentials()) {
-				include('views/backend/insights/insights.php');
-			} else {
-				include('views/backend/misc/admin-notice.php');
+			$logged_in_text = '';
+			if($has_credentials) {
+				$logged_in_text .= sprintf(__('Logged in as <a href="https://urtak.com/account/edit" target="_blank">%1$s</a>', 'urtak'), self::get_credentials('email'));
+				$logged_in_text .= "&nbsp;| &nbsp;";
 			}
 
-			include('views/backend/misc/footer.php');
+			$active_moderation = self::SUB_LEVEL_MODERATION_SLUG === $current_tab;
+			$active_results = self::SUB_LEVEL_RESULTS_SLUG === $current_tab;
+			$active_settings = self::SUB_LEVEL_SETTINGS_SLUG === $current_tab;
+
+			$url_moderation = self::_get_moderation_url();
+			$url_results = self::_get_results_url();
+			$url_settings = self::_get_settings_url();
+
+			include('views/backend/pages/_inc/header.php');
 		}
 
-		public static function display_meta_box($post) {
-			$force_hide = get_post_meta($post->ID, self::FORCE_HIDE_KEY, true);
+		private static function _display_page_footer() {
+			include('views/backend/pages/_inc/footer.php');
+		}
 
-			include('views/backend/meta-boxes/meta-box.php');
+		public static function display_moderation_page() {
+			self::_display_page_header(self::SUB_LEVEL_MODERATION_SLUG);
+
+			include('views/backend/pages/moderation.php');
+
+			self::_display_page_footer();
+		}
+
+		public static function display_results_page() {
+			self::_display_page_header(self::SUB_LEVEL_RESULTS_SLUG);
+
+			include('views/backend/pages/results.php');
+
+			self::_display_page_footer();
 		}
 
 		public static function display_settings_page() {
@@ -611,18 +741,29 @@ if(!class_exists('UrtakPlugin')) {
 					$settings['moderation'] = $publication['moderation'];
 					$settings['default_first_question'] = $publication['default_first_question_text'];
 					$settings['has_first_question'] = empty($settings['default_first_question']) ? 'no' : 'yes';
+					$settings['blacklisting'] = isset($publication['blacklisting']) ? ($publication['blacklisting'] ? 'yes' : 'no') : 'no';
+					$settings['blacklist_override'] = isset($publication['blacklist_override']) ? ($publication['blacklist_override'] ? 'yes' : 'no') : 'no';
+					$settings['blacklist_words'] = isset($publication['blacklist_words']) ? $publication['blacklist_words'] : '';
 				}
 			}
 
-			include('views/backend/misc/header.php');
+			self::_display_page_header(self::SUB_LEVEL_SETTINGS_SLUG);
 
-			include('views/backend/settings/settings.php');
+			include('views/backend/pages/settings.php');
 
-			include('views/backend/misc/footer.php');
+			self::_display_page_footer();
 		}
 
 
 		//// META BOX DISPLAY CALLBACKS
+
+		public static function display_meta_box($post) {
+			$force_hide = get_post_meta($post->ID, self::FORCE_HIDE_KEY, true);
+			$moderation_url = self::_get_moderation_url($post->ID);
+			$results_url = self::_get_results_url($post->ID);
+
+			include('views/backend/meta-boxes/meta-box.php');
+		}
 
 		public static function display_meta_box__insights($ajax = false) {
 			if($ajax) {
@@ -665,17 +806,6 @@ if(!class_exists('UrtakPlugin')) {
 				}
 
 				include('views/backend/insights/meta-boxes/at-a-glance.php');
-			} else {
-				self::echo_ajax_loading_action(__FUNCTION__);
-			}
-		}
-
-		public static function display_meta_box__posts_without_urtaks($ajax = false) {
-			if($ajax) {
-				$post_ids = self::get_nonassociated_post_ids();
-				$posts = new WP_Query(array('nopaging' => true, 'post__in' => $post_ids, 'post_type' => self::get_settings('post-types'), 'order' => 'ASC', 'orderby' => 'title'));
-
-				include('views/backend/insights/meta-boxes/posts-without-urtaks.php');
 			} else {
 				self::echo_ajax_loading_action(__FUNCTION__);
 			}
@@ -753,13 +883,6 @@ if(!class_exists('UrtakPlugin')) {
 			return urtak_get_embeddable_widget($atts);
 		}
 
-		/// POST META
-
-		private static function get_nonassociated_post_ids() {
-			global $wpdb;
-
-			return $wpdb->get_col($wpdb->prepare("SELECT ID FROM {$wpdb->posts} WHERE post_type IN ('page', 'post') AND ID NOT IN(SELECT DISTINCT post_id FROM {$wpdb->postmeta} WHERE meta_key = %s AND meta_value = %s)", self::QUESTION_CREATED_KEY, 'yes'));
-		}
 		/// SETTINGS
 
 		private static function get_settings($settings_key = null) {
@@ -770,8 +893,7 @@ if(!class_exists('UrtakPlugin')) {
 				wp_cache_set(self::SETTINGS_KEY, $settings, null, time() + self::CACHE_PERIOD);
 			}
 
-			return is_null($settings_key) ? $settings :
-					(isset($settings[$settings_key]) ? $settings[$settings_key] : false);
+			return is_null($settings_key) ? $settings : (isset($settings[$settings_key]) ? $settings[$settings_key] : false);
 		}
 
 		private static function set_settings($settings) {
@@ -831,52 +953,54 @@ if(!class_exists('UrtakPlugin')) {
 
 		//// Publications
 
-		private static function create_or_get_publication_for_host($name, $host, $default_first_question, $moderation, $email, $urtak_api = null) {
+		private static function _normalize_publication_attributes($publication_attributes) {
+			return shortcode_atts(array(
+				'blacklisting' => false,
+				'blacklist_override' => false,
+				'blacklist_words' => '',
+				'default_first_question_text' => '',
+				'domains' => '',
+				'moderation' => 'community',
+				'name' => '',
+				'platform' => 'wordpress',
+				'theme' => 15,
+			), $publication_attributes);
+		}
+
+		private static function create_or_get_publication_for_host($publication_attributes, $urtak_api = null) {
 			$publications = self::get_publications($urtak_api);
+
+			$publication_attributes = self::_normalize_publication_attributes($publication_attributes);
 
 			foreach($publications as $publication) {
 				foreach($publication['hosts'] as $phost) {
-					if($host === $phost['host']) {
+					if($publication_attributes['domains'] === $phost['domains']) {
 						return $publication;
 					}
 				}
 			}
 
-			// There wasn't an existing item, so we need to create one
-			return self::create_publication($name, $host, $default_first_question, $moderation, $email, $urtak_api);
+			return self::create_publication($publication_attributes, $urtak_api);
 		}
 
-		private static function create_publication($name, $host, $default_first_question, $moderation, $email, $urtak_api = null) {
+		private static function create_publication($publication_attributes, $urtak_api = null) {
 			$urtak_api = self::get_urtak_api($urtak_api);
 
-			$publication_args = array(
-			    'domains'    => $host,
-			    'name'       => $name,
-			    'platform'   => 'wordpress',
-			    'moderation' => $moderation,
-			    'default_first_question_text' => $default_first_question,
-			    'theme'      => 15
-			);
-			$create_response = $urtak_api->create_publication('email', $email, $publication_args);
+			$email = isset($publication_attributes['email']) ? $publication_attributes['email'] : '';
 
-			$publication = false;
-			if($create_response->success()) {
-				$publication = $create_response->body['publication'];
-			}
+			$publication_attributes = self::_normalize_publication_attributes($publication_attributes);
 
-			return $publication;
+			$create_response = $urtak_api->create_publication('email', $email, $publication_attributes);
+
+			return $create_response->success() ? $create_response->body['publication'] : false;
 		}
 
 		private static function get_publication($key, $urtak_api = null) {
 			$urtak_api = self::get_urtak_api($urtak_api);
 
-			$publication = false;
 			$publication_response = $urtak_api->get_publication($key);
-			if($publication_response->success()) {
-				$publication = $publication_response->body['publication'];
-			}
 
-			return $publication;
+			return $publication_response->success() ? $publication_response->body['publication'] : false;
 		}
 
 		private static function get_publications($urtak_api = null) {
@@ -900,25 +1024,16 @@ if(!class_exists('UrtakPlugin')) {
 			return $publications;
 		}
 
-		private static function update_publication($name, $host, $default_first_question, $moderation, $key, $urtak_api = null) {
+		private static function update_publication($publication_attributes, $urtak_api = null) {
 			$urtak_api = self::get_urtak_api($urtak_api);
 
-			$publication_args = array(
-				'domains' => $host,
-				// 'name' => $name,
-				'platform' => 'wordpress',
-				'moderation' => $moderation,
-				'default_first_question_text' => $default_first_question,
-				'theme' => 15
-			);
-			$update_response = $urtak_api->update_publication($key, $publication_args);
+			$key = isset($publication_attributes['key']) ? $publication_attributes['key'] : '';
 
-			$publication = false;
-			if($update_response->success()) {
-				$publication = true;
-			}
+			$publication_attributes = self::_normalize_publication_attributes($publication_attributes);
 
-			return $publication;
+			$update_response = $urtak_api->update_publication($key, $publication_attributes);
+
+			return $update_response->success();
 		}
 
 		//// Questions
@@ -949,6 +1064,10 @@ if(!class_exists('UrtakPlugin')) {
 			$questions_response = $urtak_api->get_urtak_questions('post_id', $post_id, $args);
 			if($questions_response->success()) {
 				$questions = (array)$questions_response->body;
+
+				foreach($questions['questions']['question'] as $key => $question) {
+					$questions['questions']['question'][$key]['nicedate'] = date(get_option('date_format') . ' \a\t ' . get_option('time_format'), $question['created_at']);
+				}
 			} else if(404 === intval($questions_response->code)) {
 				// We're trapping this particular thing because we want to make sure not to provide an error
 				// in case the Urtak for this post hasn't been created
@@ -960,18 +1079,23 @@ if(!class_exists('UrtakPlugin')) {
 			return $questions;
 		}
 
-		private static function get_publication_questions_response($page, $per_page, $order, $show, $urtak_api = null) {
+		private static function get_publication_questions_response($page, $per_page, $order, $show, $search = '', $urtak_api = null) {
 			if(empty($per_page)) {
 				$per_page = 10;
 			}
 
 			$urtak_api = self::get_urtak_api($urtak_api);
 
-			$args = array('f' => $show, 'o' => $order, 'page' => $page, 'per_page' => $per_page);
+			$args = array('s' => $search, 'f' => $show, 'o' => $order, 'page' => $page, 'per_page' => $per_page);
 
 			$questions_response = $urtak_api->get_publication_questions($args);
 			if($questions_response->success()) {
 				$questions = (array)$questions_response->body;
+
+				foreach($questions['questions']['question'] as $key => $question) {
+					$questions['questions']['question'][$key]['nicedate'] = date(get_option('date_format') . ' \a\t ' . get_option('time_format'), $question['created_at']);
+					$questions['questions']['question'][$key]['post_id'] = $question['urtak']['post_id'];
+				}
 			} else if(404 === intval($questions_response->code)) {
 				// We're trapping this particular thing because we want to make sure not to provide an error
 				// in case the Urtak for this post hasn't been created
@@ -983,18 +1107,30 @@ if(!class_exists('UrtakPlugin')) {
 			return $questions;
 		}
 
-		private static function update_urtak_question($post_id, $question_id, $options = array(), $urtak = null) {
+		private static function update_urtak_question($post_id, $question_id, $options = array(), $urtak_api = null) {
 			$urtak_api = self::get_urtak_api($urtak_api);
 
-			$updated = false;
 			$update_response = $urtak_api->update_urtak_question('post_id', $post_id, $question_id, $options);
-			if($update_response->success()) {
-				$updated = true;
-			}
 
-			return $updated;
+			return $update_response->success() ? $update_response->body['question'] : false;
 		}
 
+		//// Flagged Questions
+		private static function get_flags($options, $urtak_api = null) {
+			$urtak_api = self::get_urtak_api($urtak_api);
+
+			$flagged_questions_response = $urtak_api->get_flags($options);
+
+			return $flagged_questions_response->success() ? $flagged_questions_response->body : false;
+		}
+
+		private static function modify_flag_status($flag_id, $status, $urtak_api = null) {
+			$urtak_api = self::get_urtak_api($urtak_api);
+
+			$modify_flag_status_response = $urtak_api->modify_flag_status($flag_id, $status);
+
+			return $modify_flag_status_response->success() ? $modify_flag_status_response->body : false;
+		}
 
 		//// Urtaks
 
@@ -1029,12 +1165,23 @@ if(!class_exists('UrtakPlugin')) {
 			return $urtak;
 		}
 
-		private static function get_urtaks($args = array(), $urtak_api = null) {
+		private static function get_urtaks_response($args = array(), $urtak_api = null) {
 			$urtak_api = self::get_urtak_api($urtak_api);
 
-			$urtaks = false;
+			if(isset($args['per_page'])) {
+				$args['per'] = $args['per_page'];
+				unset($args['per_page']);
+			}
+
 			$urtaks_response = $urtak_api->get_urtaks($args);
-			if($urtaks_response->success()) {
+
+			return $urtaks_response->success() ? $urtaks_response->body : false;
+		}
+
+		private static function get_urtaks($args = array(), $urtak_api = null) {
+			$urtaks_response = self::get_urtaks_response($args, $urtak_api);
+
+			if($urtaks_response) {
 				$urtaks = $urtaks_response->body['urtaks']['urtak'];
 				if(isset($urtaks['id'])) {
 					$urtaks = array($urtaks);
@@ -1043,9 +1190,11 @@ if(!class_exists('UrtakPlugin')) {
 				foreach($urtaks as $urtak) {
 					self::$urtaks_fetched[$urtak->post_id] = $urtak;
 				}
-			}
 
-			return $urtaks;
+				return $urtaks;
+			} else {
+				return false;
+			}
 		}
 
 		private static function update_urtak($args, $questions, $urtak_api = null) {
@@ -1066,9 +1215,32 @@ if(!class_exists('UrtakPlugin')) {
 
 		//// LINKS
 
-		private static function _get_insights_url() {
-			return add_query_arg(array('page' => self::SUB_LEVEL_INSIGHTS_SLUG), admin_url('admin.php'));
+		///// PAGES
+
+		private static function _build_hash($urtak_id, $question_id) {
+			$urtak_id = is_null($urtak_id) || !is_numeric($urtak_id) ? 0 : intval($urtak_id);
+			$question_id = is_null($question_id) || !is_numeric($question_id) ? 0 : intval($question_id);
+
+			return empty($urtak_id) ? '' : sprintf('#%d-%d', $urtak_id, $question_id);
 		}
+
+		private static function _get_moderation_url($urtak_id = null, $question_id = null) {
+			$url = add_query_arg(array('page' => self::SUB_LEVEL_MODERATION_SLUG), admin_url('admin.php'));
+
+			return ($url . self::_build_hash($urtak_id, $question_id));
+		}
+
+		private static function _get_results_url($urtak_id = null, $question_id = null) {
+			$url = add_query_arg(array('page' => self::SUB_LEVEL_RESULTS_SLUG), admin_url('admin.php'));
+
+			return ($url . self::_build_hash($urtak_id, $question_id));
+		}
+
+		private static function _get_settings_url() {
+			return add_query_arg(array('page' => self::SUB_LEVEL_SETTINGS_SLUG), admin_url('admin.php'));
+		}
+
+		///// USER CREDENTIALS
 
 		private static function _get_login_url() {
 			return add_query_arg(array('action' => 'login'), self::_get_settings_url());
@@ -1077,14 +1249,12 @@ if(!class_exists('UrtakPlugin')) {
 		private static function _get_logout_url() {
 			return add_query_arg(array('action' => 'logout', 'urtak-logout-nonce' => wp_create_nonce('urtak-logout')), self::_get_settings_url());
 		}
-
-		private static function _get_settings_url() {
-			return add_query_arg(array('page' => self::SUB_LEVEL_SETTINGS_SLUG), admin_url('admin.php'));
-		}
-
 		private static function _get_signup_url() {
 			return add_query_arg(array('action' => 'signup'), self::_get_settings_url());
 		}
+
+
+		//// URTAK DATA
 
 		private static function _get_card($question, $post_id, $controls = false, $use_nested_urtak = false) {
 			ob_start();
@@ -1235,10 +1405,13 @@ if(!class_exists('UrtakPlugin')) {
 										&& ('yes' === self::get_settings('user-start')
 											|| 'yes' === get_post_meta($post_id, self::QUESTION_CREATED_KEY, true)));
 
+			$should_show = $should_show && (!isset(self::$urtaks_shown[$post_id]));
+
 			if(!$should_show) {
 				return '';
 			}
 
+			self::$urtaks_shown[$post_id] = true;
 
 			$height = self::get_settings('height');
 			$permalink = get_permalink($post_id);

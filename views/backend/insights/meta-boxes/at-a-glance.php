@@ -86,7 +86,7 @@
 		jQuery.each(keys, function(index, element) {
 			var data = window['urtak_data_' + this], ticks = window['urtak_ticks_' + this];
 
-			UrtakDelegates.plot_bar_graph('#urtak-at-a-glance-' + this + '-chart-placeholder', data, ticks);
+			UrtakPlot('#urtak-at-a-glance-' + this + '-chart-placeholder', data, ticks);
 		});
 	}
 

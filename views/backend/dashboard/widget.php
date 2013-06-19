@@ -20,7 +20,7 @@
 		if(!jQuery('#urtak').is('.closed')) {
 			jQuery('#urtak-at-a-glance-days-chart-placeholder').empty();
 
-			UrtakDelegates.plot_bar_graph('#urtak-at-a-glance-days-chart-placeholder', urtak_data_days, urtak_ticks_days);
+			UrtakPlot('#urtak-at-a-glance-days-chart-placeholder', urtak_data_days, urtak_ticks_days);
 		}
 	}
 

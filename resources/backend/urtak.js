@@ -1,28 +1,6 @@
-// Textarea and select clone() bug workaround | Spencer Tipping
-// Licensed under the terms of the MIT source code license
-
-// Motivation.
-// jQuery's clone() method works in most cases, but it fails to copy the value of textareas and select elements. This patch replaces jQuery's clone() method with a wrapper that fills in the
-// values after the fact.
-
-// An interesting error case submitted by Piotr Przybył: If two <select> options had the same value, the clone() method would select the wrong one in the cloned box. The fix, suggested by Piotr
-// and implemented here, is to use the selectedIndex property on the <select> box itself rather than relying on jQuery's value-based val().
-(function(original) {
-  jQuery.fn.clone = function() {
-    var result = original.apply(this, arguments),
-      my_textareas = this.find('textarea').add(this.filter('textarea')),
-      result_textareas = result.find('textarea').add(result.filter('textarea')),
-      my_selects = this.find('select').add(this.filter('select')),
-      result_selects = result.find('select').add(result.filter('select'));
-
-    for (var i = 0, l = my_textareas.length; i < l; ++i) jQuery(result_textareas[i]).val(jQuery(my_textareas[i]).val());
-    for (var i = 0, l = my_selects.length; i < l; ++i) result_selects[i].selectedIndex = my_selects[i].selectedIndex;
-
-    return result;
-  };
-})(jQuery.fn.clone); // via https://github.com/spencertipping/jquery.fix.clone/blob/master/jquery.fix.clone.js
-
 jQuery(document).ready(function($) {
+	/* Settings Page */
+
 	$('.urtak-login-signup-settings h2 a').click(function(event) {
 		event.preventDefault();
 
@@ -71,18 +49,35 @@ jQuery(document).ready(function($) {
 		}
 	}).change();
 
-	$('.urtak-tabbed-control a').live('click', function(event) {
-		event.preventDefault();
+	$('#urtak-blacklisting').change(function(event) {
+		var $this = $(this),
+			$container = $('.urtak-blacklisting-dependent'),
+			value = $this.val();
 
-		var $this = $(this)
-		, $control = $this.parents('ul')
-		, $item = $this.parents('li');
+		if($this.is(':checked')) {
+			$container.show();
+		} else {
+			$container.find('input[type="checkbox"]').removeAttr('checked').change();
+			$container.hide();
+		}
+	}).change();
 
-		$control.find('li.active').removeClass('active');
-		$item.addClass('active');
+	$('#urtak-blacklist_override').change(function(event) {
+		var $this = $(this),
+			$container = $('.urtak-blacklist_override-dependent'),
+			value = $this.val();
 
-		$('[data-tabbed-depend-on="' + $control.attr('id') + '"]').hide().filter($this.attr('href')).show();
-	}).parent().filter(':first-child').find('a').click();
+		if($this.is(':checked')) {
+			$container.show().find('textarea').focus();
+		} else {
+			$container.hide();
+		}
+	}).change();
+
+	/* End Settings Page */
+
+
+	/* Ajax Meta Boxes */
 
 	$('.urtak-ajax-loader[data-action]').each(function(index, element) {
 		var $element = $(element), action = $element.attr('data-action');
@@ -97,300 +92,544 @@ jQuery(document).ready(function($) {
 		);
 	});
 
-	$('.urtak-card-controls-icon:not(.urtak-card-controls-icon-special)[data-action]').live('click', function(event) {
+	/* End Ajax Meta Boxes */
+
+
+	/* Tabs (i.e. At a Glance) */
+
+	$('.urtak-tabbed-control a').live('click', function(event) {
 		event.preventDefault();
 
 		var $this = $(this)
-		, $card = $this.parents('.urtak-card')
-		, vars = {
-			action: 'urtak_modify_question_status',
-			questions: [
-				{
-					post_id: $card.attr('data-post-id'),
-					question_id: $card.attr('data-question-id'),
-					action: $this.attr('data-action')
-				}
-			]
-		};
+		, $control = $this.parents('ul')
+		, $item = $this.parents('li');
 
-		$(this).addClass('active').siblings('a').removeClass('active');
+		$control.find('li.active').removeClass('active');
+		$item.addClass('active');
 
-		UrtakDelegates.modify_question_status(vars);
-	});
+		$('[data-tabbed-depend-on="' + $control.attr('id') + '"]').hide().filter($this.attr('href')).show();
+	}).parent().filter(':first-child').find('a').click();
 
-	$('.urtak-set-first-question').live('click', function(event) {
-		event.preventDefault();
-
-		var $this = $(this),
-			$container = $this.parents('.urtak-update-message'),
-			$card = $container.parents('.urtak-card'),
-			$first = $container.find('.urtak-update-message-first-question'),
-			$first_all = $('.urtak-update-message-first-question').hide(),
-			$not_first = $container.find('.urtak-update-message-not-first-question'),
-			$not_first_all = $('.urtak-update-message-not-first-question').show(),
-			$input = $container.find('.urtak-first-question-input'),
-			$inputs_all = $('.urtak-first-question-input').val('0'),
-			post_id = $card.attr('data-post-id'),
-			question_id = $card.attr('data-question-id');
-
-		$not_first.hide();
-		$first.show();
-		$input.val('1');
-
-		if('' != post_id && '' != question_id) {
-			UrtakDelegates.modify_question_status({
-				action: 'urtak_modify_question_first',
-				post_id: post_id,
-				question_id: question_id,
-				first_question: 1
-			});
-		}
-	});
-
-	$('.urtak-unset-first-question').live('click', function(event) {
-		event.preventDefault();
-
-		var $this = $(this),
-			$container = $this.parents('.urtak-update-message'),
-			$card = $container.parents('.urtak-card'),
-			$first = $container.find('.urtak-update-message-first-question').hide(),
-			$not_first = $container.find('.urtak-update-message-not-first-question').show(),
-			$input = $container.find('.urtak-first-question-input').val('0'),
-			post_id = $card.attr('data-post-id'),
-			question_id = $card.attr('data-question-id');
-
-		if('' != post_id && '' != question_id) {
-			UrtakDelegates.modify_question_status({
-				action: 'urtak_modify_question_first',
-				post_id: post_id,
-				question_id: question_id,
-				first_question: 0
-			});
-		}
-	});
-
-	$('.urtak-help-content-inner-icon a').click(function(event) { event.preventDefault(); });
-
-	$('.urtak-card-info-question textarea').keypress(function(event) {
-		if(13 === event.which) {
-			event.preventDefault();
-		}
-	});
-
-	$('#urtak-meta-box-controls-alls a').live('click', function(event) {
-		event.preventDefault();
-
-		var $this = $(this)
-		, $cards = $('.urtak-card[data-question-id]')
-		, action = $this.attr('data-action')
-		, vars = {
-			action: 'urtak_modify_question_status',
-			questions: []
-		};
-
-		$cards.each(function(index, element) {
-			var $card = $(element);
-
-			vars.questions.push({
-				post_id: $card.attr('data-post-id'),
-				question_id: $card.attr('data-question-id'),
-				action: action
-			});
-
-			$card.find('[data-action="' + action + '"]').addClass('active').siblings('a.active').removeClass('active');
-		});
-
-		UrtakDelegates.modify_question_status(vars);
-	});
-
-	$('[data-urtak-attribute]').live('change', function(event) {
-		UrtakDelegates.get_questions(UrtakDelegates.get_search_vars());
-	}).filter('#urtak-default-question-hidden-input').change().val(0);
-
-	$('#urtak-meta-box-controls-pager a').live('click', function(event) {
-		event.preventDefault();
-
-		if('disabled' == $(this).attr('data-disabled')) {
-			return false;
-		}
-
-		$('#urtak-meta-box-controls-page-number').val($(this).attr('data-value')).change();
-	});
-
-	$('.urtak-meta-box-controls-per-page-link').live('click', function(event) {
-		event.preventDefault();
-
-		$(this).addClass('active').siblings('a').removeClass('active');
-		$('#urtak-meta-box-controls-page-number').val(1);
-		$('#urtak-meta-box-per-page').val($(this).text()).change();
-	});
-
-	$('.urtak-card-plot-controls li').live('click', function(event) {
-		event.preventDefault();
-
-		var $li = $(this)
-		, $this = $li.find('a')
-		, $parent = $this.parent()
-		, $card = $this.parents('.urtak-card')
-		, $clone = $card.clone()
-		, $question = $clone.find('.large-text')
-		, $answer = $clone.find('.urtak-adder-answer')
-		, $controls = $clone.find('.urtak-card-controls')
-		, answer = $parent.attr('data-answer')
-		, question = $.trim($question.val());
-
-		if($this.hasClass('activated')) {
-			if(!$parent.hasClass('card-question-answers-d') && '' != question) {
-
-				$clone.find('.urtak-card-plot-controls').hide();
-				$clone.find('.urtak-card-plot-' + answer).show();
-				$clone.find('.urtak-card-info-question').append(question);
-
-				$answer.val(answer);
-
-				$controls.show();
-				$question.hide();
-
-				$clone.css({ opacity: 0 }).insertAfter($card).animate({ opacity: 1 }, { duration: 600 });
-			}
-
-			$parent.parent().find('a').removeClass('activated').removeClass('deactivated');
-			$card.find('.large-text').val('').focus();
-		} else {
-			$parent.parent().find('a').removeClass('activated').addClass('deactivated');
-			$this.removeClass('deactivated').addClass('activated');
-		}
-
-	});
-
-	$('.urtak-card-plot-controls li').live('mouseover', function(event) {
-		var $this = $(this), $link = $this.find('a');
-
-		$this.parent().find('a').removeClass('activated').addClass('deactivated');
-		$link.removeClass('deactivated').addClass('activated');
-	}).live('mouseout', function(event) {
-		var $this = $(this);
-
-		$this.parent().find('a').removeClass('activated').removeClass('deactivated');
-	});
+	/* End Tabs */
 
 
 
-	$(document).keydown(function(event) {
-		var $selected = $('.urtak-card-plot-controls li a.activated, .urtak-card-plot-controls li a:focus');
-		var $last = $('.urtak-card-plot-controls li.card-question-answers-d a:focus');
+	/* Post Editing VM */
 
-		if($selected.size() > 0 && (event.which === 27 || event.which === 9)) {
-			// check for escape or tab key press
-			$selected.parent().parent().find('a').removeClass('activated').removeClass('deactivated');
+	var $editor = $('.urtak-questions-editor');
+	if($editor.size() > 0) {
+		window.questions_vm = new UrtakQuestionsVM($('#post_ID').val());
 
-			if(event.which === 27) {
-				$selected.parents('.urtak-card').find('textarea').focus();
-			}
-		}
+		ko.applyBindings(window.questions_vm, $editor.get(0));
 
-		if($last.size() > 0 && event.which === 9) {
-			// user tabbed from last field
+		window.questions_vm.add_question({}, true);
+		window.questions_vm.get_post_data();
 
-			event.preventDefault();
-			$('.urtak-card-plot-controls li.card-question-answers-y a').focus();
-		}
-	});
-
-	$('.urtak-card textarea').mousedown(function(event) {
-		var $selected = $('.urtak-card-plot-controls li a');
-
-		if($selected.size() > 0) {
-			$selected.parent().parent().find('a').removeClass('activated').removeClass('deactivated');
-		}
-	});
-
-	$('.urtak-card-controls-icon-special').live('click', function(event) {
-		event.preventDefault();
-		var $card = $(this).parents('.urtak-card')
-		, $next = $card.nextAll('.urtak-card')
-		, top = $card.outerHeight(true);
-
-		$card.animate({ opacity: 0 }, { duration: 600, complete: function() {
-			$card.remove();
-			$next.css({ top: top + 'px' });
-			$next.animate({ top: 0 }, { duration: 600 });
-		} });
-	});
-
-	var $help = $('#urtak-meta-box-help'), $cards = $('#urtak-meta-box-cards');
-
-	if($help.size() > 0) {
-		$help.css({
-			top: (parseInt($cards.outerHeight(true)) - parseInt($help.find('#urtak-meta-box-help-handle').outerHeight(true))) + 'px'
+		$editor.parents('form').submit(function(event) {
+			$editor.find('#urtak-serialized').val(ko.toJSON(window.questions_vm));
 		});
 	}
 
-	$('#urtak-meta-box-help-handle').click(function(event) {
-		event.preventDefault();
-
-		var $this = $(this);
-
-		if($this.hasClass('open')) {
-			$help.animate({
-				top: (parseInt($cards.outerHeight(true)) - parseInt($help.find('#urtak-meta-box-help-handle').outerHeight(true)))
-			});
-			$this.removeClass('open');
-			$this.text(Urtak_Vars.help_text);
+	$('#urtak-force-hide-urtak').change(function(event) {
+		if($(this).is(':checked')) {
+			$editor.find('table,.tablenav-pages').hide();
 		} else {
-			$help.animate({
-				top: (parseInt($cards.outerHeight(true)) - parseInt($help.find('#urtak-meta-box-help-content').outerHeight(true)))
-			});
-			$this.addClass('open');
-			$this.text(Urtak_Vars.help_close);
+			$editor.find('table,.tablenav-pages').show();
+		}
+	}).change();
+
+
+	/* End Post Editing VM */
+
+
+
+	/* Moderation VM */
+
+	var $moderation = $('.urtak-moderation');
+
+	if($moderation.size() > 0) {
+		var hash = document.location.hash.substring(1),
+			parts = hash.split('-'),
+			post_id = 0,
+			question_id = 0;
+
+		if(2 === parts.length) {
+			post_id = parts[0];
+			question_id = parts[1];
 		}
 
+		window.urtak_moderation_vm = new UrtakReviewVM(post_id, question_id);
 
-	});
+		ko.applyBindings(window.urtak_moderation_vm, $moderation.get(0));
+
+		window.urtak_moderation_vm.fetch_questions();
+		window.urtak_moderation_vm.fetch_flags();
+		window.urtak_moderation_vm.fetch_urtaks();
+	}
+
+	/* End Moderation VM */
+
+
+	/* Results VM */
+
+	var $results = $('.urtak-results');
+
+	if($results.size() > 0) {
+		var hash = document.location.hash.substring(1),
+			parts = hash.split('-'),
+			post_id = 0,
+			question_id = 0;
+
+		if(2 === parts.length) {
+			post_id = parts[0];
+			question_id = parts[1];
+		}
+
+		window.urtak_results_vm = new UrtakReviewVM(post_id, question_id);
+
+		ko.applyBindings(window.urtak_results_vm, $results.get(0));
+
+		window.urtak_results_vm.questions_filter('st|aa');
+		window.urtak_results_vm.fetch_questions();
+		window.urtak_results_vm.fetch_urtaks();
+	}
+
+	/* End Results VM */
 });
 
-var UrtakDelegates = (function(jQuery) {
-	var $ = jQuery
-	, _disable_requests = false
-	, _get_questions = null
-	, _get_search_vars = null
-	, _modify_question_status = null
-	, _plot_bar_graph = null;
+var UrtakQuestionsVM = function(post_id) {
+	var self = this;
 
-	_get_questions = function(vars) {
-		if(!_disable_requests) {
-			var $cards = $('#urtak-meta-box-cards').addClass('loading');
-			$cards.find('.urtak-card[data-question-id]').remove();
 
-			$.post(
+	self.page = ko.observable(1);
+	self.pages = ko.observable(1);
+	self.per_page = ko.observable(10);
+	self.post_id = ko.observable(post_id);
+	self.loading = ko.observable(false);
+	self.questions = ko.observableArray();
+	self.total = ko.observable(0);
+	self.urtak = ko.observable(false);
+
+	self.has_pages = ko.computed(function() {
+		return !self.loading() && self.pages() > 1;
+	});
+
+	self.has_previous_page = ko.computed(function() {
+		return self.page() - 1 >= 1;
+	});
+
+	self.previous_page = function() {
+		if(self.has_previous_page()) {
+			self.page(self.page() - 1);
+			self.get_post_data();
+		}
+	};
+
+	self.has_next_page = ko.computed(function() {
+		return self.page() + 1 <= self.pages();
+	});
+
+	self.next_page = function() {
+		if(self.has_next_page()) {
+			self.page(self.page() + 1);
+			self.get_post_data();
+		}
+	};
+
+	self.has_question = ko.computed(function() {
+		return !self.loading() && self.questions().length > 0;
+	});
+	self.no_questions = ko.computed(function() {
+		return !self.loading() && self.questions().length === 0;
+	});
+
+	self.is_focused = ko.computed(function() {
+		for(var i = 0; i < self.questions().length; i++) {
+			if(self.questions()[i].has_focus()) {
+				return true;
+			}
+		}
+
+		return false;
+	});
+
+	self.has_urtak = ko.computed(function() {
+		return false !== self.urtak();
+	});
+	self.pending_questions_count = ko.computed(function() {
+		return self.has_urtak() ? self.urtak().pending_questions_count : 0;
+	});
+	self.responses_count = ko.computed(function() {
+		return self.has_urtak() ? self.urtak().responses_count : 0;
+	});
+
+	self.add_question = function(question, beginning) {
+		question.post_id = self.post_id;
+
+		var question_vm = new UrtakQuestionVM(question);
+
+		if(beginning) {
+			self.questions.unshift(question_vm);
+		} else {
+			self.questions.push(question_vm);
+		}
+
+		return question_vm;
+	};
+
+	self.add_new_question = function() {
+		return self.add_question({}, true);
+	};
+
+	self.check_for_add = function(data, event) {
+		if(13 === event.keyCode || 13 === event.which) {
+			var question = self.add_new_question();
+
+			question.has_focus(true);
+		} else {
+			return true;
+		}
+	};
+
+	self.remove_question = function() {
+		if(confirm(Urtak_Vars.remove_question)) {
+			this.reject();
+
+			self.questions.remove(this);
+		}
+	};
+
+	self.set_first = function() {
+		self.unset_first();
+
+		this.toggle_first(true);
+	};
+
+	self.unset_first = function() {
+		ko.utils.arrayForEach(self.questions(), function(question) {
+			question.toggle_first(false);
+		});
+	};
+
+	self.get_post_data = function() {
+		if(!self.loading()) {
+			self.loading(true);
+
+			var questions_to_remove = ko.utils.arrayFilter(self.questions(), function(question) {
+				return question.existing();
+			});
+
+			ko.utils.arrayForEach(questions_to_remove, function(question) {
+				self.questions.remove(question);
+			});
+
+			jQuery.get(
 				ajaxurl,
-				vars,
+				{
+					action: 'urtak_get_post_data',
+					page: self.page(),
+					per_page: self.per_page(),
+					post_id: self.post_id
+				},
 				function(data, status) {
-					if(data.error) {
-						$cards.removeClass('loading').find('.urtak-card').remove()
-						$cards.find('#urtak-meta-box-cards-holder').append('<div id="urtak-get-questions-error" class="settings-error error"><p>' + data.error_message + '</p></div>');
-						_disable_requests = true;
-					} else {
-						$('#urtak-meta-box-controls-pager').empty().append(data.pager);
-						$cards.removeClass('loading').find('.urtak-card:last').after(data.cards);
+					self.pages(data.questions.pages);
+					self.total(data.questions.entries);
 
-						if(data.default_first_question_text) {
-							var $card = $('.urtak-card.urtak-card-adder.urtak-card-with-controls:first'),
-								$button = $card.find('.card-question-answers-s:first'),
-								$field = $card.find('.large-text').val(data.default_first_question_text),
-								$first = $card.find('.urtak-first-question-input').val(1);
+					ko.utils.arrayForEach(data.questions.question, function(question) {
+						self.add_question(question);
+					});
+
+					self.urtak(data.questions.urtak);
+
+					self.loading(false);
+				},
+				'json'
+			);
+		}
+	};
+
+	self.has_new_questions = ko.computed(function() {
+		var dirty = false;
+
+		ko.utils.arrayForEach(self.questions(), function(question) {
+			if(!question.existing() && '' !== question.text()) {
+				dirty = true;
+			}
+		});
+
+		return dirty;
+	});
+};
+
+var UrtakQuestionVM = function(question) {
+	var self = this;
+
+	self.change_status = function(action) {
+		if(self.existing()) {
+			var status;
+			switch(action) {
+				case 'approve':
+					status = 'approved';
+					break;
+				case 'reject':
+					status = 'rejected';
+					break;
+				case 'archive':
+					status = 'archived';
+					break;
+			}
+			self.status(status);
+
+			jQuery.get(
+				ajaxurl,
+				{
+					action: 'urtak_modify_question_status',
+					post_id: self.post_id,
+					question_id: self.id,
+					status: action
+				},
+				function(data, status) {
+
+				},
+				'json'
+			);
+		}
+	};
+
+	self.approve = function() {
+		self.change_status('approve');
+	};
+
+	self.archive = function() {
+		self.change_status('archive');
+	};
+
+	self.reject = function() {
+		self.change_status('reject');
+	};
+
+	self.toggle_first = function(is_first) {
+		if(is_first != self.first_question()) {
+			// Send request to backend and then update local status
+			jQuery.get(
+				ajaxurl,
+				{
+					action: 'urtak_modify_question_first',
+					first_question: is_first,
+					post_id: self.post_id,
+					question_id: self.id
+				},
+				function(data, status) {
+
+				},
+				'json'
+			);
 
 
-							$button.mouseover().click();
-							$first.val(0);
+			self.first_question(is_first);
+		}
+	};
 
-							var $clone = $card.next();
-							$clone.find('.urtak-update-message > span').addClass('is-first-question');
-						}
+	self.has_focus = ko.observable(false);
+	self.first_question = ko.observable(question.first_question || false);
+	self.not_first_question = ko.computed(function() { return !self.first_question(); });
+
+	self.data = question;
+
+	self.created_at = question.created_at || Math.round(new Date().getTime() / 1000);
+	self.id = question.id || 0;
+	self.nicedate = question.nicedate;
+	self.post_id = question.post_id;
+	self.responses = question.responses || { counts: { total: 0 } };
+	self.status = ko.observable(question.status || 'pending');
+	self.text = ko.observable(question.text || '');
+	self.user_generated = question.user_generated || false;
+
+	self.nicestatus = ko.computed(function() {
+		if('approved' == self.status()) {
+			return 'Approved';
+		} else if('pending' == self.status()) {
+			return 'Pending';
+		} else if('rejected' == self.status()) {
+			return 'Rejected';
+		} else if('archived' == self.status()) {
+			return 'Archived';
+		}
+	});
+
+	self.is_approved = ko.computed(function() {
+		return 'approved' == self.status();
+	});
+
+	self.is_archived = ko.computed(function() {
+		return 'archived' == self.status();
+	});
+
+	self.is_rejected = ko.computed(function() {
+		return 'rejected' == self.status();
+	});
+
+	self.existing = ko.computed(function() {
+		return self.id != 0;
+	});
+
+	self.number_responses = ko.computed(function() {
+		return self.responses && self.responses.counts && self.responses && self.responses.counts.total ? self.responses.counts.total : 0;
+	});
+
+	self.yes_percent = ko.computed(function() {
+		return self.responses && self.responses.percents && self.responses.percents.yes ? self.responses.percents.yes : 0;
+	});
+
+	self.no_percent = ko.computed(function() {
+		return self.responses && self.responses.percents && self.responses.percents.no ? self.responses.percents.no : 0;
+	});
+
+	self.care_percent = ko.computed(function() {
+		return self.responses && self.responses.percents && self.responses.percents.care ? self.responses.percents.care : 0;
+	});
+};
+
+var UrtakFlaggedQuestionVM = function(flag) {
+	var self = this;
+
+	self.change_status = function(status) {
+		jQuery.get(
+			ajaxurl,
+			{
+				action: 'urtak_modify_flag',
+				flag_id: self.id,
+				status: status
+			},
+			function(data, status) {
+				if(data.error) {
+					console.log(data);
+				}
+			},
+			'json'
+		);
+	};
+
+	self.id = flag.id || 0;
+	self.count = flag.count || 0;
+	self.question = flag.question || '';
+};
+
+var UrtakReviewVM = function(post_id, question_id) {
+	var self = this;
+
+	self.post_id = ko.observable(post_id);
+	self.question_id = ko.observable(question_id);
+
+	var post_titles = {};
+
+	self.post_title_accessor = ko.observable('');
+	self.post_title = ko.computed(function() {
+		var post_id = self.post_id(),
+			post_title = self.post_title_accessor();
+
+		if(post_titles[post_id]) {
+			self.post_title_accessor(post_titles[post_id]);
+
+			return post_titles[post_id];
+		} else {
+			jQuery.get(
+				ajaxurl,
+				{
+					action: 'urtak_get_post_title',
+					post_id: post_id
+				},
+				function(data, status) {
+					if(data.post_title) {
+						post_titles[data.post_id] = data.post_title;
+
+						self.post_title_accessor(data.post_title);
 					}
+				},
+				'json'
+			);
 
-					if('function' === typeof(callback)) {
-						callback(data, status);
+			return 'Post ID ' + post_id;
+		}
+	});
+
+	// Urtaks
+	self.urtaks_order = ko.observable('n_responses|DESC');
+	self.urtaks_page = ko.observable(1);
+	self.urtaks_pages = ko.observable(0);
+	self.urtaks_per_page = ko.observable(10);
+	self.urtaks_total = ko.observable(0);
+
+	self.urtaks_loading = ko.observable(false);
+
+	self.urtaks = ko.observableArray();
+
+	self.has_urtaks_pages = ko.computed(function() {
+		return !self.urtaks_loading() && self.urtaks_pages() > 1;
+	});
+
+	self.has_previous_urtaks_page = ko.computed(function() {
+		return self.urtaks_page() - 1 >= 1;
+	});
+
+	self.previous_urtaks_page = function() {
+		if(self.has_previous_urtaks_page()) {
+			self.urtaks_page(self.urtaks_page() - 1);
+			self.fetch_urtaks();
+		}
+	};
+
+	self.has_next_urtaks_page = ko.computed(function() {
+		return self.urtaks_page() + 1 <= self.urtaks_pages();
+	});
+
+	self.next_urtaks_page = function() {
+		if(self.has_next_urtaks_page()) {
+			self.urtaks_page(self.urtaks_page() + 1);
+			self.fetch_urtaks();
+		}
+	};
+
+	self.add_urtak = function(urtak) {
+		self.urtaks.push(urtak);
+	};
+
+	self.has_urtaks = ko.computed(function() {
+		return !self.urtaks_loading() && self.urtaks().length > 0;
+	});
+
+	self.no_urtaks = ko.computed(function() {
+		return !self.urtaks_loading() && self.urtaks().length === 0;
+	});
+
+	self.fetch_urtaks = function() {
+		if(!self.urtaks_loading()) {
+			self.urtaks_loading(true);
+
+			self.urtaks.removeAll();
+
+			jQuery.get(
+				ajaxurl,
+				{
+					action: 'urtak_get_urtaks',
+					order: self.urtaks_order(),
+					page: self.urtaks_page(),
+					per_page: self.urtaks_per_page(),
+					post_id: self.post_id()
+				},
+				function(data, status) {
+					self.urtaks_loading(false);
+
+					if(data.error) {
+						console.log(data);
+					} else {
+						self.urtaks_page(Math.floor(data.urtaks.offset / self.urtaks_per_page()) + 1);
+						self.urtaks_pages(data.urtaks.pages);
+						self.urtaks_total(data.urtaks.entries);
+
+						for(var i = 0; i < data.urtaks.urtak.length; i++) {
+							self.add_urtak(data.urtaks.urtak[i]);
+						}
 					}
 				},
 				'json'
@@ -398,30 +637,225 @@ var UrtakDelegates = (function(jQuery) {
 		}
 	};
 
-	_get_search_vars = function() {
-		var vars = {};
+	self.filter_and_fetch_urtaks = function() {
+		self.urtaks_page(1);
 
-		$('[data-urtak-attribute]').each(function(index, element) {
-			var $element = $(element);
-
-			vars[$element.attr('data-urtak-attribute')] = $element.val();
-		});
-
-		return vars;
+		self.fetch_urtaks();
 	};
 
-	_modify_question_status = function(vars) {
-		$.post(
-			ajaxurl,
-			vars,
-			function(data, status) {
+	self.reset_and_fetch_urtaks = function() {
+		self.urtaks_page(1);
+		self.urtaks_order('n_responses|DESC');
 
-			},
-			'json'
-		);
+		self.fetch_urtaks();
 	};
 
-	_plot_bar_graph = function(selector, data, ticks) {
+
+	self.load_questions_for_urtak = function(urtak) {
+		self.questions_page(1);
+
+		self.post_id(urtak.post_id);
+
+		self.fetch_questions();
+	};
+
+	// Questions
+	self.questions_filter = ko.observable('st|pe');
+	self.questions_order = ko.observable('time');
+	self.questions_page = ko.observable(1);
+	self.questions_pages = ko.observable(0);
+	self.questions_per_page = ko.observable(10);
+	self.questions_search_query = ko.observable('');
+	self.questions_total = ko.observable(0);
+
+	self.questions_loading = ko.observable(false);
+
+	self.questions = ko.observableArray();
+
+	self.has_questions_pages = ko.computed(function() {
+		return !self.questions_loading() && self.questions_pages() > 1;
+	});
+
+	self.has_previous_questions_page = ko.computed(function() {
+		return self.questions_page() - 1 >= 1;
+	});
+
+	self.previous_questions_page = function() {
+		if(self.has_previous_questions_page()) {
+			self.questions_page(self.questions_page() - 1);
+			self.fetch_questions();
+		}
+	};
+
+	self.has_next_questions_page = ko.computed(function() {
+		return self.questions_page() + 1 <= self.questions_pages();
+	});
+
+	self.next_questions_page = function() {
+		if(self.has_next_questions_page()) {
+			self.questions_page(self.questions_page() + 1);
+			self.fetch_questions();
+		}
+	};
+
+	self.add_question = function(question) {
+		self.questions.push(new UrtakQuestionVM(question));
+	};
+
+	self.has_questions = ko.computed(function() {
+		return !self.questions_loading() && self.questions().length > 0;
+	});
+
+	self.no_questions = ko.computed(function() {
+		return !self.questions_loading() && self.questions().length === 0;
+	});
+
+	self.fetch_questions = function() {
+		if(!self.questions_loading()) {
+			self.questions_loading(true);
+
+			self.questions.removeAll();
+
+			jQuery.get(
+				ajaxurl,
+				{
+					action: 'urtak_get_questions',
+					order: self.questions_order(),
+					page: self.questions_page(),
+					per_page: self.questions_per_page(),
+					post_id: self.post_id(),
+					search: self.questions_search_query(),
+					show: self.questions_filter()
+				},
+				function(data, status) {
+					self.questions_loading(false);
+
+					if(data.error) {
+						console.log(data);
+					} else {
+						self.questions_page(Math.floor(data.questions.offset / self.questions_per_page())  + 1);
+						self.questions_pages(data.questions.pages);
+						self.questions_total(data.questions.entries);
+
+						for(var i = 0; i < data.questions.question.length; i++) {
+							self.add_question(data.questions.question[i]);
+						}
+					}
+				},
+				'json'
+			);
+		}
+	};
+
+	self.filter_and_fetch_questions = function() {
+		self.questions_page(1);
+
+		self.fetch_questions();
+	};
+
+	self.reset_and_fetch_questions = function() {
+		self.post_id(0);
+
+		self.questions_filter('st|pe');
+		self.questions_page(1);
+		self.questions_order('time');
+		self.questions_search_query('');
+
+		self.fetch_questions();
+	};
+
+	// Flagged questions
+	self.flags_page = ko.observable(1);
+	self.flags_pages = ko.observable(0);
+	self.flags_per_page = ko.observable(10);
+	self.flags_total = ko.observable(0);
+
+	self.flags_loading = ko.observable(false);
+
+	self.flags = ko.observableArray();
+
+	self.has_flags_pages = ko.computed(function() {
+		return !self.flags_loading() && self.flags_pages() > 1;
+	});
+
+	self.has_previous_flags_page = ko.computed(function() {
+		return self.flags_page() - 1 >= 1;
+	});
+
+	self.previous_flags_page = function() {
+		if(self.has_previous_flags_page()) {
+			self.flags_page(self.flags_page() - 1);
+			self.fetch_flags();
+		}
+	};
+
+	self.has_next_flags_page = ko.computed(function() {
+		return self.flags_page() + 1 <= self.flags_pages();
+	});
+
+	self.next_flags_page = function() {
+		if(self.has_next_flags_page()) {
+			self.flags_page(self.flags_page() + 1);
+			self.fetch_flags();
+		}
+	};
+
+	self.add_flag = function(flag) {
+		self.flags.push(new UrtakFlaggedQuestionVM(flag));
+	};
+
+	self.has_flags = ko.computed(function() {
+		return !self.flags_loading() && self.flags().length > 0;
+	});
+
+	self.no_flags = ko.computed(function() {
+		return !self.flags_loading() && self.flags().length === 0;
+	});
+
+	self.fetch_flags = function() {
+		if(!self.flags_loading()) {
+			self.flags_loading(true);
+
+			self.flags.removeAll();
+
+			jQuery.get(
+				ajaxurl,
+				{
+					action: 'urtak_get_flags',
+					page: self.flags_page(),
+					per_page: self.flags_per_page()
+				},
+				function(data, status) {
+					self.flags_loading(false);
+
+					if(data.error) {
+						console.log(data);
+					} else {
+						self.flags_page(Math.floor(data.flags.offset / self.flags_per_page()) + 1);
+						self.flags_pages(data.flags.pages);
+						self.flags_total(data.flags.entries);
+
+						for(var i = 0; i < data.flags.flag.length; i++) {
+							self.add_flag(data.flags.flag[i]);
+						}
+					}
+				},
+				'json'
+			);
+		}
+	};
+
+	self.change_flag_status = function(flag, status) {
+		flag.change_status(status);
+
+		self.flags.remove(flag);
+	}
+}
+
+var UrtakPlot = function(selector, data, ticks) {
+	var $ = jQuery;
+
+	if($.plot) {
 		$.plot(
 			$(selector),
 			[
@@ -454,12 +888,5 @@ var UrtakDelegates = (function(jQuery) {
 				}
 			}
 		);
-	};
-
-	return {
-		get_questions: _get_questions,
-		get_search_vars: _get_search_vars,
-		modify_question_status: _modify_question_status,
-		plot_bar_graph: _plot_bar_graph
-	};
-})(jQuery);
+	}
+};
