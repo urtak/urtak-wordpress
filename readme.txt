@@ -7,10 +7,11 @@ Tested up to: 3.6
 Stable tag: 2.0.0
 License: MIT
 
-An Urtak poll is the simplest and fastest way to find out what an online
-audience is thinking.
+URTAK HAS SADLY SHUTDOWN. This repo remains here on github for posterity.
 
 == Description ==
+
+(FOR POSTERITY)
 
 The Urtak plugin for WordPress makes it extremely easy to add, moderate, and
 create insights from Urtak polls on your site.
@@ -53,23 +54,7 @@ in action.
 
 == Installation ==
 
-You may install Urtak using the built in WordPress plugin installer. You can
-also manually install the plugin by uploading it to your `/wp-content/plugins`
-directory.
-
-Once you have installed and activated the plugin, an “Urtak” link should appear
-in your dashboard’s left navigation menu. In the “Settings” sub-section of the
-Urtak plugin, you may sign up for an Urtak account or log in with your existing
-credentials if you already have an account.
-
-Once you’ve signed in and completed your selections on the “Settings” page, you
-will see an Urtak meta-box on your Post Edit pages from which you can create
-Urtak polls.
-
-For more information visit [about.urtak.com](http://about.urtak.com/).
-
-Please note that use of Urtak is subject to our [Terms and Privacy
-Policy](http://about.urtak.com/terms).
+N/A
 
 == Screenshots ==
 
